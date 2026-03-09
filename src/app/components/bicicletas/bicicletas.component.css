@@ -1,0 +1,385 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+
+:host {
+  display: block;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+/* VARIABLES */
+
+:root {
+  --bg-card:    #0d1420;
+  --bg-card2:   #111827;
+  --border:     #1e2d45;
+  --neon:       #00d4ff;
+  --neon2:      #ff6b00;
+  --neon3:      #39ff14;
+  --text:       #e2e8f0;
+  --text-muted: #64748b;
+  --danger:     #ff3366;
+}
+
+/* RESET */
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+/* MAIN LAYOUT */
+
+.velox-main{
+  display:grid;
+  grid-template-columns:360px 1fr;
+  gap:2rem;
+  padding:2rem 2.5rem;
+  align-items:start;
+}
+
+/* SIDEBAR */
+
+.velox-sidebar{
+  display:flex;
+  flex-direction:column;
+  gap:1.5rem;
+}
+
+/* CARD */
+
+.velox-card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  overflow:hidden;
+  transition:border-color .3s;
+}
+
+.velox-card:hover{
+  border-color:rgba(0,212,255,.3);
+}
+
+.card-header-neon{
+  display:flex;
+  align-items:center;
+  gap:.7rem;
+  padding:1rem 1.4rem;
+  background:linear-gradient(135deg,rgba(0,212,255,.12),rgba(0,212,255,.03));
+  border-bottom:1px solid rgba(0,212,255,.2);
+  font-family:'Orbitron',sans-serif;
+  font-size:.85rem;
+  font-weight:700;
+  color:var(--neon);
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+.card-header-neon.secondary{
+  background:linear-gradient(135deg,rgba(255,107,0,.12),rgba(255,107,0,.03));
+  border-bottom-color:rgba(255,107,0,.2);
+  color:var(--neon2);
+}
+
+.card-body{
+  padding:1.4rem;
+}
+
+/* INPUTS */
+
+.field-group{
+  margin-bottom:1rem;
+}
+
+.field-label{
+  display:block;
+  font-size:.78rem;
+  font-weight:600;
+  color:var(--text-muted);
+  letter-spacing:1px;
+  text-transform:uppercase;
+  margin-bottom:.4rem;
+}
+
+.velox-input{
+  width:100%;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:.65rem .9rem;
+  color:var(--text);
+  font-family:'Rajdhani',sans-serif;
+  font-size:1rem;
+  font-weight:500;
+  transition:all .2s;
+  outline:none;
+}
+
+.velox-input:focus{
+  border-color:var(--neon);
+  background:rgba(0,212,255,.05);
+  box-shadow:0 0 0 3px rgba(0,212,255,.1);
+}
+
+.field-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:.8rem;
+}
+
+/* BOTON */
+
+.velox-btn-primary{
+  width:100%;
+  padding:.9rem;
+  background:linear-gradient(135deg,#00d4ff,#0099cc);
+  border:none;
+  border-radius:10px;
+  color:#000;
+  font-family:'Orbitron',sans-serif;
+  font-size:.8rem;
+  font-weight:700;
+  letter-spacing:2px;
+  cursor:pointer;
+  transition:all .2s;
+  margin-top:.5rem;
+  text-transform:uppercase;
+}
+
+.velox-btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,212,255,.4);
+}
+
+.velox-btn-primary:active{
+  transform:translateY(0);
+}
+
+/* CATALOGO */
+
+.velox-catalog{
+  min-width:0;
+}
+
+.catalog-header{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  margin-bottom:1.5rem;
+}
+
+.catalog-title{
+  font-family:'Orbitron',sans-serif;
+  font-size:1.6rem;
+  font-weight:900;
+  color:#fff;
+}
+
+.catalog-sub{
+  font-size:.9rem;
+  color:var(--text-muted);
+  margin-top:.2rem;
+}
+
+.velox-btn-refresh{
+  padding:.6rem 1.2rem;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--border);
+  border-radius:8px;
+  color:var(--text-muted);
+  font-family:'Rajdhani',sans-serif;
+  font-size:.9rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .2s;
+}
+
+.velox-btn-refresh:hover{
+  border-color:var(--neon);
+  color:var(--neon);
+  background:rgba(0,212,255,.06);
+}
+
+/* SPINNER */
+
+.velox-loading{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:1rem;
+  padding:4rem;
+  color:var(--text-muted);
+}
+
+.spinner{
+  width:40px;
+  height:40px;
+  border:3px solid var(--border);
+  border-top-color:var(--neon);
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg);}
+}
+
+/* GRID */
+
+.bikes-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:1.2rem;
+}
+
+.bike-card{
+  position:relative;
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  overflow:hidden;
+  transition:all .3s;
+  cursor:pointer;
+}
+
+.bike-card:hover{
+  border-color:rgba(0,212,255,.4);
+  transform:translateY(-4px);
+  box-shadow:0 16px 40px rgba(0,0,0,.4),0 0 20px rgba(0,212,255,.1);
+}
+
+.bike-card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:.8rem 1rem 0;
+}
+
+.bike-type-badge{
+  padding:.25rem .6rem;
+  border-radius:5px;
+  font-size:.72rem;
+  font-weight:700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+.badge-mtb{
+  background:rgba(57,255,20,.15);
+  color:#39ff14;
+  border:1px solid rgba(57,255,20,.3);
+}
+
+.badge-ruta{
+  background:rgba(0,212,255,.15);
+  color:#00d4ff;
+  border:1px solid rgba(0,212,255,.3);
+}
+
+.badge-urbana{
+  background:rgba(255,200,0,.15);
+  color:#ffc800;
+  border:1px solid rgba(255,200,0,.3);
+}
+
+.badge-bmx{
+  background:rgba(255,51,102,.15);
+  color:#ff3366;
+  border:1px solid rgba(255,51,102,.3);
+}
+
+.bike-id{
+  font-size:.75rem;
+  color:var(--text-muted);
+  font-family:'Orbitron',sans-serif;
+}
+
+.bike-img-wrap{
+  display:flex;
+  justify-content:center;
+  padding:1.2rem;
+}
+
+.bike-img{
+  width:90px;
+  height:90px;
+  filter:invert(1) drop-shadow(0 4px 12px rgba(0,212,255,.4));
+  transition:transform .3s;
+}
+
+.bike-card:hover .bike-img{
+  transform:scale(1.08) rotate(-3deg);
+}
+
+.bike-info{
+  padding:0 1rem 1.2rem;
+  border-top:1px solid var(--border);
+  padding-top:.8rem;
+}
+
+.bike-name{
+  font-family:'Orbitron',sans-serif;
+  font-size:.95rem;
+  font-weight:700;
+  color:#fff;
+  margin-bottom:.2rem;
+}
+
+.bike-model{
+  font-size:.88rem;
+  color:var(--text-muted);
+  margin-bottom:.2rem;
+}
+
+.bike-code{
+  font-size:.78rem;
+  color:var(--neon);
+  font-family:'Orbitron',sans-serif;
+  margin-bottom:.5rem;
+}
+
+.bike-price{
+  font-family:'Orbitron',sans-serif;
+  font-size:1.05rem;
+  font-weight:700;
+  color:var(--neon2);
+}
+
+/* EMPTY */
+
+.empty-state{
+  grid-column:1/-1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:5rem 2rem;
+  color:var(--text-muted);
+}
+
+.empty-icon{
+  font-size:4rem;
+  margin-bottom:1rem;
+  filter:grayscale(1);
+  opacity:.4;
+}
+
+.empty-title{
+  font-family:'Orbitron',sans-serif;
+  font-size:1.1rem;
+  color:var(--text-muted);
+  margin-bottom:.5rem;
+}
+
+.empty-sub{
+  font-size:.9rem;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+  .velox-main{
+    grid-template-columns:1fr;
+    padding:1.5rem;
+  }
+
+}

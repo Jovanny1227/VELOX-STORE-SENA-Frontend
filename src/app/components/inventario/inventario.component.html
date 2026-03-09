@@ -1,0 +1,28 @@
+<div style="padding:40px">
+  <h2>Inventario de Bicicletas</h2>
+
+  <div *ngIf="cargando">Cargando inventario...</div>
+  <div *ngIf="mensajeError">{{ mensajeError }}</div>
+
+  <table *ngIf="!cargando && inventario.length" border="1" width="100%">
+    <tr>
+      <th>Código</th>
+      <th>Marca</th>
+      <th>Modelo</th>
+      <th>Tipo</th>
+      <th>Precio</th>
+      <th>Stock</th>
+    </tr>
+
+    <tr *ngFor="let item of inventario">
+      <td>{{ item.codigo }}</td>
+      <td>{{ item.marca }}</td>
+      <td>{{ item.modelo }}</td>
+      <td>{{ item.tipo }}</td>
+      <td>{{ item.precio | currency:'COP':'symbol':'1.0-0' }}</td>
+      <td>{{ item.stock }}</td>
+    </tr>
+  </table>
+
+  <div *ngIf="!cargando && inventario.length === 0">No hay bicicletas en inventario</div>
+</div>
