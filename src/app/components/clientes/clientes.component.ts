@@ -12,6 +12,7 @@ import { Cliente } from '../../models/cliente.model';
   styleUrls: ['./clientes.component.css'],
 })
 export class ClientesComponent implements OnInit {
+
   clientes: Cliente[] = [];
 
   nuevoCliente: Cliente = {
@@ -29,34 +30,53 @@ export class ClientesComponent implements OnInit {
   }
 
   cargarClientes() {
-    this.clienteService.listarClientes().subscribe((data) => {
-      this.clientes = data;
+    this.clienteService.listarClientes().subscribe({
+      next: (data) => {
+        this.clientes = data;
+      },
+      error: () => {
+        this.mensaje = '❌ Error al cargar clientes';
+      }
     });
   }
 
   registrarCliente() {
-    if (
-      !this.nuevoCliente.documento.trim() ||
-      !this.nuevoCliente.nombre.trim() ||
-      !this.nuevoCliente.telefono.trim()
-    ) {
+
+    const documento = this.nuevoCliente.documento.trim();
+    const nombre = this.nuevoCliente.nombre.trim();
+    const telefono = this.nuevoCliente.telefono.trim();
+
+    if (!documento || !nombre || !telefono) {
       this.mensaje = '⚠️ Todos los campos son obligatorios';
       return;
     }
 
-    this.clienteService.registrarCliente(this.nuevoCliente).subscribe({
+    this.clienteService.registrarCliente({
+      documento,
+      nombre,
+      telefono
+    }).subscribe({
       next: () => {
-        this.mensaje = '✅ Cliente registrado';
-        this.cargarClientes();
+
+        this.mensaje = '✅ Cliente registrado correctamente';
 
         this.nuevoCliente = {
           documento: '',
           nombre: '',
           telefono: '',
         };
+
+        this.cargarClientes();
       },
-      error: () => {
-        this.mensaje = '❌ Error al registrar cliente';
+
+      error: (err) => {
+
+        if (err.status === 400) {
+          this.mensaje = err.error;
+        } else {
+          this.mensaje = '❌ Error al registrar cliente';
+        }
+
       },
     });
   }
