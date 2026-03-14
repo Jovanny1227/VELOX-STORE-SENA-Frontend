@@ -1,53 +1,68 @@
-<div style="padding:40px">
+<div class="contenedor">
 
-  <h2>Registro de Clientes</h2>
+  <h1>Gestión de Clientes</h1>
 
-  <input
-    placeholder="Documento"
-    [(ngModel)]="nuevoCliente.documento"
-    required
-  />
+  <div class="formulario">
 
-  <input
-    placeholder="Nombre"
-    [(ngModel)]="nuevoCliente.nombre"
-    required
-  />
+    <h2>Registrar Cliente</h2>
 
-  <input
-    placeholder="Teléfono"
-    [(ngModel)]="nuevoCliente.telefono"
-    required
-  />
+    <input
+      type="text"
+      placeholder="Documento"
+      [(ngModel)]="nuevoCliente.documento"
+    />
 
-  <button
-    (click)="registrarCliente()"
-    [disabled]="!nuevoCliente.documento || !nuevoCliente.nombre || !nuevoCliente.telefono"
-  >
-    Registrar Cliente
-  </button>
+    <input
+      type="text"
+      placeholder="Nombre"
+      [(ngModel)]="nuevoCliente.nombre"
+    />
 
-  <p>{{mensaje}}</p>
+    <input
+      type="text"
+      placeholder="Teléfono"
+      [(ngModel)]="nuevoCliente.telefono"
+    />
+
+    <button
+      (click)="registrarCliente()"
+      [disabled]="!nuevoCliente.documento || !nuevoCliente.nombre || !nuevoCliente.telefono"
+    >
+      Registrar Cliente
+    </button>
+
+    <p class="mensaje">{{mensaje}}</p>
+
+  </div>
 
   <hr>
 
-  <h2>Lista de Clientes</h2>
+  <div class="tabla">
 
-  <table border="1" width="100%">
-    <tr>
-      <th>ID</th>
-      <th>Documento</th>
-      <th>Nombre</th>
-      <th>Teléfono</th>
-    </tr>
+    <h2>Lista de Clientes</h2>
 
-    <tr *ngFor="let c of clientes">
-      <td>{{c.clienteId}}</td>
-      <td>{{c.documento}}</td>
-      <td>{{c.nombre}}</td>
-      <td>{{c.telefono}}</td>
-    </tr>
+    <table>
 
-  </table>
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Documento</th>
+        <th>Nombre</th>
+        <th>Teléfono</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr *ngFor="let c of clientes">
+        <td>{{c.clienteId}}</td>
+        <td>{{c.documento}}</td>
+        <td>{{c.nombre}}</td>
+        <td>{{c.telefono}}</td>
+      </tr>
+      </tbody>
+
+    </table>
+
+  </div>
 
 </div>
