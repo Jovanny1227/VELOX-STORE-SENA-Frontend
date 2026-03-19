@@ -6,7 +6,7 @@ import { Venta } from '../models/venta.model';
 @Injectable({ providedIn: 'root' })
 export class VentaService {
 
-  private apiUrl = 'http://localhost:8080/api/ventas';
+  private apiUrl = '/api/ventas';
 
   constructor(private http: HttpClient) {}
 
@@ -16,7 +16,7 @@ export class VentaService {
 
   registrarVenta(clienteId: number, codigoBicicleta: string, cantidad: number): Observable<any> {
     const body = { clienteId, codigoBicicleta, cantidad };
-    return this.http.post<any>(this.apiUrl, body);
+    return this.http.post<any>(`${this.apiUrl}/registrar`, body);
   }
 
   ventasPorCliente(clienteId: number): Observable<Venta[]> {

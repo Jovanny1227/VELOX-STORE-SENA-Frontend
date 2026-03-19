@@ -1,53 +1,56 @@
-<div style="padding:40px">
+<div class="clientes-container">
 
-  <h2>Registro de Clientes</h2>
+  <div class="section-header">
+    <h2>Registro de Clientes</h2>
+  </div>
 
-  <input
-    placeholder="Documento"
-    [(ngModel)]="nuevoCliente.documento"
-    required
-  />
+  <div class="form-card">
+    <div class="form-row">
+      <div class="field-group">
+        <label>Documento</label>
+        <input class="velox-input" placeholder="Numero de documento" [(ngModel)]="nuevoCliente.documento" />
+      </div>
+      <div class="field-group">
+        <label>Nombre</label>
+        <input class="velox-input" placeholder="Nombre completo" [(ngModel)]="nuevoCliente.nombre" />
+      </div>
+      <div class="field-group">
+        <label>Telefono</label>
+        <input class="velox-input" placeholder="Numero de telefono" [(ngModel)]="nuevoCliente.telefono" />
+      </div>
+      <button class="btn-primary" (click)="registrarCliente()"
+        [disabled]="!nuevoCliente.documento || !nuevoCliente.nombre || !nuevoCliente.telefono">
+        Registrar
+      </button>
+    </div>
+    <p class="msg-exito" *ngIf="mensaje && !mensajeError">{{ mensaje }}</p>
+    <p class="msg-error" *ngIf="mensajeError">{{ mensajeError }}</p>
+  </div>
 
-  <input
-    placeholder="Nombre"
-    [(ngModel)]="nuevoCliente.nombre"
-    required
-  />
+  <div class="section-header" style="margin-top:32px">
+    <h2>Lista de Clientes</h2>
+    <span class="badge-count">{{ clientes.length }}</span>
+  </div>
 
-  <input
-    placeholder="Teléfono"
-    [(ngModel)]="nuevoCliente.telefono"
-    required
-  />
-
-  <button
-    (click)="registrarCliente()"
-    [disabled]="!nuevoCliente.documento || !nuevoCliente.nombre || !nuevoCliente.telefono"
-  >
-    Registrar Cliente
-  </button>
-
-  <p>{{mensaje}}</p>
-
-  <hr>
-
-  <h2>Lista de Clientes</h2>
-
-  <table border="1" width="100%">
-    <tr>
-      <th>ID</th>
-      <th>Documento</th>
-      <th>Nombre</th>
-      <th>Teléfono</th>
-    </tr>
-
-    <tr *ngFor="let c of clientes">
-      <td>{{c.clienteId}}</td>
-      <td>{{c.documento}}</td>
-      <td>{{c.nombre}}</td>
-      <td>{{c.telefono}}</td>
-    </tr>
-
+  <table class="velox-table" *ngIf="clientes.length">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Documento</th>
+        <th>Nombre</th>
+        <th>Telefono</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of clientes">
+        <td><span class="id-badge">{{ c.clienteId }}</span></td>
+        <td>{{ c.documento }}</td>
+        <td>{{ c.nombre }}</td>
+        <td>{{ c.telefono }}</td>
+      </tr>
+    </tbody>
   </table>
+
+  <div class="empty-state" *ngIf="!clientes.length">No hay clientes registrados</div>
 
 </div>

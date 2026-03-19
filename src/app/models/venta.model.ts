@@ -1,6 +1,7 @@
 export interface Venta {
-  idVenta?:   number;
-  clienteId:  number;
-  fecha?:     string;
-  total?:     number;
+  idVenta?: number;
+  cliente?: { nombre: string; documento: string };
+  fecha?: string;
+  total?: number;
+  estado?: string;
 }

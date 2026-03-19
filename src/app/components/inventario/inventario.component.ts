@@ -13,7 +13,7 @@ import { Inventario } from '../../models/inventario.model';
 export class InventarioComponent implements OnInit {
 
   inventario: Inventario[] = [];
-  cargando = false;
+  cargando = true;
   mensajeError = '';
 
   constructor(private inventarioService: InventarioService) {}
@@ -24,16 +24,20 @@ export class InventarioComponent implements OnInit {
 
   cargarInventario() {
     this.cargando = true;
+    this.mensajeError = '';
     this.inventarioService.listarInventario().subscribe({
-      next: data => {
-        this.inventario = data;
+      next: (data: any) => {
+        this.inventario = Array.isArray(data) ? data : [];
         this.cargando = false;
       },
-      error: err => {
-        this.mensajeError = 'Error al cargar inventario';
+      error: (err: any) => {
+        this.mensajeError = 'Error al cargar inventario: ' + (err?.message || 'servidor no disponible');
         this.cargando = false;
       }
     });
   }
 
+  totalStock(): number {
+    return this.inventario.reduce((acc, item) => acc + (item.stock || 0), 0);
+  }
 }

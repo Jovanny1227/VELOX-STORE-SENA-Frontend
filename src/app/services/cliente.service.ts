@@ -6,7 +6,7 @@ import { Cliente } from '../models/cliente.model';
 @Injectable({ providedIn: 'root' })
 export class ClienteService {
 
-  private apiUrl = 'http://localhost:8080/api/clientes';
+  private apiUrl = '/api/clientes';
 
   constructor(private http: HttpClient) {}
 
@@ -16,10 +16,6 @@ export class ClienteService {
 
   buscarPorId(clienteId: number): Observable<Cliente> {
     return this.http.get<Cliente>(`${this.apiUrl}/${clienteId}`);
-  }
-
-  buscarPorDocumento(documento: string): Observable<Cliente> {
-    return this.http.get<Cliente>(`${this.apiUrl}/documento/${documento}`);
   }
 
   registrarCliente(cliente: Cliente): Observable<Cliente> {

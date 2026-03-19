@@ -3,101 +3,60 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BicicletaService } from '../../services/bicicleta.service';
 import { Bicicleta } from '../../models/bicicleta.model';
-import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-bicicletas',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './bicicletas.component.html',
-  styleUrls: ['./bicicletas.component.css'],
+  styleUrls: ['./bicicletas.component.css']
 })
 export class BicicletasComponent implements OnInit {
+
   bicicletas: Bicicleta[] = [];
-
-  nuevaBicicleta: Bicicleta = {
-    modelo: '',
-    marca: '',
-    precio: 0,
-    tipo: '',
-  };
-
   stockInicial: number = 0;
-  mensajeExito: string = '';
-  mensajeError: string = '';
-  cargando: boolean = false;
-  bicicletaBuscada: Bicicleta | null = null;
-  codigoBusqueda: string = '';
+  mensaje = '';
+  mensajeError = '';
+
+  nuevaBicicleta: Bicicleta = { marca: '', modelo: '', precio: 0, tipo: '' };
+
+  imagenesMap: Record<string, string> = {
+    MTB: 'assets/bikes/mtb.png',
+    RUTA: 'assets/bikes/ruta.png',
+    URBANO: 'assets/bikes/urbano.png',
+    BMX: 'assets/bikes/bmx.png'
+  };
 
   constructor(private bicicletaService: BicicletaService) {}
 
-  ngOnInit(): void {
-    this.cargarBicicletas();
-  }
+  ngOnInit(): void { this.cargarBicicletas(); }
 
-  cargarBicicletas(): void {
-    this.cargando = true;
+  cargarBicicletas() {
     this.bicicletaService.listarBicicletas().subscribe({
-      next: (data) => {
-        this.bicicletas = data;
-        this.cargando = false;
-      },
-      error: (err) => {
-        this.mensajeError = 'Error al cargar: ' + err.message;
-        this.cargando = false;
-      },
+      next: data => this.bicicletas = data,
+      error: () => this.mensajeError = 'Error al cargar bicicletas'
     });
   }
 
-  registrarBicicleta(): void {
-    this.mensajeExito = '';
+  registrarBicicleta() {
+    this.mensaje = '';
     this.mensajeError = '';
-
-    if (
-      !this.nuevaBicicleta.marca.trim() ||
-      !this.nuevaBicicleta.modelo.trim() ||
-      !this.nuevaBicicleta.tipo ||
-      this.nuevaBicicleta.precio <= 0
-    ) {
-      this.mensajeError = '⚠️ Complete todos los campos correctamente';
+    if (!this.nuevaBicicleta.marca || !this.nuevaBicicleta.modelo || !this.nuevaBicicleta.tipo || this.nuevaBicicleta.precio <= 0) {
+      this.mensajeError = 'Complete todos los campos';
       return;
     }
-
-    if (this.stockInicial < 0) {
-      this.mensajeError = '⚠️ El stock no puede ser negativo';
-      return;
-    }
-
     this.bicicletaService.registrarBicicleta(this.nuevaBicicleta, this.stockInicial).subscribe({
-      next: (creada) => {
-        this.mensajeExito = `✅ Bicicleta '${creada.codigo}' registrada (id=${creada.idBicicleta}).`;
+      next: () => {
+        this.mensaje = 'Bicicleta registrada correctamente';
+        this.nuevaBicicleta = { marca: '', modelo: '', precio: 0, tipo: '' };
+        this.stockInicial = 0;
         this.cargarBicicletas();
-        this.limpiarFormulario();
       },
-      error: (err) => {
-        this.mensajeError = '❌ ' + (err.error || err.message);
-      },
+      error: () => this.mensajeError = 'Error al registrar bicicleta'
     });
   }
 
-  buscarBicicleta(): void {
-    if (!this.codigoBusqueda.trim()) return;
-
-    this.bicicletaBuscada = null;
-    this.mensajeError = '';
-
-    this.bicicletaService.buscarPorCodigo(this.codigoBusqueda).subscribe({
-      next: (b) => {
-        this.bicicletaBuscada = b;
-      },
-      error: () => {
-        this.mensajeError = `❌ No existe código '${this.codigoBusqueda}'.`;
-      },
-    });
-  }
-
-  limpiarFormulario(): void {
-    this.nuevaBicicleta = { modelo: '', marca: '', precio: 0, tipo: '' };
-    this.stockInicial = 0;
+  getImagen(tipo: string): string {
+    return this.imagenesMap[tipo] || 'assets/bikes/mtb.png';
   }
 }

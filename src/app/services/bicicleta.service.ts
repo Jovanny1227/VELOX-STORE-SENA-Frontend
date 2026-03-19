@@ -6,7 +6,7 @@ import { Bicicleta } from '../models/bicicleta.model';
 @Injectable({ providedIn: 'root' })
 export class BicicletaService {
 
-  private apiUrl = 'http://localhost:8080/api/bicicletas';
+  private apiUrl = '/api/bicicletas';
 
   constructor(private http: HttpClient) {}
 

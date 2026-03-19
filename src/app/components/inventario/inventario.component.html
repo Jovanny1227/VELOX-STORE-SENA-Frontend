@@ -1,28 +1,51 @@
-<div style="padding:40px">
-  <h2>Inventario de Bicicletas</h2>
+<div class="inventario-container">
 
-  <div *ngIf="cargando">Cargando inventario...</div>
-  <div *ngIf="mensajeError">{{ mensajeError }}</div>
+  <div class="inventario-header">
+    <h2>Inventario de Bicicletas</h2>
+    <button class="btn-refresh" (click)="cargarInventario()">Actualizar</button>
+  </div>
 
-  <table *ngIf="!cargando && inventario.length" border="1" width="100%">
-    <tr>
-      <th>Código</th>
-      <th>Marca</th>
-      <th>Modelo</th>
-      <th>Tipo</th>
-      <th>Precio</th>
-      <th>Stock</th>
-    </tr>
+  <div class="estado-msg" *ngIf="cargando">Cargando inventario...</div>
+  <div class="estado-error" *ngIf="mensajeError">{{ mensajeError }}</div>
 
-    <tr *ngFor="let item of inventario">
-      <td>{{ item.codigo }}</td>
-      <td>{{ item.marca }}</td>
-      <td>{{ item.modelo }}</td>
-      <td>{{ item.tipo }}</td>
-      <td>{{ item.precio | currency:'COP':'symbol':'1.0-0' }}</td>
-      <td>{{ item.stock }}</td>
-    </tr>
+  <div class="stats-row" *ngIf="!cargando && inventario.length">
+    <div class="stat-card">
+      <span class="stat-value">{{ inventario.length }}</span>
+      <span class="stat-label">Modelos</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">{{ totalStock() }}</span>
+      <span class="stat-label">Unidades totales</span>
+    </div>
+  </div>
+
+  <table class="inventario-table" *ngIf="!cargando && inventario.length">
+    <thead>
+      <tr>
+        <th>Codigo</th>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th>Tipo</th>
+        <th>Precio</th>
+        <th>Stock</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of inventario" [class.stock-bajo]="item.stock <= 3">
+        <td><span class="codigo-badge">{{ item.codigo }}</span></td>
+        <td>{{ item.marca }}</td>
+        <td>{{ item.modelo }}</td>
+        <td><span class="tipo-badge tipo-{{item.tipo.toLowerCase()}}">{{ item.tipo }}</span></td>
+        <td>{{ item.precio | currency:'COP':'symbol':'1.0-0' }}</td>
+        <td>
+          <span class="stock-badge" [class.bajo]="item.stock <= 3">{{ item.stock }}</span>
+        </td>
+      </tr>
+    </tbody>
   </table>
 
-  <div *ngIf="!cargando && inventario.length === 0">No hay bicicletas en inventario</div>
+  <div class="empty-state" *ngIf="!cargando && inventario.length === 0">
+    No hay bicicletas en inventario
+  </div>
+
 </div>

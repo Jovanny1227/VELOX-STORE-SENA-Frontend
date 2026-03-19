@@ -6,7 +6,7 @@ import { Inventario } from '../models/inventario.model';
 @Injectable({ providedIn: 'root' })
 export class InventarioService {
 
-  private apiUrl = 'http://localhost:8080/api/inventario';
+  private apiUrl = '/api/inventario';
 
   constructor(private http: HttpClient) {}
 
@@ -14,4 +14,7 @@ export class InventarioService {
     return this.http.get<Inventario[]>(this.apiUrl);
   }
 
+  dashboardInventario(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/dashboard`);
+  }
 }
