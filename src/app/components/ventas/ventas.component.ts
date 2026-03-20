@@ -4,9 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { VentaService } from '../../services/venta.service';
 import { ClienteService } from '../../services/cliente.service';
 import { BicicletaService } from '../../services/bicicleta.service';
-import { Cliente } from '../../models/cliente.model';
-import { Bicicleta } from '../../models/bicicleta.model';
-import { Venta } from '../../models/venta.model';
 
 @Component({
   selector: 'app-ventas',
@@ -17,14 +14,12 @@ import { Venta } from '../../models/venta.model';
 })
 export class VentasComponent implements OnInit {
 
-  clientes: Cliente[] = [];
-  bicicletas: Bicicleta[] = [];
-  ventas: Venta[] = [];
-
+  clientes: any[] = [];
+  bicicletas: any[] = [];
+  ventas: any[] = [];
   clienteSeleccionado: number | null = null;
   bicicletaSeleccionada: string = '';
   cantidad: number = 1;
-
   cargando = false;
   mensajeExito = '';
   mensajeError = '';
@@ -35,23 +30,12 @@ export class VentasComponent implements OnInit {
     private bicicletaService: BicicletaService
   ) {}
 
-  ngOnInit(): void {
-    this.cargarDatos();
-  }
+  ngOnInit(): void { this.cargarDatos(); }
 
   cargarDatos() {
-    this.clienteService.listarClientes().subscribe({
-      next: data => this.clientes = data,
-      error: () => this.mensajeError = 'Error al cargar clientes'
-    });
-    this.bicicletaService.listarBicicletas().subscribe({
-      next: data => this.bicicletas = data,
-      error: () => this.mensajeError = 'Error al cargar bicicletas'
-    });
-    this.ventaService.listarVentas().subscribe({
-      next: data => this.ventas = data,
-      error: () => {}
-    });
+    this.clienteService.listarClientes().subscribe({ next: data => this.clientes = data, error: () => {} });
+    this.bicicletaService.listarBicicletas().subscribe({ next: data => this.bicicletas = data, error: () => {} });
+    this.ventaService.listarVentas().subscribe({ next: data => this.ventas = data, error: () => {} });
   }
 
   registrarVenta() {
@@ -66,12 +50,23 @@ export class VentasComponent implements OnInit {
         this.bicicletaSeleccionada = '';
         this.cantidad = 1;
         this.cargando = false;
-        this.ventaService.listarVentas().subscribe(data => this.ventas = data);
+        this.cargarDatos();
       },
-      error: err => {
+      error: (err: any) => {
         this.mensajeError = err.error || 'Error al registrar venta';
         this.cargando = false;
       }
+    });
+  }
+
+  eliminarVenta(id: number) {
+    if (!confirm('Eliminar esta venta y restaurar el stock?')) return;
+    this.ventaService.eliminarVenta(id).subscribe({
+      next: () => {
+        this.mensajeExito = 'Venta eliminada y stock restaurado';
+        this.cargarDatos();
+      },
+      error: () => this.mensajeError = 'Error al eliminar venta'
     });
   }
 }

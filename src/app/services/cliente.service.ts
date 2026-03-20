@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Cliente } from '../models/cliente.model';
 
 @Injectable({ providedIn: 'root' })
 export class ClienteService {
@@ -10,15 +9,19 @@ export class ClienteService {
 
   constructor(private http: HttpClient) {}
 
-  listarClientes(): Observable<Cliente[]> {
-    return this.http.get<Cliente[]>(this.apiUrl);
+  listarClientes(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
   }
 
-  buscarPorId(clienteId: number): Observable<Cliente> {
-    return this.http.get<Cliente>(`${this.apiUrl}/${clienteId}`);
+  registrarCliente(cliente: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, cliente);
   }
 
-  registrarCliente(cliente: Cliente): Observable<Cliente> {
-    return this.http.post<Cliente>(this.apiUrl, cliente);
+  actualizarCliente(id: number, cliente: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, cliente);
+  }
+
+  eliminarCliente(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }

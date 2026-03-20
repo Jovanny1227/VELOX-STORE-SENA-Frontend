@@ -1,5 +1,4 @@
 <div class="clientes-container">
-
   <div class="section-header">
     <h2>Registro de Clientes</h2>
   </div>
@@ -23,8 +22,30 @@
         Registrar
       </button>
     </div>
-    <p class="msg-exito" *ngIf="mensaje && !mensajeError">{{ mensaje }}</p>
+    <p class="msg-exito" *ngIf="mensaje">{{ mensaje }}</p>
     <p class="msg-error" *ngIf="mensajeError">{{ mensajeError }}</p>
+  </div>
+
+  <div class="modal-overlay" *ngIf="clienteEditando">
+    <div class="modal-card">
+      <h3>Editar Cliente</h3>
+      <div class="field-group">
+        <label>Documento</label>
+        <input class="velox-input" [(ngModel)]="clienteEditando.documento" />
+      </div>
+      <div class="field-group" style="margin-top:12px">
+        <label>Nombre</label>
+        <input class="velox-input" [(ngModel)]="clienteEditando.nombre" />
+      </div>
+      <div class="field-group" style="margin-top:12px">
+        <label>Telefono</label>
+        <input class="velox-input" [(ngModel)]="clienteEditando.telefono" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary" (click)="guardarEdicion()">Guardar</button>
+        <button class="btn-cancel" (click)="cancelarEdicion()">Cancelar</button>
+      </div>
+    </div>
   </div>
 
   <div class="section-header" style="margin-top:32px">
@@ -39,6 +60,7 @@
         <th>Documento</th>
         <th>Nombre</th>
         <th>Telefono</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -47,10 +69,12 @@
         <td>{{ c.documento }}</td>
         <td>{{ c.nombre }}</td>
         <td>{{ c.telefono }}</td>
+        <td class="acciones">
+          <button class="btn-edit" (click)="editarCliente(c)">Editar</button>
+          <button class="btn-delete" (click)="eliminarCliente(c.clienteId)">Eliminar</button>
+        </td>
       </tr>
     </tbody>
   </table>
-
   <div class="empty-state" *ngIf="!clientes.length">No hay clientes registrados</div>
-
 </div>

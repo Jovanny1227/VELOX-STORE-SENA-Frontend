@@ -1,51 +1,97 @@
 <div class="inventario-container">
-
   <div class="inventario-header">
     <h2>Inventario de Bicicletas</h2>
-    <button class="btn-refresh" (click)="cargarInventario()">Actualizar</button>
+    <div class="header-actions">
+      <button class="btn-tab" [class.active]="vistaActiva === 'stock'" (click)="vistaActiva = 'stock'">Stock</button>
+      <button class="btn-tab" [class.active]="vistaActiva === 'movimientos'" (click)="vistaActiva = 'movimientos'">Movimientos</button>
+      <button class="btn-refresh" (click)="cargarTodo()">Actualizar</button>
+    </div>
   </div>
 
-  <div class="estado-msg" *ngIf="cargando">Cargando inventario...</div>
+  <div class="estado-msg" *ngIf="cargando">Cargando...</div>
   <div class="estado-error" *ngIf="mensajeError">{{ mensajeError }}</div>
 
-  <div class="stats-row" *ngIf="!cargando && inventario.length">
+  <div class="stats-row" *ngIf="!cargando">
+    <div class="stat-card">
+      <span class="stat-value">{{ totalStock() }}</span>
+      <span class="stat-label">Stock Total</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value green">{{ totalValorInventario() | currency:'COP':'symbol':'1.0-0' }}</span>
+      <span class="stat-label">Valor Total</span>
+    </div>
     <div class="stat-card">
       <span class="stat-value">{{ inventario.length }}</span>
       <span class="stat-label">Modelos</span>
     </div>
-    <div class="stat-card">
-      <span class="stat-value">{{ totalStock() }}</span>
-      <span class="stat-label">Unidades totales</span>
+    <div class="stat-card" *ngFor="let tipo of getTiposUnicos()">
+      <span class="stat-value tipo-color-{{tipo.toLowerCase()}}">{{ getStockPorTipo(tipo) }}</span>
+      <span class="stat-label">{{ tipo }}</span>
     </div>
   </div>
 
-  <table class="inventario-table" *ngIf="!cargando && inventario.length">
-    <thead>
-      <tr>
-        <th>Codigo</th>
-        <th>Marca</th>
-        <th>Modelo</th>
-        <th>Tipo</th>
-        <th>Precio</th>
-        <th>Stock</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of inventario" [class.stock-bajo]="item.stock <= 3">
-        <td><span class="codigo-badge">{{ item.codigo }}</span></td>
-        <td>{{ item.marca }}</td>
-        <td>{{ item.modelo }}</td>
-        <td><span class="tipo-badge tipo-{{item.tipo.toLowerCase()}}">{{ item.tipo }}</span></td>
-        <td>{{ item.precio | currency:'COP':'symbol':'1.0-0' }}</td>
-        <td>
-          <span class="stock-badge" [class.bajo]="item.stock <= 3">{{ item.stock }}</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="empty-state" *ngIf="!cargando && inventario.length === 0">
-    No hay bicicletas en inventario
+  <div *ngIf="vistaActiva === 'stock'">
+    <div class="tipo-section" *ngFor="let tipo of getTiposUnicos()">
+      <div class="tipo-header">
+        <span class="tipo-badge tipo-{{tipo.toLowerCase()}}">{{ tipo }}</span>
+        <span class="tipo-stock">{{ getStockPorTipo(tipo) }} unidades</span>
+        <span class="tipo-valor">{{ getValorPorTipo(tipo) | currency:'COP':'symbol':'1.0-0' }}</span>
+      </div>
+      <table class="inventario-table">
+        <thead>
+          <tr>
+            <th>Codigo</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Precio unit.</th>
+            <th>Stock</th>
+            <th>Valor total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of inventario | filtrarTipo:tipo" [class.stock-bajo]="item.stock <= 3">
+            <td><span class="codigo-badge">{{ item.codigo }}</span></td>
+            <td>{{ item.marca }}</td>
+            <td>{{ item.modelo }}</td>
+            <td>{{ item.precio | currency:'COP':'symbol':'1.0-0' }}</td>
+            <td><span class="stock-badge" [class.bajo]="item.stock <= 3">{{ item.stock }}</span></td>
+            <td><span class="valor-badge">{{ getValorItem(item) | currency:'COP':'symbol':'1.0-0' }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="empty-state" *ngIf="!cargando && inventario.length === 0">No hay bicicletas en inventario</div>
   </div>
 
+  <div *ngIf="vistaActiva === 'movimientos'">
+    <div class="tipo-section" *ngFor="let tipo of getTiposUnicos()">
+      <div class="tipo-header">
+        <span class="tipo-badge tipo-{{tipo.toLowerCase()}}">{{ tipo }}</span>
+      </div>
+      <table class="inventario-table" *ngIf="getMovimientosPorTipo(tipo).length">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Bicicleta</th>
+            <th>Proveedor</th>
+            <th>Cantidad</th>
+            <th>Precio unit.</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let m of getMovimientosPorTipo(tipo)">
+            <td>{{ m.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ m.bicicleta?.marca }} {{ m.bicicleta?.modelo }}</td>
+            <td>{{ getNombreProveedor(m) }}</td>
+            <td><span class="stock-badge">{{ m.cantidad }}</span></td>
+            <td>{{ m.precioUnitario | currency:'COP':'symbol':'1.0-0' }}</td>
+            <td><span class="valor-badge">{{ m.cantidad * m.precioUnitario | currency:'COP':'symbol':'1.0-0' }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="empty-state-sm" *ngIf="!getMovimientosPorTipo(tipo).length">Sin entradas registradas</div>
+    </div>
+    <div class="empty-state" *ngIf="!cargando && movimientos.length === 0">No hay movimientos registrados</div>
+  </div>
 </div>

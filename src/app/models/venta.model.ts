@@ -3,5 +3,4 @@ export interface Venta {
   cliente?: { nombre: string; documento: string };
   fecha?: string;
   total?: number;
-  estado?: string;
 }
