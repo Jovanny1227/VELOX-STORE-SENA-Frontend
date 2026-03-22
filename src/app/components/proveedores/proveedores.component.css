@@ -1,38 +1,5 @@
 .proveedores-container { padding: 40px; color: #fff; }
-.section-header { margin-bottom: 24px; }
-.section-header h2 { font-size: 1.8rem; font-family: "Orbitron", sans-serif; color: #00e5ff; margin: 0; }
+.section-header h2 { font-size: 1.8rem; font-family: "Orbitron", sans-serif; color: #00e5ff; margin: 0 0 24px 0; }
 .layout-grid { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start; }
-.form-card { background: #0d2137; border: 1px solid #1a2e45; border-radius: 12px; overflow: hidden; }
-.card-header { background: #0a1929; border-bottom: 2px solid #00e5ff; padding: 14px 20px; font-family: "Orbitron", sans-serif; font-size: 0.8rem; letter-spacing: 2px; color: #00e5ff; }
-.card-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
-.field-group { display: flex; flex-direction: column; gap: 6px; }
-.field-group label { font-size: 0.72rem; color: #7a9ab8; text-transform: uppercase; letter-spacing: 1.5px; }
-.velox-input { background: #0a1929; border: 1px solid #1a2e45; color: #fff; padding: 10px 14px; border-radius: 8px; font-size: 0.95rem; outline: none; width: 100%; box-sizing: border-box; }
-.velox-input:focus { border-color: #00e5ff; }
-.btn-primary { background: #00e5ff; color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; text-transform: uppercase; letter-spacing: 1px; }
-.btn-primary:hover { background: #00b8d4; }
-.msg-exito { color: #69f0ae; font-size: 0.85rem; }
-.msg-error { color: #ef5350; font-size: 0.85rem; }
-.lista-section { display: flex; flex-direction: column; gap: 12px; }
-.section-sub-header { display: flex; align-items: center; gap: 10px; font-size: 1rem; color: #7a9ab8; margin-bottom: 4px; }
+.section-sub-header { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: #7a9ab8; margin-bottom: 15px; letter-spacing: 1px; }
 .badge-count { background: #00e5ff22; color: #00e5ff; border: 1px solid #00e5ff44; padding: 2px 12px; border-radius: 20px; font-size: 0.85rem; }
-.proveedor-card { background: #0d2137; border: 1px solid #1a2e45; border-radius: 12px; padding: 16px 20px; cursor: pointer; transition: border-color 0.2s; }
-.proveedor-card:hover { border-color: #00e5ff44; }
-.proveedor-card.activo { border-color: #00e5ff; }
-.proveedor-top { display: flex; justify-content: space-between; align-items: center; }
-.proveedor-info { display: flex; flex-direction: column; gap: 4px; }
-.proveedor-nombre { font-size: 1rem; font-weight: bold; color: #fff; }
-.proveedor-nit { font-size: 0.8rem; color: #7a9ab8; }
-.proveedor-stats { display: flex; gap: 24px; }
-.stat { display: flex; flex-direction: column; align-items: center; }
-.stat-val { font-size: 1.2rem; font-weight: bold; color: #00e5ff; }
-.stat-val.green { color: #69f0ae; }
-.stat-lbl { font-size: 0.7rem; color: #7a9ab8; text-transform: uppercase; letter-spacing: 1px; }
-.movimientos-lista { margin-top: 16px; border-top: 1px solid #1a2e45; padding-top: 16px; }
-.mov-header { font-size: 0.8rem; color: #7a9ab8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
-.mov-table { width: 100%; border-collapse: collapse; }
-.mov-table thead tr { background: #0a1929; color: #00e5ff; font-size: 0.75rem; text-transform: uppercase; }
-.mov-table th, .mov-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #1a2e45; font-size: 0.85rem; }
-.qty-badge { background: #1a3a1a; color: #69f0ae; padding: 2px 10px; border-radius: 12px; font-weight: bold; }
-.empty-state { text-align: center; color: #7a9ab8; padding: 60px; }
-.empty-state-sm { color: #7a9ab8; padding: 12px 0; font-size: 0.85rem; }

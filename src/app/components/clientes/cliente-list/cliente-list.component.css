@@ -1,0 +1,14 @@
+.velox-table { width: 100%; border-collapse: collapse; }
+.velox-table thead tr { background: #0d2137; color: #00e5ff; text-transform: uppercase; font-size: 0.8rem; }
+.velox-table th, .velox-table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #1a2e45; }
+.velox-table tbody tr:hover { background: #0d2137; }
+
+.acciones { display: flex; gap: 6px; }
+.id-badge { background: #0d2137; color: #00e5ff; padding: 3px 10px; border-radius: 4px; font-family: monospace; }
+.empty-state { text-align: center; color: #aaa; padding: 60px; }
+
+.btn-edit { background: #1a2e45; color: #00e5ff; border: 1px solid #00e5ff44; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-right: 6px; }
+.btn-edit:hover { background: #00e5ff22; }
+
+.btn-delete { background: #3a1a1a; color: #ef5350; border: 1px solid #ef535044; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+.btn-delete:hover { background: #ef5350; color: #fff; }

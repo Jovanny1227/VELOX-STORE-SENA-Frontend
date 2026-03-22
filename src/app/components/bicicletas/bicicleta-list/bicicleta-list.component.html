@@ -1,0 +1,40 @@
+<div class="catalog-header">
+  <div>
+    <h2 class="catalog-title">CATALOGO</h2>
+    <p class="catalog-sub">{{ bicicletas.length }} bicicletas registradas</p>
+  </div>
+  <button class="btn-refresh" (click)="actualizar()">ACTUALIZAR</button>
+</div>
+<div class="empty-state" *ngIf="bicicletas.length === 0">No hay bicicletas registradas</div>
+<div class="catalog-grid">
+  <div class="bike-card" *ngFor="let b of bicicletas">
+    <div class="bike-card-top">
+      <span class="tipo-badge tipo-{{b.tipo?.toLowerCase()}}">{{ b.tipo }}</span>
+      <span class="bike-cod">{{ b.codigo }}</span>
+    </div>
+    <div class="bike-img-wrap">
+      <img [src]="getImagen(b.tipo)" [alt]="b.tipo" class="bike-img" />
+    </div>
+    <div class="bike-info">
+      <span class="bike-marca">{{ b.marca }}</span>
+      <span class="bike-modelo">{{ b.modelo }}</span>
+      <div class="bike-precios">
+        <div class="precio-row">
+          <span class="precio-label">Precio unit.</span>
+          <span class="bike-precio">{{ b.precio | currency:'COP':'symbol':'1.0-0' }}</span>
+        </div>
+        <div class="precio-row">
+          <span class="precio-label">Stock actual</span>
+          <span class="stock-badge" [class.bajo]="getStock(b.codigo) <= 3">{{ getStock(b.codigo) }}</span>
+        </div>
+        <div class="precio-row">
+          <span class="precio-label">Valor total</span>
+          <span class="valor-total">{{ getValorTotal(b) | currency:'COP':'symbol':'1.0-0' }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="bike-actions">
+      <button class="btn-delete-card" (click)="eliminar(b.idBicicleta)">Eliminar</button>
+    </div>
+  </div>
+</div>
