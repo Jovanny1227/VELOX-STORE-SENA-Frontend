@@ -1,63 +1,58 @@
-<div style="padding:40px"><div class="ventas-wrapper">
-
-  <h2>Registrar Venta</h2>
-
-  <!-- Loading -->
-  <div *ngIf="cargando" class="msg msg-loading">
-    <span class="pulse-dot"></span>
-    Procesando venta......
+<div class="ventas-container">
+  <div class="section-header">
+    <h2>Registrar Venta</h2>
   </div>
-
-  <!-- Éxito -->
-  <div *ngIf="mensajeExito" class="msg msg-success">
-    {{ mensajeExito }}
+  <div class="form-card">
+    <div class="form-grid">
+      <div class="field-group">
+        <label>Cliente</label>
+        <select class="velox-input" [(ngModel)]="clienteSeleccionado">
+          <option [ngValue]="null">-- Seleccionar Cliente --</option>
+          <option *ngFor="let c of clientes" [ngValue]="c.clienteId">{{ c.nombre }} ({{ c.documento }})</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>Bicicleta</label>
+        <select class="velox-input" [(ngModel)]="bicicletaSeleccionada">
+          <option value="">-- Seleccionar Bicicleta --</option>
+          <option *ngFor="let b of bicicletas" [value]="b.codigo">{{ b.marca }} {{ b.modelo }} ({{ b.tipo }}) - {{ b.precio | currency:'COP':'symbol':'1.0-0' }}</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>Cantidad</label>
+        <input type="number" class="velox-input" [(ngModel)]="cantidad" min="1" />
+      </div>
+    </div>
+    <button class="btn-primary" (click)="registrarVenta()"
+      [disabled]="!clienteSeleccionado || !bicicletaSeleccionada || cantidad < 1 || cargando">
+      {{ cargando ? 'Procesando...' : 'Registrar Venta' }}
+    </button>
+    <p class="msg-exito" *ngIf="mensajeExito">{{ mensajeExito }}</p>
+    <p class="msg-error" *ngIf="mensajeError">{{ mensajeError }}</p>
   </div>
-
-  <!-- Error -->
-  <div *ngIf="mensajeError" class="msg msg-error">
-    {{ mensajeError }}
+  <div class="section-header" style="margin-top:32px">
+    <h2>Historial de Ventas</h2>
+    <span class="badge-count">{{ ventas.length }}</span>
   </div>
-
-  <!-- Cliente -->
-  <div class="field-group">
-    <label for="cliente">Cliente</label>
-    <select id="cliente" [(ngModel)]="clienteSeleccionado">
-      <option [ngValue]="null">-- Seleccionar Cliente --</option>
-      <option *ngFor="let c of clientes" [ngValue]="c.clienteId">
-        {{ c.nombre }} ({{ c.documento }})
-      </option>
-    </select>
-  </div>
-
-  <!-- Bicicleta -->
-  <div class="field-group">
-    <label for="bicicleta">Bicicleta</label>
-    <select id="bicicleta" [(ngModel)]="bicicletaSeleccionada">
-      <option value="">-- Seleccionar Bicicleta --</option>
-      <option *ngFor="let b of bicicletas" [value]="b.codigo">
-        {{ b.marca }} {{ b.modelo }} ({{ b.tipo }}) — {{ b.precio | currency:'COP':'symbol':'1.0-0' }}
-      </option>
-    </select>
-  </div>
-
-  <!-- Cantidad -->
-  <div class="field-group">
-    <label for="cantidad">Cantidad</label>
-    <input
-      id="cantidad"
-      type="number"
-      [(ngModel)]="cantidad"
-      min="1"
-    />
-  </div>
-
-  <!-- Botón -->
-  <button
-    class="btn-registrar"
-    (click)="registrarVenta()"
-    [disabled]="cargando"
-  >
-    Registrar Venta
-  </button>
-
-</div></div>
+  <table class="velox-table" *ngIf="ventas.length">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Cliente</th>
+        <th>Fecha</th>
+        <th>Total</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let v of ventas">
+        <td><span class="id-badge">{{ v.idVenta }}</span></td>
+        <td>{{ v.cliente?.nombre }}</td>
+        <td>{{ v.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ v.total | currency:'COP':'symbol':'1.0-0' }}</td>
+        <td><button class="btn-delete" (click)="eliminarVenta(v.idVenta)">Eliminar</button></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="empty-state" *ngIf="!ventas.length">No hay ventas registradas</div>
+</div>

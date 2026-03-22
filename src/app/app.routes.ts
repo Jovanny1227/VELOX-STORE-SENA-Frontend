@@ -3,12 +3,13 @@ import { BicicletasComponent } from './components/bicicletas/bicicletas.componen
 import { ClientesComponent } from './components/clientes/clientes.component';
 import { VentasComponent } from './components/ventas/ventas.component';
 import { InventarioComponent } from './components/inventario/inventario.component';
+import { ProveedoresComponent } from './components/proveedores/proveedores.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'bicicletas', pathMatch: 'full' },
-
   { path: 'bicicletas', component: BicicletasComponent },
   { path: 'clientes', component: ClientesComponent },
   { path: 'ventas', component: VentasComponent },
-  { path: 'inventario', component: InventarioComponent }
+  { path: 'inventario', component: InventarioComponent },
+  { path: 'proveedores', component: ProveedoresComponent }
 ];

@@ -2,82 +2,72 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClienteService } from '../../services/cliente.service';
-import { Cliente } from '../../models/cliente.model';
 
 @Component({
   selector: 'app-clientes',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './clientes.component.html',
-  styleUrls: ['./clientes.component.css'],
+  styleUrls: ['./clientes.component.css']
 })
 export class ClientesComponent implements OnInit {
 
-  clientes: Cliente[] = [];
-
-  nuevoCliente: Cliente = {
-    documento: '',
-    nombre: '',
-    telefono: '',
-  };
-
+  clientes: any[] = [];
+  nuevoCliente: any = { documento: '', nombre: '', telefono: '' };
+  clienteEditando: any = null;
   mensaje = '';
+  mensajeError = '';
 
   constructor(private clienteService: ClienteService) {}
 
-  ngOnInit(): void {
-    this.cargarClientes();
-  }
+  ngOnInit(): void { this.cargarClientes(); }
 
   cargarClientes() {
     this.clienteService.listarClientes().subscribe({
-      next: (data) => {
-        this.clientes = data;
-      },
-      error: () => {
-        this.mensaje = '❌ Error al cargar clientes';
-      }
+      next: data => this.clientes = data,
+      error: () => this.mensajeError = 'Error al cargar clientes'
     });
   }
 
   registrarCliente() {
-
-    const documento = this.nuevoCliente.documento.trim();
-    const nombre = this.nuevoCliente.nombre.trim();
-    const telefono = this.nuevoCliente.telefono.trim();
-
-    if (!documento || !nombre || !telefono) {
-      this.mensaje = '⚠️ Todos los campos son obligatorios';
-      return;
-    }
-
-    this.clienteService.registrarCliente({
-      documento,
-      nombre,
-      telefono
-    }).subscribe({
+    this.mensaje = '';
+    this.mensajeError = '';
+    this.clienteService.registrarCliente(this.nuevoCliente).subscribe({
       next: () => {
-
-        this.mensaje = '✅ Cliente registrado correctamente';
-
-        this.nuevoCliente = {
-          documento: '',
-          nombre: '',
-          telefono: '',
-        };
-
+        this.mensaje = 'Cliente registrado correctamente';
+        this.nuevoCliente = { documento: '', nombre: '', telefono: '' };
         this.cargarClientes();
       },
+      error: () => this.mensajeError = 'Error al registrar cliente'
+    });
+  }
 
-      error: (err) => {
+  editarCliente(c: any) {
+    this.clienteEditando = { ...c };
+  }
 
-        if (err.status === 400) {
-          this.mensaje = err.error;
-        } else {
-          this.mensaje = '❌ Error al registrar cliente';
-        }
-
+  guardarEdicion() {
+    this.mensaje = '';
+    this.mensajeError = '';
+    this.clienteService.actualizarCliente(this.clienteEditando.clienteId, this.clienteEditando).subscribe({
+      next: () => {
+        this.mensaje = 'Cliente actualizado correctamente';
+        this.clienteEditando = null;
+        this.cargarClientes();
       },
+      error: () => this.mensajeError = 'Error al actualizar cliente'
+    });
+  }
+
+  cancelarEdicion() {
+    this.clienteEditando = null;
+  }
+
+  eliminarCliente(id: number) {
+    if (!confirm('Confirmar eliminacion')) return;
+    this.clienteService.eliminarCliente(id).subscribe({
+      next: () => this.cargarClientes(),
+      error: () => this.mensajeError = 'Error al eliminar cliente'
     });
   }
 }

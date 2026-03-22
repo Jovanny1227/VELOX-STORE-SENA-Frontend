@@ -2,102 +2,126 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BicicletaService } from '../../services/bicicleta.service';
-import { Bicicleta } from '../../models/bicicleta.model';
-import { RouterModule } from '@angular/router';
+import { MovimientoService } from '../../services/movimiento.service';
+import { InventarioService } from '../../services/inventario.service';
 
 @Component({
   selector: 'app-bicicletas',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './bicicletas.component.html',
-  styleUrls: ['./bicicletas.component.css'],
+  styleUrls: ['./bicicletas.component.css']
 })
 export class BicicletasComponent implements OnInit {
-  bicicletas: Bicicleta[] = [];
 
-  nuevaBicicleta: Bicicleta = {
-    modelo: '',
-    marca: '',
-    precio: 0,
-    tipo: '',
+  bicicletas: any[] = [];
+  inventario: any[] = [];
+  proveedores: any[] = [];
+  stockInicial: number = 0;
+  proveedorSeleccionado: number | null = null;
+  mensaje = '';
+  mensajeError = '';
+  nuevaBicicleta: any = { marca: '', modelo: '', precio: 0, tipo: '' };
+
+  imagenesMap: Record<string, string> = {
+    MTB: 'assets/bikes/mtb.png',
+    RUTA: 'assets/bikes/ruta.png',
+    URBANO: 'assets/bikes/urbano.png',
+    BMX: 'assets/bikes/bmx.png'
   };
 
-  stockInicial: number = 0;
-  mensajeExito: string = '';
-  mensajeError: string = '';
-  cargando: boolean = false;
-  bicicletaBuscada: Bicicleta | null = null;
-  codigoBusqueda: string = '';
-
-  constructor(private bicicletaService: BicicletaService) {}
+  constructor(
+    private bicicletaService: BicicletaService,
+    private movimientoService: MovimientoService,
+    private inventarioService: InventarioService
+  ) {}
 
   ngOnInit(): void {
     this.cargarBicicletas();
+    this.cargarProveedores();
+    this.cargarInventario();
   }
 
-  cargarBicicletas(): void {
-    this.cargando = true;
+  cargarBicicletas() {
     this.bicicletaService.listarBicicletas().subscribe({
-      next: (data) => {
-        this.bicicletas = data;
-        this.cargando = false;
-      },
-      error: (err) => {
-        this.mensajeError = 'Error al cargar: ' + err.message;
-        this.cargando = false;
-      },
+      next: data => this.bicicletas = data,
+      error: () => this.mensajeError = 'Error al cargar bicicletas'
     });
   }
 
-  registrarBicicleta(): void {
-    this.mensajeExito = '';
+  cargarInventario() {
+    this.inventarioService.listarInventario().subscribe({
+      next: (data: any) => this.inventario = Array.isArray(data) ? data : [],
+      error: () => {}
+    });
+  }
+
+  cargarProveedores() {
+    this.movimientoService.listarProveedores().subscribe({
+      next: data => this.proveedores = Array.isArray(data) ? data : [],
+      error: () => {}
+    });
+  }
+
+  getStock(codigo: string): number {
+    const item = this.inventario.find(i => i.codigo === codigo);
+    return item ? item.stock : 0;
+  }
+
+  getValorTotal(bici: any): number {
+    return (bici.precio || 0) * this.getStock(bici.codigo);
+  }
+
+  registrarBicicleta() {
+    this.mensaje = '';
     this.mensajeError = '';
-
-    if (
-      !this.nuevaBicicleta.marca.trim() ||
-      !this.nuevaBicicleta.modelo.trim() ||
-      !this.nuevaBicicleta.tipo ||
-      this.nuevaBicicleta.precio <= 0
-    ) {
-      this.mensajeError = '⚠️ Complete todos los campos correctamente';
+    if (!this.nuevaBicicleta.marca || !this.nuevaBicicleta.modelo || !this.nuevaBicicleta.tipo || this.nuevaBicicleta.precio <= 0) {
+      this.mensajeError = 'Complete todos los campos';
       return;
     }
-
-    if (this.stockInicial < 0) {
-      this.mensajeError = '⚠️ El stock no puede ser negativo';
+    if (!this.proveedorSeleccionado) {
+      this.mensajeError = 'Seleccione un proveedor';
       return;
     }
-
     this.bicicletaService.registrarBicicleta(this.nuevaBicicleta, this.stockInicial).subscribe({
-      next: (creada) => {
-        this.mensajeExito = `✅ Bicicleta '${creada.codigo}' registrada (id=${creada.idBicicleta}).`;
+      next: (bici: any) => {
+        if (this.stockInicial > 0) {
+          const movimiento = {
+            codigoBicicleta: bici.codigo,
+            idProveedor: this.proveedorSeleccionado,
+            tipo: 'ENTRADA',
+            cantidad: this.stockInicial,
+            precioUnitario: this.nuevaBicicleta.precio,
+            observacion: 'Stock inicial'
+          };
+          this.movimientoService.registrarMovimiento(movimiento).subscribe({
+            next: () => this.cargarInventario()
+          });
+        }
+        this.mensaje = 'Bicicleta registrada correctamente';
+        this.nuevaBicicleta = { marca: '', modelo: '', precio: 0, tipo: '' };
+        this.stockInicial = 0;
+        this.proveedorSeleccionado = null;
         this.cargarBicicletas();
-        this.limpiarFormulario();
+        this.cargarInventario();
       },
-      error: (err) => {
-        this.mensajeError = '❌ ' + (err.error || err.message);
-      },
+      error: () => this.mensajeError = 'Error al registrar bicicleta'
     });
   }
 
-  buscarBicicleta(): void {
-    if (!this.codigoBusqueda.trim()) return;
-
-    this.bicicletaBuscada = null;
-    this.mensajeError = '';
-
-    this.bicicletaService.buscarPorCodigo(this.codigoBusqueda).subscribe({
-      next: (b) => {
-        this.bicicletaBuscada = b;
+  eliminarBicicleta(id: number) {
+    if (!confirm('Eliminar esta bicicleta y su inventario?')) return;
+    this.bicicletaService.eliminarBicicleta(id).subscribe({
+      next: () => {
+        this.mensaje = 'Bicicleta eliminada';
+        this.cargarBicicletas();
+        this.cargarInventario();
       },
-      error: () => {
-        this.mensajeError = `❌ No existe código '${this.codigoBusqueda}'.`;
-      },
+      error: () => this.mensajeError = 'Error al eliminar bicicleta'
     });
   }
 
-  limpiarFormulario(): void {
-    this.nuevaBicicleta = { modelo: '', marca: '', precio: 0, tipo: '' };
-    this.stockInicial = 0;
+  getImagen(tipo: string): string {
+    return this.imagenesMap[tipo] || 'assets/bikes/mtb.png';
   }
 }

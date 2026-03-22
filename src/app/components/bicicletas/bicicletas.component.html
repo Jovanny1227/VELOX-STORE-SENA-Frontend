@@ -1,125 +1,95 @@
 <section class="velox-main">
-
   <aside class="velox-sidebar">
-
-
     <div class="velox-card">
-
-      <div class="card-header-neon">
-        <span class="card-header-icon">🚴</span>
-        REGISTRAR BICICLETA
-      </div>
-
+      <div class="card-header-neon">REGISTRAR BICICLETA</div>
       <div class="card-body">
-
         <div class="field-group">
           <label class="field-label">Marca</label>
-          <input class="velox-input" [(ngModel)]="nuevaBicicleta.marca">
+          <input class="velox-input" placeholder="Ej: Trek" [(ngModel)]="nuevaBicicleta.marca">
         </div>
-
         <div class="field-group">
           <label class="field-label">Modelo</label>
-          <input class="velox-input" [(ngModel)]="nuevaBicicleta.modelo">
+          <input class="velox-input" placeholder="Ej: Marlin 5" [(ngModel)]="nuevaBicicleta.modelo">
         </div>
-
         <div class="field-group">
           <label class="field-label">Tipo</label>
-
-          <select class="velox-input" [(ngModel)]="nuevaBicicleta.tipo">
-            <option value="">Seleccione tipo</option>
+          <select class="velox-select" [(ngModel)]="nuevaBicicleta.tipo">
+            <option value="" disabled>Seleccione tipo</option>
             <option value="MTB">MTB</option>
             <option value="RUTA">Ruta</option>
             <option value="URBANO">Urbano</option>
             <option value="BMX">BMX</option>
           </select>
         </div>
-
+        <div class="field-group">
+          <label class="field-label">Proveedor</label>
+          <select class="velox-select" [(ngModel)]="proveedorSeleccionado">
+            <option [ngValue]="null" disabled>Seleccione proveedor</option>
+            <option *ngFor="let p of proveedores" [ngValue]="p.idProveedor">{{ p.nombre }}</option>
+          </select>
+          <small class="field-hint" *ngIf="proveedores.length === 0">No hay proveedores registrados</small>
+        </div>
         <div class="field-row">
-
           <div class="field-group">
-            <label class="field-label">Precio</label>
+            <label class="field-label">Precio unit.</label>
             <input type="number" class="velox-input" [(ngModel)]="nuevaBicicleta.precio">
           </div>
-
           <div class="field-group">
-            <label class="field-label">Stock Inicial</label>
+            <label class="field-label">Stock</label>
             <input type="number" class="velox-input" [(ngModel)]="stockInicial">
           </div>
-
         </div>
-
-        <button class="velox-btn-primary" (click)="registrarBicicleta()">
-          GUARDAR
-        </button>
-
+        <div class="valor-preview" *ngIf="nuevaBicicleta.precio > 0 && stockInicial > 0">
+          <span class="valor-label">Valor total entrada</span>
+          <span class="valor-num">{{ nuevaBicicleta.precio * stockInicial | currency:'COP':'symbol':'1.0-0' }}</span>
+        </div>
+        <p class="msg-exito" *ngIf="mensaje">{{ mensaje }}</p>
+        <p class="msg-error" *ngIf="mensajeError">{{ mensajeError }}</p>
+        <button class="velox-btn-primary" (click)="registrarBicicleta()">GUARDAR</button>
       </div>
-
     </div>
-
-
   </aside>
 
   <section class="velox-catalog">
-
-
     <div class="catalog-header">
-
       <div>
-        <h2 class="catalog-title">CATÁLOGO</h2>
-        <div class="catalog-sub">Listado de bicicletas</div>
+        <h2 class="catalog-title">CATALOGO</h2>
+        <p class="catalog-sub">{{ bicicletas.length }} bicicletas registradas</p>
       </div>
-
-      <button class="velox-btn-refresh" (click)="cargarBicicletas()">
-        ACTUALIZAR
-      </button>
-
+      <button class="btn-refresh" (click)="cargarBicicletas()">ACTUALIZAR</button>
     </div>
-
-    <div class="bikes-grid">
-
+    <div class="empty-state" *ngIf="bicicletas.length === 0">No hay bicicletas registradas</div>
+    <div class="catalog-grid">
       <div class="bike-card" *ngFor="let b of bicicletas">
-
         <div class="bike-card-top">
-
-      <span class="bike-type-badge badge-mtb">
-        {{b.tipo}}
-      </span>
-
-          <span class="bike-id">
-        #{{b.idBicicleta}}
-      </span>
-
+          <span class="tipo-badge tipo-{{b.tipo?.toLowerCase()}}">{{ b.tipo }}</span>
+          <span class="bike-cod">{{ b.codigo }}</span>
         </div>
-
         <div class="bike-img-wrap">
-          <img [src]="'assets/bikes/' + b.tipo.toLowerCase() + '.png'" class="bike-img">
+          <img [src]="getImagen(b.tipo)" [alt]="b.tipo" class="bike-img" />
         </div>
-
         <div class="bike-info">
-
-          <div class="bike-name">
-            {{b.marca}}
+          <span class="bike-marca">{{ b.marca }}</span>
+          <span class="bike-modelo">{{ b.modelo }}</span>
+          <div class="bike-precios">
+            <div class="precio-row">
+              <span class="precio-label">Precio unit.</span>
+              <span class="bike-precio">{{ b.precio | currency:'COP':'symbol':'1.0-0' }}</span>
+            </div>
+            <div class="precio-row">
+              <span class="precio-label">Stock actual</span>
+              <span class="stock-badge" [class.bajo]="getStock(b.codigo) <= 3">{{ getStock(b.codigo) }}</span>
+            </div>
+            <div class="precio-row">
+              <span class="precio-label">Valor total</span>
+              <span class="valor-total">{{ getValorTotal(b) | currency:'COP':'symbol':'1.0-0' }}</span>
+            </div>
           </div>
-
-          <div class="bike-model">
-            {{b.modelo}}
-          </div>
-
-          <div class="bike-code">
-            {{b.codigo}}
-          </div>
-
-          <div class="bike-price">
-            ${{b.precio}}
-          </div>
-
         </div>
-
+        <div class="bike-actions">
+          <button class="btn-delete-card" (click)="eliminarBicicleta(b.idBicicleta)">Eliminar</button>
+        </div>
       </div>
-
     </div>
-
-
   </section>
-
 </section>
