@@ -32,7 +32,9 @@ export class BicicletaListComponent {
   }
 
   getImagen(tipo: string): string {
-    return this.imagenesMap[tipo] || 'assets/bikes/mtb.png';
+    // El .toUpperCase() asegura que 'mtb' o 'Mtb' se conviertan en 'MTB'
+    if (!tipo) return 'assets/bikes/mtb.png';
+    return this.imagenesMap[tipo.toUpperCase()] || 'assets/bikes/mtb.png';
   }
 
   eliminar(id: number) {
