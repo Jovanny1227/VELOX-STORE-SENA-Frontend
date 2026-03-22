@@ -1,23 +1,21 @@
-<table class="velox-table" *ngIf="inventario.length">
+<table class="velox-table">
   <thead>
   <tr>
-    <th>Código</th>
-    <th>Bicicleta</th>
-    <th>Stock Actual</th>
-    <th>Precio Unit.</th>
-    <th>Valor Total</th>
+    <th>BICICLETA</th>
+    <th>EXISTENCIAS</th>
+    <th>UBICACIÓN</th>
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let i of inventario">
-    <td><span class="id-badge">{{ i.codigo }}</span></td>
-    <td>{{ i.bicicleta }}</td>
+  <tr *ngFor="let item of inventario">
     <td>
-      <span class="stock-badge" [class.bajo]="i.stock <= 3">{{ i.stock }}</span>
+      <strong>{{ item.marca || item.bicicleta?.marca || 'Bicicleta' }}</strong>
+      {{ item.modelo || item.bicicleta?.modelo || item.codigo || item.id_bicicleta }}
     </td>
-    <td>{{ i.precioUnitario | currency:'COP':'symbol':'1.0-0' }}</td>
-    <td><strong class="text-neon">{{ i.valorTotal | currency:'COP':'symbol':'1.0-0' }}</strong></td>
+    <td class="existencias-cell">
+      {{ item.stock ?? item.cantidadDisponible ?? item.cantidad_disponible ?? '0' }}
+    </td>
+    <td>{{ item.ubicacion || 'Bodega Principal' }}</td>
   </tr>
   </tbody>
 </table>
-<div class="empty-state" *ngIf="!inventario.length">El inventario está vacío</div>

@@ -10,4 +10,7 @@ import { CommonModule } from '@angular/common';
 })
 export class InventarioListComponent {
   @Input() inventario: any[] = [];
+  // Aunque ya no lo usemos tanto aquí (porque lo separamos en el padre),
+  // es bueno dejarlo por si necesitas mostrarlo todo junto
+  @Input() movimientos: any[] = [];
 }

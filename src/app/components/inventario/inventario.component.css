@@ -1,15 +1,59 @@
-.inventario-container { padding: 40px; color: #fff; }
-.inventario-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-.inventario-header h2 { font-size: 1.8rem; font-family: "Orbitron", sans-serif; color: #00e5ff; margin: 0; }
-.header-actions { display: flex; gap: 10px; align-items: center; }
-.btn-tab { background: #0d2137; color: #7a9ab8; border: 1px solid #1a2e45; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
-.btn-tab.active { background: #00e5ff22; color: #00e5ff; border-color: #00e5ff44; }
-.btn-refresh { background: #00e5ff; color: #000; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-.btn-refresh:hover { background: #00b8d4; }
-.estado-msg { color: #aaa; margin-bottom: 16px; }
-.estado-error { color: #ef5350; margin-bottom: 16px; }
-.stats-row { display: flex; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
-.stat-card { background: #0d2137; border: 1px solid #1a2e45; border-radius: 10px; padding: 16px 24px; display: flex; flex-direction: column; align-items: center; min-width: 110px; }
-.stat-value { font-size: 1.6rem; font-weight: bold; color: #00e5ff; }
-.stat-value.green { color: #69f0ae; font-size: 1.1rem; }
-.stat-label { font-size: 0.72rem; color: #7a9ab8; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+.resumen-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+}
+
+.card-neon {
+  background: #0a1929;
+  border: 1px solid #00e5ff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.big-number {
+  font-size: 3rem;
+  color: #00e5ff;
+  font-weight: bold;
+  text-shadow: 0 0 10px #00e5ff;
+}
+
+.types-list {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.type-item {
+  background: rgba(0, 229, 255, 0.1);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.historial-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.history-column {
+  background: rgba(13, 33, 55, 0.9);
+  padding: 15px;
+  border-radius: 8px;
+  border-top: 3px solid #00e5ff;
+}
+
+.mini-table {
+  width: 100%;
+  color: white;
+  font-size: 0.9rem;
+}
+
+.text-success { color: #00ff88; }
+.text-danger { color: #ff4d4d; }
+
+.scroll-table {
+  max-height: 300px;
+  overflow-y: auto;
+}

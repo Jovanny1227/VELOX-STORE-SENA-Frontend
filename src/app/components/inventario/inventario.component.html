@@ -1,7 +1,54 @@
 <div class="inventario-container">
-  <div class="section-header">
-    <h2>Control de Inventario Real</h2>
-    <span class="badge-count">{{ inventario.length }} productos</span>
+
+  <div class="resumen-grid">
+    <div class="card-neon">
+      <h4>Total en Bodega</h4>
+      <p class="big-number">{{ totalExistencias }}</p>
+    </div>
+
+    <div class="card-neon">
+      <h4>Stock por Categoría</h4>
+      <div class="categorias-flex">
+        <div *ngFor="let cat of stockPorTipo | keyvalue" class="cat-item">
+          <span>{{ cat.key }}:</span>
+          <strong>{{ cat.value }}</strong>
+        </div>
+      </div>
+    </div>
   </div>
-  <app-inventario-list [inventario]="inventario"></app-inventario-list>
+
+  <div class="section-card mt-4">
+    <h3>Inventario Detallado</h3>
+    <app-inventario-list [inventario]="inventario"></app-inventario-list>
+  </div>
+
+  <div class="historial-grid mt-4">
+    <div class="history-col entries">
+      <h3 class="text-success">↓ Entradas</h3>
+      <table class="mini-table">
+        <tr *ngFor="let e of getEntradas()">
+          <td>{{ e.fecha | date:'dd/MM' }}</td>
+          <td class="text-success">+{{ e.cantidad }}</td>
+          <td>{{ e.observacion || e.bicicleta?.marca || e.codigoBicicleta || 'Ingreso de Stock' }}</td>
+        </tr>
+      </table>
+      <div *ngIf="getEntradas().length === 0" style="color:#7a9ab8; font-size: 0.8rem; margin-top: 10px;">
+        No hay entradas registradas.
+      </div>
+    </div>
+
+    <div class="history-col exits">
+      <h3 class="text-danger">↑ Salidas</h3>
+      <table class="mini-table">
+        <tr *ngFor="let s of getSalidas()">
+          <td>{{ s.fecha | date:'dd/MM' }}</td>
+          <td class="text-danger">-{{ s.cantidad }}</td>
+          <td>{{ s.observacion }}</td>
+        </tr>
+      </table>
+      <div *ngIf="getSalidas().length === 0" style="color:#7a9ab8; font-size: 0.8rem; margin-top: 10px;">
+        No hay salidas registradas.
+      </div>
+    </div>
+  </div>
 </div>
