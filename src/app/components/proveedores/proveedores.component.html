@@ -1,94 +1,27 @@
 <div class="proveedores-container">
-
   <div class="section-header">
-    <h2>Proveedores</h2>
+    <h2>Gestión de Proveedores</h2>
   </div>
 
   <div class="layout-grid">
+    <aside>
+      <app-proveedor-form
+        [mensaje]="mensaje"
+        [mensajeError]="mensajeError"
+        (onRegistrar)="registrarProveedor($event)">
+      </app-proveedor-form>
+    </aside>
 
-    <div class="form-card">
-      <div class="card-header">REGISTRAR PROVEEDOR</div>
-      <div class="card-body">
-        <div class="field-group">
-          <label>Nombre</label>
-          <input class="velox-input" placeholder="Nombre del proveedor" [(ngModel)]="nuevoProveedor.nombre" />
-        </div>
-        <div class="field-group">
-          <label>NIT</label>
-          <input class="velox-input" placeholder="NIT o identificacion" [(ngModel)]="nuevoProveedor.nit" />
-        </div>
-        <div class="field-group">
-          <label>Telefono</label>
-          <input class="velox-input" placeholder="Numero de telefono" [(ngModel)]="nuevoProveedor.telefono" />
-        </div>
-        <div class="field-group">
-          <label>Email</label>
-          <input class="velox-input" placeholder="Correo electronico" [(ngModel)]="nuevoProveedor.email" />
-        </div>
-        <p class="msg-exito" *ngIf="mensaje">{{ mensaje }}</p>
-        <p class="msg-error" *ngIf="mensajeError">{{ mensajeError }}</p>
-        <button class="btn-primary" (click)="registrarProveedor()">REGISTRAR</button>
-      </div>
-    </div>
-
-    <div class="lista-section">
+    <section class="lista-section">
       <div class="section-sub-header">
-        <span>Lista de Proveedores</span>
+        <span>PROVEEDORES REGISTRADOS </span>
         <span class="badge-count">{{ proveedores.length }}</span>
       </div>
 
-      <div class="empty-state" *ngIf="!proveedores.length">No hay proveedores registrados</div>
-
-      <div class="proveedor-card" *ngFor="let p of proveedores"
-           [class.activo]="proveedorSeleccionado?.idProveedor === p.idProveedor"
-           (click)="seleccionarProveedor(p)">
-        <div class="proveedor-top">
-          <div class="proveedor-info">
-            <span class="proveedor-nombre">{{ p.nombre }}</span>
-            <span class="proveedor-nit">NIT: {{ p.nit || 'N/A' }}</span>
-          </div>
-          <div class="proveedor-stats">
-            <div class="stat">
-              <span class="stat-val">{{ getTotalEntradas(p.idProveedor) }}</span>
-              <span class="stat-lbl">Unidades</span>
-            </div>
-            <div class="stat">
-              <span class="stat-val green">{{ getTotalValor(p.idProveedor) | currency:'COP':'symbol':'1.0-0' }}</span>
-              <span class="stat-lbl">Total valor</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="movimientos-lista" *ngIf="proveedorSeleccionado?.idProveedor === p.idProveedor">
-          <div class="mov-header">Detalle de entradas</div>
-          <table class="mov-table" *ngIf="getMovimientosProveedor(p.idProveedor).length">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Bicicleta</th>
-                <th>Cantidad</th>
-                <th>Precio unit.</th>
-                <th>Subtotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let m of getMovimientosProveedor(p.idProveedor)">
-                <td>{{ m.fecha | date:'dd/MM/yyyy' }}</td>
-                <td>{{ m.bicicleta?.marca }} {{ m.bicicleta?.modelo }}</td>
-                <td><span class="qty-badge">{{ m.cantidad }}</span></td>
-                <td>{{ m.precioUnitario | currency:'COP':'symbol':'1.0-0' }}</td>
-                <td>{{ m.cantidad * m.precioUnitario | currency:'COP':'symbol':'1.0-0' }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="empty-state-sm" *ngIf="!getMovimientosProveedor(p.idProveedor).length">
-            Sin entradas registradas
-          </div>
-        </div>
-
-      </div>
-    </div>
-
+      <app-proveedor-list
+        [proveedores]="proveedores"
+        (onEliminar)="eliminarProveedor($event)">
+      </app-proveedor-list>
+    </section>
   </div>
-
 </div>

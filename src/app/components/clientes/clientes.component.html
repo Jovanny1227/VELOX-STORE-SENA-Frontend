@@ -1,80 +1,23 @@
 <div class="clientes-container">
-  <div class="section-header">
-    <h2>Registro de Clientes</h2>
-  </div>
+  <div class="section-header"><h2>Registro de Clientes</h2></div>
 
-  <div class="form-card">
-    <div class="form-row">
-      <div class="field-group">
-        <label>Documento</label>
-        <input class="velox-input" placeholder="Numero de documento" [(ngModel)]="nuevoCliente.documento" />
-      </div>
-      <div class="field-group">
-        <label>Nombre</label>
-        <input class="velox-input" placeholder="Nombre completo" [(ngModel)]="nuevoCliente.nombre" />
-      </div>
-      <div class="field-group">
-        <label>Telefono</label>
-        <input class="velox-input" placeholder="Numero de telefono" [(ngModel)]="nuevoCliente.telefono" />
-      </div>
-      <button class="btn-primary" (click)="registrarCliente()"
-        [disabled]="!nuevoCliente.documento || !nuevoCliente.nombre || !nuevoCliente.telefono">
-        Registrar
-      </button>
-    </div>
-    <p class="msg-exito" *ngIf="mensaje">{{ mensaje }}</p>
-    <p class="msg-error" *ngIf="mensajeError">{{ mensajeError }}</p>
-  </div>
-
-  <div class="modal-overlay" *ngIf="clienteEditando">
-    <div class="modal-card">
-      <h3>Editar Cliente</h3>
-      <div class="field-group">
-        <label>Documento</label>
-        <input class="velox-input" [(ngModel)]="clienteEditando.documento" />
-      </div>
-      <div class="field-group" style="margin-top:12px">
-        <label>Nombre</label>
-        <input class="velox-input" [(ngModel)]="clienteEditando.nombre" />
-      </div>
-      <div class="field-group" style="margin-top:12px">
-        <label>Telefono</label>
-        <input class="velox-input" [(ngModel)]="clienteEditando.telefono" />
-      </div>
-      <div class="modal-actions">
-        <button class="btn-primary" (click)="guardarEdicion()">Guardar</button>
-        <button class="btn-cancel" (click)="cancelarEdicion()">Cancelar</button>
-      </div>
-    </div>
-  </div>
+  <app-cliente-form
+    [clienteEditando]="clienteEditando"
+    [mensaje]="mensaje"
+    [mensajeError]="mensajeError"
+    (onRegistrar)="registrarCliente($event)"
+    (onGuardarEdicion)="actualizarCliente($event)"
+    (onCancelarEdicion)="clienteEditando = null">
+  </app-cliente-form>
 
   <div class="section-header" style="margin-top:32px">
     <h2>Lista de Clientes</h2>
     <span class="badge-count">{{ clientes.length }}</span>
   </div>
 
-  <table class="velox-table" *ngIf="clientes.length">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Documento</th>
-        <th>Nombre</th>
-        <th>Telefono</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let c of clientes">
-        <td><span class="id-badge">{{ c.clienteId }}</span></td>
-        <td>{{ c.documento }}</td>
-        <td>{{ c.nombre }}</td>
-        <td>{{ c.telefono }}</td>
-        <td class="acciones">
-          <button class="btn-edit" (click)="editarCliente(c)">Editar</button>
-          <button class="btn-delete" (click)="eliminarCliente(c.clienteId)">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="empty-state" *ngIf="!clientes.length">No hay clientes registrados</div>
+  <app-cliente-list
+    [clientes]="clientes"
+    (onEditar)="clienteEditando = $event"
+    (onEliminar)="eliminarCliente($event)">
+  </app-cliente-list>
 </div>

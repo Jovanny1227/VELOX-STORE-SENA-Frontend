@@ -1,0 +1,11 @@
+.velox-table { width: 100%; border-collapse: collapse; }
+.velox-table thead tr { background: #0d2137; color: #00e5ff; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+.velox-table th, .velox-table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #1a2e45; }
+.velox-table tbody tr:hover { background: #0d2137; }
+
+.id-badge { background: #0a1929; color: #00e5ff; padding: 3px 10px; border-radius: 4px; font-family: monospace; border: 1px solid #1a2e45; }
+.empty-state { text-align: center; color: #aaa; padding: 60px; }
+
+/* Estilo para el botón de eliminar que estaba en tu HTML original */
+.btn-delete { background: #ef535022; color: #ef5350; border: 1px solid #ef535044; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+.btn-delete:hover { background: #ef5350; color: #fff; }
