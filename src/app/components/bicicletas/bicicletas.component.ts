@@ -59,35 +59,25 @@ export class BicicletasComponent implements OnInit {
   }
 
   // Este método recibe los datos que emite el formulario hijo
-  procesarRegistro(datos: any) {
+procesarRegistro(datos: any) {
     this.mensaje = '';
     this.mensajeError = '';
 
     this.bicicletaService.registrarBicicleta(datos.bicicleta, datos.stock).subscribe({
       next: (bici: any) => {
-        if (datos.stock > 0) {
-          const movimiento = {
-            codigoBicicleta: bici.codigo,
-            idProveedor: datos.idProveedor,
-            tipo: 'ENTRADA',
-            cantidad: datos.stock,
-            precioUnitario: datos.bicicleta.precio,
-            observacion: 'Stock inicial',
-          };
-          this.movimientoService.registrarMovimiento(movimiento).subscribe({
-            next: () => this.cargarInventario(),
-          });
-        }
+        // ELIMINAMOS EL BLOQUE QUE LLAMABA A this.movimientoService.registrarMovimiento(...)
+        // porque el backend ya lo hace automáticamente al registrar la bicicleta.
+
         this.mensaje = 'Bicicleta registrada correctamente';
         this.cargarBicicletas();
-        this.cargarInventario();
+        this.cargarInventario(); // Recargamos para ver el stock real
       },
       error: () => (this.mensajeError = 'Error al registrar bicicleta'),
     });
   }
 
   // Este método recibe el ID que emite la lista hija
-  procesarEliminacion(id: number) {
+procesarEliminacion(id: number) {
     this.mensaje = '';
     this.mensajeError = '';
 
@@ -97,7 +87,19 @@ export class BicicletasComponent implements OnInit {
         this.cargarBicicletas();
         this.cargarInventario();
       },
-      error: () => (this.mensajeError = 'Error al eliminar bicicleta'),
+      error: (err) => {
+        // ESTO ES CLAVE: Leer el mensaje de error que manda Spring Boot
+        console.error("Error completo del backend:", err);
+
+        // Si el backend manda un mensaje en err.error.message o err.error
+        if (err.error && typeof err.error === 'string') {
+           this.mensajeError = err.error;
+        } else if (err.error && err.error.message) {
+           this.mensajeError = err.error.message;
+        } else {
+           this.mensajeError = 'Error al eliminar bicicleta. Revisa la consola (F12).';
+        }
+      }
     });
   }
 }

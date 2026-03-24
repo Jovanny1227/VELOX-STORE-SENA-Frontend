@@ -35,6 +35,9 @@ export class BicicletaFormComponent {
       return;
     }
 
+
+    this.nuevaBicicleta.proveedorId = this.proveedorSeleccionado;
+
     // Emitimos los datos al padre para que él se comunique con el backend
     this.onRegistrar.emit({
       bicicleta: this.nuevaBicicleta,

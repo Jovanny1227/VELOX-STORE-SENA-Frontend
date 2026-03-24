@@ -27,7 +27,7 @@ export class VentaFormComponent {
   enviar() {
     this.onRegistrarVenta.emit({
       clienteId: this.clienteSeleccionado,
-      codigoBici: this.bicicletaSeleccionada,
+      codigoBicicleta: this.bicicletaSeleccionada,
       cantidad: this.cantidad,
     });
     // Reset local

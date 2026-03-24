@@ -11,7 +11,7 @@
   <tbody>
   <tr *ngFor="let v of ventas">
     <td><span class="id-badge">{{ v.idVenta }}</span></td>
-    <td>{{ v.cliente?.nombre }}</td>
+    <td>{{ v.nombreCliente }}</td>
     <td>{{ v.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
     <td>{{ v.total | currency:'COP':'symbol':'1.0-0' }}</td>
     <td><button class="btn-delete" (click)="onEliminar.emit(v.idVenta!)">Eliminar</button></td>

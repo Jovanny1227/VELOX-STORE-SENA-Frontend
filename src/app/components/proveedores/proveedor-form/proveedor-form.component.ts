@@ -14,7 +14,7 @@ export class ProveedorFormComponent {
   @Input() mensajeError: string = '';
   @Output() onRegistrar = new EventEmitter<any>();
 
-  nuevoProveedor = { nombre: '', contacto: '', direccion: '' };
+  nuevoProveedor = { nombre: '', nit: '', telefono: '', email: '' };
 
   enviar() {
     this.onRegistrar.emit(this.nuevoProveedor);
@@ -22,3 +22,4 @@ export class ProveedorFormComponent {
     this.nuevoProveedor = { nombre: '', contacto: '', direccion: '' };
   }
 }
+

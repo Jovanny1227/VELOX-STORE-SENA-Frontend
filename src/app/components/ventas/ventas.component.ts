@@ -38,21 +38,34 @@ export class VentasComponent implements OnInit {
   }
 
   procesarVenta(datos: any) {
-    this.cargando = true;
-    this.mensajeExito = '';
-    this.mensajeError = '';
-    this.ventaService.registrarVenta(datos.clienteId, datos.codigoBici, datos.cantidad).subscribe({
-      next: () => {
-        this.mensajeExito = 'Venta registrada correctamente';
-        this.cargando = false;
-        this.cargarDatos();
-      },
-      error: (err) => {
-        this.mensajeError = err.error || 'Error al registrar venta';
-        this.cargando = false;
-      },
-    });
-  }
+      // Evita enviar si ya está cargando
+      if (this.cargando) return;
+
+      this.cargando = true;
+      this.mensajeExito = '';
+      this.mensajeError = '';
+
+      // Usa datos.codigoBicicleta
+      this.ventaService.registrarVenta(datos.clienteId, datos.codigoBicicleta, datos.cantidad).subscribe({
+        next: () => {
+          this.mensajeExito = 'Venta registrada correctamente';
+          this.cargando = false;
+          this.cargarDatos(); // Esto recargará las listas
+        },
+        error: (err) => {
+          // Mejoramos la captura del error para depurar
+          console.error("Error al vender:", err);
+          if (typeof err.error === 'string') {
+             this.mensajeError = err.error;
+          } else if (err.error && err.error.message) {
+             this.mensajeError = err.error.message;
+          } else {
+             this.mensajeError = 'Error al registrar venta';
+          }
+          this.cargando = false;
+        },
+      });
+    }
 
   eliminarVenta(id: number) {
     if (!confirm('¿Eliminar esta venta?')) return;
