@@ -29,3 +29,17 @@
 .bike-actions { padding: 10px 14px; border-top: 1px solid #1a2e45; }
 .btn-delete-card { background: #3a1a1a; color: #ef5350; border: 1px solid #ef535044; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; width: 100%; }
 .btn-delete-card:hover { background: #ef5350; color: #fff; }
+
+.filtros-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.filtro-texto {
+  flex: 1;
+  min-width: 200px;
+}
+.filtro-tipo {
+  min-width: 160px;
+}

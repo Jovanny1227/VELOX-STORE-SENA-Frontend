@@ -1,13 +1,28 @@
-<div class="catalog-header">
+﻿<div class="catalog-header">
   <div>
     <h2 class="catalog-title">CATALOGO</h2>
-    <p class="catalog-sub">{{ bicicletas.length }} bicicletas registradas</p>
+    <p class="catalog-sub">{{ bicicletasFiltradas().length }} bicicletas encontradas</p>
   </div>
   <button class="btn-refresh" (click)="actualizar()">ACTUALIZAR</button>
 </div>
-<div class="empty-state" *ngIf="bicicletas.length === 0">No hay bicicletas registradas</div>
+
+<!-- FILTROS -->
+<div class="filtros-bar">
+  <input class="velox-input filtro-texto" type="text" placeholder="Buscar por marca o modelo..."
+         [(ngModel)]="filtroTexto" />
+  <select class="velox-input filtro-tipo" [(ngModel)]="filtroTipo">
+    <option value="">Todos los tipos</option>
+    <option value="MTB">MTB</option>
+    <option value="RUTA">RUTA</option>
+    <option value="URBANO">URBANO</option>
+    <option value="BMX">BMX</option>
+  </select>
+</div>
+
+<div class="empty-state" *ngIf="bicicletasFiltradas().length === 0">No hay bicicletas que coincidan con la busqueda</div>
+
 <div class="catalog-grid">
-  <div class="bike-card" *ngFor="let b of bicicletas">
+  <div class="bike-card" *ngFor="let b of bicicletasFiltradas()">
     <div class="bike-card-top">
       <span class="tipo-badge tipo-{{b.tipo?.toLowerCase()}}">{{ b.tipo }}</span>
       <span class="bike-cod">{{ b.codigo }}</span>

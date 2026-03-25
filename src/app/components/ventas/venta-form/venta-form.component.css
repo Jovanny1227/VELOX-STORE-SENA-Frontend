@@ -125,3 +125,62 @@
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+.carrito-section {
+  margin-top: 1.5rem;
+  border: 1px solid #2a2a3a;
+  border-radius: 10px;
+  padding: 1rem;
+  background: #0f0f1a;
+}
+.carrito-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #a78bfa;
+  margin-bottom: 0.75rem;
+}
+.carrito-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.carrito-tabla th {
+  text-align: left;
+  padding: 6px 10px;
+  color: #7c7c9a;
+  border-bottom: 1px solid #2a2a3a;
+}
+.carrito-tabla td {
+  padding: 6px 10px;
+  color: #e2e2f0;
+  border-bottom: 1px solid #1a1a2e;
+}
+.btn-quitar {
+  background: #3b0764;
+  color: #f0abfc;
+  border: none;
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.btn-quitar:hover { background: #7e22ce; }
+.carrito-total {
+  text-align: right;
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  color: #a78bfa;
+}
+.btn-secondary {
+  background: #1e1b4b;
+  color: #a78bfa;
+  border: 1px solid #4c1d95;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+  width: 100%;
+}
+.btn-secondary:hover { background: #312e81; }
+.btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
