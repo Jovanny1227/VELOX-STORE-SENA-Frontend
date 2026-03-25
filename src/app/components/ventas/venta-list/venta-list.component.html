@@ -1,21 +1,29 @@
-<table class="velox-table" *ngIf="ventas.length">
-  <thead>
-  <tr>
-    <th>ID</th>
-    <th>Cliente</th>
-    <th>Fecha</th>
-    <th>Total</th>
-    <th>Acciones</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let v of ventas">
-    <td><span class="id-badge">{{ v.idVenta }}</span></td>
-    <td>{{ v.nombreCliente }}</td>
-    <td>{{ v.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
-    <td>{{ v.total | currency:'COP':'symbol':'1.0-0' }}</td>
-    <td><button class="btn-delete" (click)="onEliminar.emit(v.idVenta!)">Eliminar</button></td>
-  </tr>
-  </tbody>
-</table>
-<div class="empty-state" *ngIf="!ventas.length">No hay ventas registradas</div>
+<div class="ventas-cards-container" *ngIf="ventas.length">
+  <div class="venta-card" *ngFor="let v of ventas">
+
+    <div class="venta-top">
+      <div class="venta-info">
+        <h3 class="venta-cliente">{{ v.nombreCliente }}</h3>
+        <span class="venta-fecha">{{ v.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <button class="btn-delete" (click)="onEliminar.emit(v.idVenta!)">Eliminar</button>
+    </div>
+
+    <div class="detalles-lista">
+      <div class="detalle-header">Resumen de Transacción</div>
+
+      <div class="detalle-item icon-id">
+        <span><strong>ID de Venta:</strong> <span class="id-badge">{{ v.idVenta }}</span></span>
+      </div>
+
+      <div class="detalle-item icon-money">
+        <span><strong>Total Cobrado:</strong> <span class="total-verde">{{ v.total | currency:'COP':'symbol':'1.0-0' }}</span></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="empty-state" *ngIf="!ventas.length">
+  No hay ventas registradas
+</div>

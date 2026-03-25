@@ -1,4 +1,4 @@
-<table class="velox-table" *ngIf="inventario.length">
+<table class="velox-table" *ngIf="inventario && inventario.length > 0">
   <thead>
   <tr>
     <th>Código</th>
@@ -11,13 +11,18 @@
   <tbody>
   <tr *ngFor="let i of inventario">
     <td><span class="id-badge">{{ i.codigo }}</span></td>
-    <td>{{ i.bicicleta }}</td>
+
+    <td>{{ i.marca }} {{ i.modelo }}</td>
+
     <td>
       <span class="stock-badge" [class.bajo]="i.stock <= 3">{{ i.stock }}</span>
     </td>
-    <td>{{ i.precioUnitario | currency:'COP':'symbol':'1.0-0' }}</td>
-    <td><strong class="text-neon">{{ i.valorTotal | currency:'COP':'symbol':'1.0-0' }}</strong></td>
+
+    <td>{{ i.precio | currency:'COP':'symbol':'1.0-0' }}</td>
+
+    <td><strong class="text-neon">{{ (i.precio * i.stock) | currency:'COP':'symbol':'1.0-0' }}</strong></td>
   </tr>
   </tbody>
 </table>
-<div class="empty-state" *ngIf="!inventario.length">El inventario está vacío</div>
+
+<div class="empty-state" *ngIf="!inventario || inventario.length === 0">El inventario está vacío</div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BicicletaService } from '../../services/bicicleta.service';
 import { MovimientoService } from '../../services/movimiento.service';
@@ -25,6 +25,7 @@ export class BicicletasComponent implements OnInit {
     private bicicletaService: BicicletaService,
     private movimientoService: MovimientoService,
     private inventarioService: InventarioService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -39,8 +40,11 @@ export class BicicletasComponent implements OnInit {
 
   cargarBicicletas() {
     this.bicicletaService.listarBicicletas().subscribe({
-      next: (data) => (this.bicicletas = data),
-      error: () => (this.mensajeError = 'Error al cargar bicicletas'),
+      next: (data) => {
+        this.bicicletas = data;
+        this.cdr.detectChanges(); // <-- ¡La magia ocurre aquí!
+      },
+      error: () => (this.mensajeError = 'Error al cargar las bicicletas'),
     });
   }
 
@@ -59,7 +63,7 @@ export class BicicletasComponent implements OnInit {
   }
 
   // Este método recibe los datos que emite el formulario hijo
-procesarRegistro(datos: any) {
+  procesarRegistro(datos: any) {
     this.mensaje = '';
     this.mensajeError = '';
 
@@ -77,7 +81,7 @@ procesarRegistro(datos: any) {
   }
 
   // Este método recibe el ID que emite la lista hija
-procesarEliminacion(id: number) {
+  procesarEliminacion(id: number) {
     this.mensaje = '';
     this.mensajeError = '';
 
@@ -89,17 +93,17 @@ procesarEliminacion(id: number) {
       },
       error: (err) => {
         // ESTO ES CLAVE: Leer el mensaje de error que manda Spring Boot
-        console.error("Error completo del backend:", err);
+        console.error('Error completo del backend:', err);
 
         // Si el backend manda un mensaje en err.error.message o err.error
         if (err.error && typeof err.error === 'string') {
-           this.mensajeError = err.error;
+          this.mensajeError = err.error;
         } else if (err.error && err.error.message) {
-           this.mensajeError = err.error.message;
+          this.mensajeError = err.error.message;
         } else {
-           this.mensajeError = 'Error al eliminar bicicleta. Revisa la consola (F12).';
+          this.mensajeError = 'Error al eliminar bicicleta. Revisa la consola (F12).';
         }
-      }
+      },
     });
   }
 }

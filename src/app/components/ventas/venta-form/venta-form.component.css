@@ -1,15 +1,127 @@
-.form-card { background: #0d2137; border: 1px solid #1a2e45; border-radius: 12px; padding: 24px; }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr 200px; gap: 16px; margin-bottom: 20px; }
-.field-group { display: flex; flex-direction: column; gap: 6px; }
-.field-group label { font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+/* Contenedor principal: Estilo oscuro y estirado */
+.form-card {
+  max-width: 1000px; /* Lo hacemos ancho para que se vea estirado */
+  margin: 0 auto 40px auto;
+  background: linear-gradient(145deg, #1f2838, #131926);
+  border: 1px solid rgba(0, 210, 255, 0.4); /* Borde cyan neón */
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.15);
+  animation: fadeIn 0.5s ease-in-out;
+}
 
-.velox-input { background: #0a1929; border: 1px solid #1a2e45; color: #fff; padding: 10px 14px; border-radius: 8px; font-size: 0.95rem; outline: none; width: 100%; box-sizing: border-box; }
-.velox-input option { background: #0a1929; color: #fff; }
-.velox-input:focus { border-color: #00e5ff; }
+/* La rejilla interna: Ponemos los campos uno al lado del otro */
+.form-grid {
+  display: grid;
+  /* Dos columnas para estirar el formulario horizontalmente */
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 25px;
+}
 
-.btn-primary { background: #00e5ff; color: #000; border: none; padding: 12px 32px; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; width: 100%; }
-.btn-primary:hover { background: #00b8d4; }
-.btn-primary:disabled { background: #444; color: #888; cursor: not-allowed; }
+/* Grupos de campos */
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
-.msg-exito { color: #69f0ae; margin-top: 12px; font-size: 0.9rem; }
-.msg-error { color: #ef5350; margin-top: 12px; font-size: 0.9rem; }
+/* El campo de Cantidad lo haremos ocupar toda la fila para que no quede un hueco */
+.field-group:last-child {
+  grid-column: span 2;
+}
+
+/* Labels elegantes */
+.field-group label {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Inputs y Selects: Fondo oscuro y texto claro */
+.velox-input {
+  background: #0b1120;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 12px 15px;
+  color: #f1f5f9;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Efecto al hacer clic en los campos */
+.velox-input:focus {
+  border-color: #00d2ff;
+  box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+  background: #111827;
+}
+
+/* Botón de Registrar Venta: Verde Neón */
+.btn-primary {
+  width: 100%; /* Botón estirado a todo lo ancho */
+  background: transparent;
+  color: #4ade80; /* Verde brillante */
+  border: 1px solid #4ade80;
+  padding: 15px;
+  border-radius: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: rgba(74, 222, 128, 0.1);
+  box-shadow: 0 0 20px rgba(74, 222, 128, 0.2);
+  transform: translateY(-2px);
+}
+
+.btn-primary:disabled {
+  border-color: #334155;
+  color: #475569;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Mensajes de éxito y error */
+.msg-exito {
+  color: #4ade80;
+  text-align: center;
+  font-weight: 600;
+  margin-top: 15px;
+  padding: 10px;
+  background: rgba(74, 222, 128, 0.05);
+  border-radius: 6px;
+}
+
+.msg-error {
+  color: #f87171;
+  text-align: center;
+  font-weight: 600;
+  margin-top: 15px;
+  padding: 10px;
+  background: rgba(248, 113, 113, 0.05);
+  border-radius: 6px;
+}
+
+/* Responsive: si la pantalla es muy pequeña, vuelve a una columna */
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .field-group:last-child {
+    grid-column: span 1;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

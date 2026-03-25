@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClienteService } from '../../services/cliente.service'; //
 import { Cliente } from '../../models/cliente.model'; //
@@ -18,7 +18,9 @@ export class ClientesComponent implements OnInit {
   mensaje = '';
   mensajeError = '';
 
-  constructor(private clienteService: ClienteService) {}
+  constructor(private clienteService: ClienteService,
+  private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.cargarClientes();
@@ -26,8 +28,14 @@ export class ClientesComponent implements OnInit {
 
   cargarClientes() {
     this.clienteService.listarClientes().subscribe({
-      next: (data) => (this.clientes = data),
-      error: () => (this.mensajeError = 'Error al cargar clientes'),
+      next: (data) => {
+        // Guardamos los datos
+        this.clientes = data;
+
+        // ¡Despertamos a Angular para que dibuje al instante!
+        this.cdr.detectChanges();
+      },
+      error: () => (this.mensajeError = 'Error al cargar los clientes')
     });
   }
 

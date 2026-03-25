@@ -19,7 +19,7 @@ export class ProveedorFormComponent {
   enviar() {
     this.onRegistrar.emit(this.nuevoProveedor);
     // Limpiar el formulario localmente
-    this.nuevoProveedor = { nombre: '', contacto: '', direccion: '' };
+    this.nuevoProveedor = { nombre: '', nit: '', telefono: '', email: '' };
   }
 }
 
