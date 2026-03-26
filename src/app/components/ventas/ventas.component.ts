@@ -1,84 +1,80 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { VentaService } from '../../services/venta.service';
 import { ClienteService } from '../../services/cliente.service';
 import { BicicletaService } from '../../services/bicicleta.service';
-import { VentaService } from '../../services/venta.service';
-import { Cliente } from '../../models/cliente.model';
-import { Bicicleta } from '../../models/bicicleta.model';
+import { VentaFormComponent } from './venta-form/venta-form.component';
+import { VentaListComponent } from './venta-list/venta-list.component';
 
 @Component({
   selector: 'app-ventas',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, VentaFormComponent, VentaListComponent],
   templateUrl: './ventas.component.html',
-  styleUrls: ['./ventas.component.css']
+  styleUrls: ['./ventas.component.css'],
 })
 export class VentasComponent implements OnInit {
-
-  clientes: Cliente[] = [];
-  bicicletas: Bicicleta[] = [];
-
-  clienteSeleccionado: number | null = null;
-  bicicletaSeleccionada: string = '';
-  cantidad: number = 1;
-
-  mensajeExito: string = '';
-  mensajeError: string = '';
-  cargando: boolean = false;
+  clientes: any[] = [];
+  bicicletas: any[] = [];
+  ventas: any[] = [];
+  cargando = false;
+  mensajeExito = '';
+  mensajeError = '';
 
   constructor(
+    private ventaService: VentaService,
     private clienteService: ClienteService,
     private bicicletaService: BicicletaService,
-    private ventaService: VentaService
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
-    this.cargarClientes();
-    this.cargarBicicletas();
+    this.cargarDatos();
   }
 
-  cargarClientes() {
-    this.clienteService.listarClientes().subscribe({
-      next: data => this.clientes = data,
-      error: () => this.mensajeError = 'Error al cargar clientes'
+  cargarDatos() {
+    this.clienteService.listarClientes().subscribe((data) => {
+      this.clientes = data;
+      this.cdr.detectChanges();
+    });
+    this.bicicletaService.listarBicicletas().subscribe((data) => {
+      this.bicicletas = data;
+      this.cdr.detectChanges();
+    });
+    this.ventaService.listarVentas().subscribe((data) => {
+      this.ventas = data;
+      this.cdr.detectChanges();
     });
   }
 
-  cargarBicicletas() {
-    this.bicicletaService.listarBicicletas().subscribe({
-      next: data => this.bicicletas = data,
-      error: () => this.mensajeError = 'Error al cargar bicicletas'
-    });
-  }
-
-  registrarVenta() {
+  procesarVenta(datos: any) {
+    if (this.cargando) return;
+    this.cargando = true;
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    if (!this.clienteSeleccionado || !this.bicicletaSeleccionada || this.cantidad <= 0) {
-      this.mensajeError = '❌ Debes seleccionar cliente, bicicleta y cantidad válida';
-      return;
-    }
-
-    this.cargando = true;
-    this.ventaService.registrarVenta(
-      this.clienteSeleccionado,
-      this.bicicletaSeleccionada,
-      this.cantidad
-    ).subscribe({
+    this.ventaService.registrarVentaMultiple(datos.clienteId, datos.items).subscribe({
       next: () => {
-        this.mensajeExito = '✅ Venta registrada correctamente';
-        this.cantidad = 1;
-        this.clienteSeleccionado = null;
-        this.bicicletaSeleccionada = '';
+        this.mensajeExito = 'Venta registrada correctamente';
+        this.cargando = false;
+        this.cargarDatos();
+      },
+      error: (err) => {
+        console.error('Error al vender:', err);
+        if (typeof err.error === 'string') {
+          this.mensajeError = err.error;
+        } else if (err.error && err.error.message) {
+          this.mensajeError = err.error.message;
+        } else {
+          this.mensajeError = 'Error al registrar venta';
+        }
         this.cargando = false;
       },
-      error: err => {
-        this.mensajeError = '❌ Error al registrar venta: ' + (err.error?.message || err.message);
-        this.cargando = false;
-      }
     });
   }
 
+  eliminarVenta(id: number) {
+    if (!confirm('Eliminar esta venta?')) return;
+    this.ventaService.eliminarVenta(id).subscribe(() => this.cargarDatos());
+  }
 }

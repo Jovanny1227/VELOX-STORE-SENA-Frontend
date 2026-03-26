@@ -1,0 +1,71 @@
+﻿<div class="form-card">
+  <div class="form-grid">
+
+    <div class="field-group">
+      <label>Cliente</label>
+      <select class="velox-input" [(ngModel)]="clienteSeleccionado">
+        <option [ngValue]="null">-- Seleccionar Cliente --</option>
+        <option *ngFor="let c of clientes" [ngValue]="c.clienteId">{{ c.nombre }} ({{ c.documento }})</option>
+      </select>
+    </div>
+
+    <div class="field-group">
+      <label>Agregar Bicicleta</label>
+      <select class="velox-input" [(ngModel)]="bicicletaSeleccionada">
+        <option value="">-- Seleccionar Bicicleta --</option>
+        <option *ngFor="let b of bicicletas" [value]="b.codigo">
+          [{{ b.codigo }}] {{ b.marca }} {{ b.modelo }} - {{ b.precio | currency:'COP':'symbol':'1.0-0' }}
+        </option>
+      </select>
+    </div>
+
+    <div class="field-group">
+      <label>Cantidad</label>
+      <input type="number" class="velox-input" [(ngModel)]="cantidad" min="1" />
+    </div>
+
+    <div class="field-group" style="display:flex; align-items:flex-end;">
+      <button class="btn-secondary" (click)="agregarAlCarrito()"
+              [disabled]="!bicicletaSeleccionada || cantidad < 1">
+        + Agregar al carrito
+      </button>
+    </div>
+
+  </div>
+
+  <!-- CARRITO -->
+  <div class="carrito-section" *ngIf="carrito.length > 0">
+    <h4 class="carrito-titulo">Carrito de compra</h4>
+    <table class="carrito-tabla">
+      <thead>
+        <tr>
+          <th>Bicicleta</th>
+          <th>Precio unit.</th>
+          <th>Cantidad</th>
+          <th>Subtotal</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of carrito; let i = index">
+          <td>{{ item.marcaModelo }}</td>
+          <td>{{ item.precio | currency:'COP':'symbol':'1.0-0' }}</td>
+          <td>{{ item.cantidad }}</td>
+          <td>{{ item.subtotal | currency:'COP':'symbol':'1.0-0' }}</td>
+          <td><button class="btn-quitar" (click)="quitarDelCarrito(i)">X</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="carrito-total">
+      <strong>Total: {{ totalCarrito | currency:'COP':'symbol':'1.0-0' }}</strong>
+    </div>
+  </div>
+
+  <button class="btn-primary" (click)="enviar()"
+          [disabled]="!clienteSeleccionado || carrito.length === 0 || cargando">
+    {{ cargando ? 'Procesando...' : 'Registrar Venta' }}
+  </button>
+
+  <p class="msg-exito" *ngIf="mensajeExito">{{ mensajeExito }}</p>
+  <p class="msg-error" *ngIf="mensajeError">{{ mensajeError }}</p>
+</div>

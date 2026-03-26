@@ -1,38 +1,22 @@
-<div style="padding:40px">
+<div class="ventas-container">
+  <div class="section-header"><h2>Registrar Venta</h2></div>
 
-  <h2>Registrar Venta</h2>
+  <app-venta-form
+    [clientes]="clientes"
+    [bicicletas]="bicicletas"
+    [cargando]="cargando"
+    [mensajeExito]="mensajeExito"
+    [mensajeError]="mensajeError"
+    (onRegistrarVenta)="procesarVenta($event)">
+  </app-venta-form>
 
-  <div *ngIf="cargando">Procesando venta...</div>
-  <div *ngIf="mensajeExito" style="color:green">{{ mensajeExito }}</div>
-  <div *ngIf="mensajeError" style="color:red">{{ mensajeError }}</div>
-
-  <div style="margin-top:20px">
-    <label>Cliente:</label>
-    <select [(ngModel)]="clienteSeleccionado">
-      <option [ngValue]="null">-- Seleccionar Cliente --</option>
-      <option *ngFor="let c of clientes" [ngValue]="c.clienteId">
-        {{ c.nombre }} ({{ c.documento }})
-      </option>
-    </select>
+  <div class="section-header" style="margin-top:32px">
+    <h2>Historial de Ventas</h2>
+    <span class="badge-count">{{ ventas.length }}</span>
   </div>
 
-  <div style="margin-top:10px">
-    <label>Bicicleta:</label>
-    <select [(ngModel)]="bicicletaSeleccionada">
-      <option value="">-- Seleccionar Bicicleta --</option>
-      <option *ngFor="let b of bicicletas" [value]="b.codigo">
-        {{ b.marca }} {{ b.modelo }} ({{ b.tipo }}) - {{ b.precio | currency:'COP':'symbol':'1.0-0' }}
-      </option>
-    </select>
-  </div>
-
-  <div style="margin-top:10px">
-    <label>Cantidad:</label>
-    <input type="number" [(ngModel)]="cantidad" min="1" />
-  </div>
-
-  <button (click)="registrarVenta()" style="margin-top:20px">
-    Registrar Venta
-  </button>
-
+  <app-venta-list
+    [ventas]="ventas"
+    (onEliminar)="eliminarVenta($event)">
+  </app-venta-list>
 </div>

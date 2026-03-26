@@ -1,0 +1,27 @@
+<div class="proveedores-container">
+  <div class="section-header">
+    <h2>Gestión de Proveedores</h2>
+  </div>
+
+  <div class="layout-grid">
+    <aside>
+      <app-proveedor-form
+        [mensaje]="mensaje"
+        [mensajeError]="mensajeError"
+        (onRegistrar)="registrarProveedor($event)">
+      </app-proveedor-form>
+    </aside>
+
+    <section class="lista-section">
+      <div class="section-sub-header">
+        <span>PROVEEDORES REGISTRADOS </span>
+        <span class="badge-count">{{ proveedores.length }}</span>
+      </div>
+
+      <app-proveedor-list
+        [proveedores]="proveedores"
+        (onEliminar)="eliminarProveedor($event)">
+      </app-proveedor-list>
+    </section>
+  </div>
+</div>

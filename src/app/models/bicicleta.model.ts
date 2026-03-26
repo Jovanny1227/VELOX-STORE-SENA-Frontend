@@ -1,8 +1,9 @@
 export interface Bicicleta {
   idBicicleta?: number;
   codigo?: string;
-  modelo: string;
   marca: string;
+  modelo: string;
   precio: number;
   tipo: string;
+  proveedorId: number;
 }

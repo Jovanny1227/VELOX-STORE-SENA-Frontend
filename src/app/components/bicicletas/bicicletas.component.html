@@ -1,125 +1,19 @@
 <section class="velox-main">
-
   <aside class="velox-sidebar">
-
-
-    <div class="velox-card">
-
-      <div class="card-header-neon">
-        <span class="card-header-icon">🚴</span>
-        REGISTRAR BICICLETA
-      </div>
-
-      <div class="card-body">
-
-        <div class="field-group">
-          <label class="field-label">Marca</label>
-          <input class="velox-input" [(ngModel)]="nuevaBicicleta.marca">
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Modelo</label>
-          <input class="velox-input" [(ngModel)]="nuevaBicicleta.modelo">
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Tipo</label>
-
-          <select class="velox-input" [(ngModel)]="nuevaBicicleta.tipo">
-            <option value="">Seleccione tipo</option>
-            <option value="MTB">MTB</option>
-            <option value="RUTA">Ruta</option>
-            <option value="URBANO">Urbano</option>
-            <option value="BMX">BMX</option>
-          </select>
-        </div>
-
-        <div class="field-row">
-
-          <div class="field-group">
-            <label class="field-label">Precio</label>
-            <input type="number" class="velox-input" [(ngModel)]="nuevaBicicleta.precio">
-          </div>
-
-          <div class="field-group">
-            <label class="field-label">Stock Inicial</label>
-            <input type="number" class="velox-input" [(ngModel)]="stockInicial">
-          </div>
-
-        </div>
-
-        <button class="velox-btn-primary" (click)="registrarBicicleta()">
-          GUARDAR
-        </button>
-
-      </div>
-
-    </div>
-
-
+    <app-bicicleta-form
+      [proveedores]="proveedores"
+      [mensaje]="mensaje"
+      [mensajeError]="mensajeError"
+      (onRegistrar)="procesarRegistro($event)">
+    </app-bicicleta-form>
   </aside>
 
   <section class="velox-catalog">
-
-
-    <div class="catalog-header">
-
-      <div>
-        <h2 class="catalog-title">CATÁLOGO</h2>
-        <div class="catalog-sub">Listado de bicicletas</div>
-      </div>
-
-      <button class="velox-btn-refresh" (click)="cargarBicicletas()">
-        ACTUALIZAR
-      </button>
-
-    </div>
-
-    <div class="bikes-grid">
-
-      <div class="bike-card" *ngFor="let b of bicicletas">
-
-        <div class="bike-card-top">
-
-      <span class="bike-type-badge badge-mtb">
-        {{b.tipo}}
-      </span>
-
-          <span class="bike-id">
-        #{{b.idBicicleta}}
-      </span>
-
-        </div>
-
-        <div class="bike-img-wrap">
-          <img [src]="'assets/bikes/' + b.tipo.toLowerCase() + '.png'" class="bike-img">
-        </div>
-
-        <div class="bike-info">
-
-          <div class="bike-name">
-            {{b.marca}}
-          </div>
-
-          <div class="bike-model">
-            {{b.modelo}}
-          </div>
-
-          <div class="bike-code">
-            {{b.codigo}}
-          </div>
-
-          <div class="bike-price">
-            ${{b.precio}}
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-
+    <app-bicicleta-list
+      [bicicletas]="bicicletas"
+      [inventario]="inventario"
+      (onEliminar)="procesarEliminacion($event)"
+      (onActualizar)="cargarTodo()">
+    </app-bicicleta-list>
   </section>
-
 </section>

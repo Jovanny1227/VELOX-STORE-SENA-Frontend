@@ -1,0 +1,32 @@
+<div class="clientes-cards-container" *ngIf="clientes.length">
+  <div class="cliente-card" *ngFor="let c of clientes">
+
+    <div class="cliente-top">
+      <div class="cliente-info">
+        <h3 class="cliente-nombre">{{ c.nombre }}</h3>
+        <span class="id-badge">ID: {{ c.clienteId }}</span>
+      </div>
+
+      <div class="acciones">
+        <button class="btn-edit" (click)="onEditar.emit(c)">Editar</button>
+        <button class="btn-delete" (click)="onEliminar.emit(c.clienteId!)">Eliminar</button>
+      </div>
+    </div>
+
+    <div class="cliente-detalles">
+      <div class="detalle-item">
+        <span class="label">Documento:</span>
+        <span class="valor-doc">{{ c.documento }}</span>
+      </div>
+      <div class="detalle-item">
+        <span class="label">Teléfono:</span>
+        <span class="valor-tel">📞 {{ c.telefono }}</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="empty-state" *ngIf="!clientes.length">
+  No hay clientes registrados
+</div>

@@ -1,62 +1,111 @@
+/* =========================================
+   NAVBAR VELOX - ESTILO PREMIUM OSCURO
+========================================= */
 .velox-nav {
+  background: rgba(15, 23, 42, 0.9); /* Azul muy oscuro casi negro */
+  backdrop-filter: blur(12px); /* Efecto de cristal esmerilado */
+  height: 70px;
   display: flex;
   align-items: center;
-  gap: 2rem;
-  padding: 1rem 2.5rem;
-  background: rgba(8,12,20,0.95);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(12px);
+  justify-content: space-between;
+  padding: 0 40px;
+  border-bottom: 2px solid #00d2ff; /* Línea neón cyan */
+  box-shadow: 0 4px 20px rgba(0, 210, 255, 0.15);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
+  font-family: 'Segoe UI', Roboto, sans-serif;
 }
 
+/* BRAND / LOGO */
 .nav-brand {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 900;
-  font-size: 1.3rem;
-  color: #fff;
+  gap: 12px;
+  color: #ffffff;
+  font-size: 1.4rem;
+  font-weight: 800;
   letter-spacing: 2px;
+}
+
+.brand-icon img {
+  height: 45px; /* Ajustado para que luzca bien dentro de los 70px de la nav */
+  width: auto;  /* Mantiene la proporción original */
+  display: block;
+  filter: drop-shadow(0 0 5px rgba(0, 210, 255, 0.5));
+}
+
+.brand-icon {
+  font-size: 1.6rem;
+  filter: drop-shadow(0 0 5px rgba(0, 210, 255, 0.5));
 }
 
 .brand-accent {
-  color: var(--neon);
+  color: #00d2ff;
+  text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
 }
 
+/* LINKS DE NAVEGACIÓN */
 .nav-links {
   display: flex;
-  gap: 0.5rem;
-  margin-left: 1rem;
-  flex: 1;
+  gap: 10px;
 }
 
 .nav-link {
-  padding: 0.4rem 1rem;
+  text-decoration: none;
+  color: #94a3b8; /* Gris azulado suave */
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 10px 20px;
   border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  cursor: pointer;
   letter-spacing: 1px;
-  text-transform: uppercase;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
 }
 
-.nav-link:hover,
+/* EFECTO HOVER */
+.nav-link:hover {
+  color: #ffffff;
+  background: rgba(0, 210, 255, 0.05);
+  border-color: rgba(0, 210, 255, 0.2);
+}
+
+/* ESTADO ACTIVO (Tu clase routerLinkActive="active") */
 .nav-link.active {
-  color: var(--neon);
-  background: rgba(0,212,255,0.08);
+  color: #00d2ff;
+  background: rgba(0, 210, 255, 0.1);
+  border-color: #00d2ff;
+  box-shadow: inset 0 0 10px rgba(0, 210, 255, 0.1), 0 0 15px rgba(0, 210, 255, 0.1);
+  transform: translateY(-2px);
 }
 
+/* BADGE DEL SISTEMA */
 .nav-badge {
-  padding: 0.3rem 0.9rem;
-  border: 1px solid var(--neon);
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-family: 'Orbitron', sans-serif;
-  color: var(--neon);
-  letter-spacing: 2px;
+  background: rgba(0, 210, 255, 0.1);
+  color: #00d2ff;
+  border: 1px solid rgba(0, 210, 255, 0.4);
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  box-shadow: 0 0 10px rgba(0, 210, 255, 0.1);
+}
+
+/* RESPONSIVE: Ajustes para pantallas pequeñas */
+@media (max-width: 950px) {
+  .velox-nav {
+    padding: 0 15px;
+    height: 60px;
+  }
+
+  .nav-link {
+    padding: 8px 12px;
+    font-size: 0.75rem;
+  }
+
+  .nav-badge {
+    display: none; /* Escondemos el badge en pantallas chicas */
+  }
 }

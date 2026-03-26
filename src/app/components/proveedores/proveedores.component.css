@@ -1,0 +1,5 @@
+.proveedores-container { padding: 40px; color: #fff; }
+.section-header h2 { font-size: 1.8rem; font-family: "Orbitron", sans-serif; color: #00e5ff; margin: 0 0 24px 0; }
+.layout-grid { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start; }
+.section-sub-header { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: #7a9ab8; margin-bottom: 15px; letter-spacing: 1px; }
+.badge-count { background: #00e5ff22; color: #00e5ff; border: 1px solid #00e5ff44; padding: 2px 12px; border-radius: 20px; font-size: 0.85rem; }

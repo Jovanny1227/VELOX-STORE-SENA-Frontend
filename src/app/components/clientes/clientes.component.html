@@ -1,53 +1,23 @@
-<div style="padding:40px">
+<div class="clientes-container">
+  <div class="section-header"><h2>Registro de Clientes</h2></div>
 
-  <h2>Registro de Clientes</h2>
+  <app-cliente-form
+    [clienteEditando]="clienteEditando"
+    [mensaje]="mensaje"
+    [mensajeError]="mensajeError"
+    (onRegistrar)="registrarCliente($event)"
+    (onGuardarEdicion)="actualizarCliente($event)"
+    (onCancelarEdicion)="clienteEditando = null">
+  </app-cliente-form>
 
-  <input
-    placeholder="Documento"
-    [(ngModel)]="nuevoCliente.documento"
-    required
-  />
+  <div class="section-header" style="margin-top:32px">
+    <h2>Lista de Clientes</h2>
+    <span class="badge-count">{{ clientes.length }}</span>
+  </div>
 
-  <input
-    placeholder="Nombre"
-    [(ngModel)]="nuevoCliente.nombre"
-    required
-  />
-
-  <input
-    placeholder="Teléfono"
-    [(ngModel)]="nuevoCliente.telefono"
-    required
-  />
-
-  <button
-    (click)="registrarCliente()"
-    [disabled]="!nuevoCliente.documento || !nuevoCliente.nombre || !nuevoCliente.telefono"
-  >
-    Registrar Cliente
-  </button>
-
-  <p>{{mensaje}}</p>
-
-  <hr>
-
-  <h2>Lista de Clientes</h2>
-
-  <table border="1" width="100%">
-    <tr>
-      <th>ID</th>
-      <th>Documento</th>
-      <th>Nombre</th>
-      <th>Teléfono</th>
-    </tr>
-
-    <tr *ngFor="let c of clientes">
-      <td>{{c.clienteId}}</td>
-      <td>{{c.documento}}</td>
-      <td>{{c.nombre}}</td>
-      <td>{{c.telefono}}</td>
-    </tr>
-
-  </table>
-
+  <app-cliente-list
+    [clientes]="clientes"
+    (onEditar)="clienteEditando = $event"
+    (onEliminar)="eliminarCliente($event)">
+  </app-cliente-list>
 </div>

@@ -1,0 +1,27 @@
+<div class="velox-card">
+  <div class="card-header-neon">REGISTRAR PROVEEDOR</div>
+  <div class="card-body">
+    <div class="field-group">
+      <label>Nombre Proveedor</label>
+      <input class="velox-input" placeholder="Ej: Shimano Colombia" [(ngModel)]="nuevoProveedor.nombre" />
+    </div>
+    <div class="field-group">
+      <label>NIT</label>
+      <input class="velox-input" placeholder="Ej: 900.123.456-7" [(ngModel)]="nuevoProveedor.nit" />
+    </div>
+    <div class="field-group">
+      <label>Teléfono</label>
+      <input class="velox-input" placeholder="Ej: 3001234567" [(ngModel)]="nuevoProveedor.telefono" />
+    </div>
+    <div class="field-group">
+      <label>Email</label>
+      <input type="email" class="velox-input" placeholder="Ej: ventas@shimano.com" [(ngModel)]="nuevoProveedor.email" />
+    </div>
+    <button class="velox-btn-primary" (click)="enviar()"
+            [disabled]="!nuevoProveedor.nombre">
+      GUARDAR
+    </button>
+  </div>
+  <p class="msg-exito" *ngIf="mensaje">{{ mensaje }}</p>
+  <p class="msg-error" *ngIf="mensajeError">{{ mensajeError }}</p>
+</div>

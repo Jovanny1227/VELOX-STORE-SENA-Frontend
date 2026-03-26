@@ -1,12 +1,99 @@
+/* =========================================
+   VELOX FOOTER - EFECTO CRISTAL (GLASS)
+========================================= */
 .velox-footer {
+  background: transparent;
+  /* EL TRUCO: Desenfoque de fondo para que parezca cristal */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px); /* Para navegadores Safari */
+
+  /* Borde superior con un ligero brillo cyan */
+  border-top: 1px solid rgba(0, 210, 255, 0.2);
+
+  color: #94a3b8; /* Gris azulado claro */
+  padding: 15px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.2rem 2.5rem;
-  border-top: 1px solid var(--border);
-  background: rgba(8,12,20,0.8);
   font-size: 0.8rem;
-  color: var(--text-muted);
-  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+
+  /* Hacemos que flote un poco sobre el fondo */
+  position: relative;
+  z-index: 10;
+  margin-top: 50px;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.footer-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Marca en el footer */
+.footer-brand {
+  color: #ffffff;
+  font-weight: 800;
   letter-spacing: 1px;
+}
+
+.cyan-text {
+  color: #00d2ff;
+  text-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
+}
+
+.footer-divider {
+  color: rgba(255, 255, 255, 0.1);
+  font-weight: 200;
+}
+
+/* Texto central */
+.system-tag {
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 2.5px;
+  font-size: 0.7rem;
+}
+
+/* Indicador de Status con Pulso */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(74, 222, 128, 0.05);
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(74, 222, 128, 0.15);
+}
+
+.status-text {
+  color: #4ade80;
+  font-size: 0.7rem;
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  background-color: #4ade80;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #4ade80;
+  animation: pulse-animation 2s infinite;
+}
+
+/* Animación del punto verde */
+@keyframes pulse-animation {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(74, 222, 128, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+}
+
+/* Ajuste móvil */
+@media (max-width: 768px) {
+  .velox-footer {
+    flex-direction: column;
+    gap: 12px;
+    padding: 25px 15px;
+    background: rgba(15, 23, 42, 0.9); /* Más opaco en móvil */
+  }
 }

@@ -1,0 +1,20 @@
+<div class="empty-state" *ngIf="proveedores.length === 0">No hay proveedores registrados</div>
+<div class="proveedores-cards-container" *ngIf="proveedores.length > 0">
+  <div class="proveedor-card" *ngFor="let p of proveedores">
+    <div class="proveedor-top">
+      <div class="proveedor-info">
+        <span class="proveedor-nombre">{{ p.nombre }}</span>
+        <span class="proveedor-nit" *ngIf="p.nit">NIT: {{ p.nit }}</span>
+      </div>
+      <button class="btn-delete" (click)="onEliminar.emit(p.idProveedor)">Eliminar</button>
+    </div>
+    <div class="movimientos-lista">
+      <div class="mov-header">Información de Contacto</div>
+      <p style="font-size: 0.85rem; color: #7a9ab8; margin: 0; padding-top: 5px;">
+        <span *ngIf="p.telefono">📞 {{ p.telefono }} <br></span>
+        <span *ngIf="p.email">✉️ {{ p.email }}</span>
+        <span *ngIf="!p.telefono && !p.email">Sin información de contacto</span>
+      </p>
+    </div>
+  </div>
+</div>

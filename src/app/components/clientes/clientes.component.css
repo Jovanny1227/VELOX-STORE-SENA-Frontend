@@ -1,0 +1,4 @@
+.clientes-container { padding: 40px; color: #fff; }
+.section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.section-header h2 { font-size: 1.8rem; font-family: "Orbitron", sans-serif; color: #00e5ff; margin: 0; }
+.badge-count { background: #00e5ff22; color: #00e5ff; border: 1px solid #00e5ff44; padding: 2px 12px; border-radius: 20px; }

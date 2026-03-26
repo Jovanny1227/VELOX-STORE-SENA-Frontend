@@ -1,103 +1,109 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { BicicletaService } from '../../services/bicicleta.service';
-import { Bicicleta } from '../../models/bicicleta.model';
-import { RouterModule } from '@angular/router';
+import { MovimientoService } from '../../services/movimiento.service';
+import { InventarioService } from '../../services/inventario.service';
+import { BicicletaFormComponent } from './bicicleta-form/bicicleta-form.component';
+import { BicicletaListComponent } from './bicicleta-list/bicicleta-list.component';
 
 @Component({
   selector: 'app-bicicletas',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, BicicletaFormComponent, BicicletaListComponent],
   templateUrl: './bicicletas.component.html',
   styleUrls: ['./bicicletas.component.css'],
 })
 export class BicicletasComponent implements OnInit {
-  bicicletas: Bicicleta[] = [];
+  bicicletas: any[] = [];
+  inventario: any[] = [];
+  proveedores: any[] = [];
 
-  nuevaBicicleta: Bicicleta = {
-    modelo: '',
-    marca: '',
-    precio: 0,
-    tipo: '',
-  };
+  mensaje = '';
+  mensajeError = '';
 
-  stockInicial: number = 0;
-  mensajeExito: string = '';
-  mensajeError: string = '';
-  cargando: boolean = false;
-  bicicletaBuscada: Bicicleta | null = null;
-  codigoBusqueda: string = '';
-
-  constructor(private bicicletaService: BicicletaService) {}
+  constructor(
+    private bicicletaService: BicicletaService,
+    private movimientoService: MovimientoService,
+    private inventarioService: InventarioService,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
-    this.cargarBicicletas();
+    this.cargarTodo();
   }
 
-  cargarBicicletas(): void {
-    this.cargando = true;
+  cargarTodo() {
+    this.cargarBicicletas();
+    this.cargarProveedores();
+    this.cargarInventario();
+  }
+
+  cargarBicicletas() {
     this.bicicletaService.listarBicicletas().subscribe({
       next: (data) => {
         this.bicicletas = data;
-        this.cargando = false;
+        this.cdr.detectChanges(); // <-- ¡La magia ocurre aquí!
       },
-      error: (err) => {
-        this.mensajeError = 'Error al cargar: ' + err.message;
-        this.cargando = false;
-      },
+      error: () => (this.mensajeError = 'Error al cargar las bicicletas'),
     });
   }
 
-  registrarBicicleta(): void {
-    this.mensajeExito = '';
+  cargarInventario() {
+    this.inventarioService.listarInventario().subscribe({
+      next: (data: any) => (this.inventario = Array.isArray(data) ? data : []),
+      error: () => {},
+    });
+  }
+
+  cargarProveedores() {
+    this.movimientoService.listarProveedores().subscribe({
+      next: (data) => (this.proveedores = Array.isArray(data) ? data : []),
+      error: () => {},
+    });
+  }
+
+  // Este método recibe los datos que emite el formulario hijo
+  procesarRegistro(datos: any) {
+    this.mensaje = '';
     this.mensajeError = '';
 
-    if (
-      !this.nuevaBicicleta.marca.trim() ||
-      !this.nuevaBicicleta.modelo.trim() ||
-      !this.nuevaBicicleta.tipo ||
-      this.nuevaBicicleta.precio <= 0
-    ) {
-      this.mensajeError = '⚠️ Complete todos los campos correctamente';
-      return;
-    }
+    this.bicicletaService.registrarBicicleta(datos.bicicleta, datos.stock).subscribe({
+      next: (bici: any) => {
+        // ELIMINAMOS EL BLOQUE QUE LLAMABA A this.movimientoService.registrarMovimiento(...)
+        // porque el backend ya lo hace automáticamente al registrar la bicicleta.
 
-    if (this.stockInicial < 0) {
-      this.mensajeError = '⚠️ El stock no puede ser negativo';
-      return;
-    }
-
-    this.bicicletaService.registrarBicicleta(this.nuevaBicicleta, this.stockInicial).subscribe({
-      next: (creada) => {
-        this.mensajeExito = `✅ Bicicleta '${creada.codigo}' registrada (id=${creada.idBicicleta}).`;
+        this.mensaje = 'Bicicleta registrada correctamente';
         this.cargarBicicletas();
-        this.limpiarFormulario();
+        this.cargarInventario(); // Recargamos para ver el stock real
       },
-      error: (err) => {
-        this.mensajeError = '❌ ' + (err.error || err.message);
-      },
+      error: () => (this.mensajeError = 'Error al registrar bicicleta'),
     });
   }
 
-  buscarBicicleta(): void {
-    if (!this.codigoBusqueda.trim()) return;
-
-    this.bicicletaBuscada = null;
+  // Este método recibe el ID que emite la lista hija
+  procesarEliminacion(id: number) {
+    this.mensaje = '';
     this.mensajeError = '';
 
-    this.bicicletaService.buscarPorCodigo(this.codigoBusqueda).subscribe({
-      next: (b) => {
-        this.bicicletaBuscada = b;
+    this.bicicletaService.eliminarBicicleta(id).subscribe({
+      next: () => {
+        this.mensaje = 'Bicicleta eliminada';
+        this.cargarBicicletas();
+        this.cargarInventario();
       },
-      error: () => {
-        this.mensajeError = `❌ No existe código '${this.codigoBusqueda}'.`;
+      error: (err) => {
+        // ESTO ES CLAVE: Leer el mensaje de error que manda Spring Boot
+        console.error('Error completo del backend:', err);
+
+        // Si el backend manda un mensaje en err.error.message o err.error
+        if (err.error && typeof err.error === 'string') {
+          this.mensajeError = err.error;
+        } else if (err.error && err.error.message) {
+          this.mensajeError = err.error.message;
+        } else {
+          this.mensajeError = 'Error al eliminar bicicleta. Revisa la consola (F12).';
+        }
       },
     });
-  }
-
-  limpiarFormulario(): void {
-    this.nuevaBicicleta = { modelo: '', marca: '', precio: 0, tipo: '' };
-    this.stockInicial = 0;
   }
 }

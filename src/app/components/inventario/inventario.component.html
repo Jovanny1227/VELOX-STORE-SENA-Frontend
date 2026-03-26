@@ -1,28 +1,69 @@
-<div style="padding:40px">
-  <h2>Inventario de Bicicletas</h2>
+<div class="inventario-container">
+  <div class="section-header">
+    <h2>Dashboard de Inventario</h2>
+  </div>
 
-  <div *ngIf="cargando">Cargando inventario...</div>
-  <div *ngIf="mensajeError">{{ mensajeError }}</div>
+  <div class="dashboard-grid">
+    <div class="stat-card stat-primary">
+      <h3>Stock Total</h3>
+      <div class="stat-value">{{ stockTotal }}</div>
+      <p class="stat-desc">Bicicletas en la tienda</p>
+    </div>
 
-  <table *ngIf="!cargando && inventario.length" border="1" width="100%">
-    <tr>
-      <th>Código</th>
-      <th>Marca</th>
-      <th>Modelo</th>
-      <th>Tipo</th>
-      <th>Precio</th>
-      <th>Stock</th>
-    </tr>
+    <div class="stat-card">
+      <h3>MTB</h3>
+      <div class="stat-value">{{ stockPorTipo['MTB'] }}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Ruta</h3>
+      <div class="stat-value">{{ stockPorTipo['RUTA'] }}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Urbano</h3>
+      <div class="stat-value">{{ stockPorTipo['URBANO'] }}</div>
+    </div>
+    <div class="stat-card">
+      <h3>BMX</h3>
+      <div class="stat-value">{{ stockPorTipo['BMX'] }}</div>
+    </div>
+  </div>
 
-    <tr *ngFor="let item of inventario">
-      <td>{{ item.codigo }}</td>
-      <td>{{ item.marca }}</td>
-      <td>{{ item.modelo }}</td>
-      <td>{{ item.tipo }}</td>
-      <td>{{ item.precio | currency:'COP':'symbol':'1.0-0' }}</td>
-      <td>{{ item.stock }}</td>
-    </tr>
-  </table>
+  <div class="movimientos-container">
 
-  <div *ngIf="!cargando && inventario.length === 0">No hay bicicletas en inventario</div>
+    <div class="movimientos-column entradas-col">
+      <h3 class="col-title text-success">Entradas a Inventario</h3>
+      <div class="empty-state" *ngIf="entradas.length === 0">No hay entradas registradas</div>
+
+      <div class="historial-card" *ngFor="let m of entradas">
+        <div class="hist-header">
+          <span class="badge badge-success">{{ m.tipo }}</span>
+          <span class="hist-fecha">{{ m.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <div class="hist-body">
+          <p><strong>Bicicleta:</strong> {{ m.bicicleta?.marca }} {{ m.bicicleta?.modelo }} ({{ m.bicicleta?.codigo }})</p>
+          <p><strong>Cantidad agregada:</strong> <span class="text-success">+{{ m.cantidad }}</span></p>
+          <p *ngIf="m.proveedor"><strong>Proveedor:</strong> {{ m.proveedor?.nombre }}</p>
+          <p class="hist-obs" *ngIf="m.observacion"><small>Nota: {{ m.observacion }}</small></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="movimientos-column salidas-col">
+      <h3 class="col-title text-danger">Salidas de Inventario (Ventas)</h3>
+      <div class="empty-state" *ngIf="salidas.length === 0">No hay salidas registradas</div>
+
+      <div class="historial-card" *ngFor="let m of salidas">
+        <div class="hist-header">
+          <span class="badge badge-danger">{{ m.tipo }}</span>
+          <span class="hist-fecha">{{ m.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <div class="hist-body">
+          <p><strong>Bicicleta:</strong> {{ m.bicicleta?.marca }} {{ m.bicicleta?.modelo }} ({{ m.bicicleta?.codigo }})</p>
+          <p><strong>Cantidad vendida:</strong> <span class="text-danger"> -{{ m.cantidad }}</span></p>
+          <p class="hist-obs" *ngIf="m.observacion"><small>Nota: {{ m.observacion }}</small></p>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>

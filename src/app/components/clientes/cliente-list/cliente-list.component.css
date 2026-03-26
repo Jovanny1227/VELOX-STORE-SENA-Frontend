@@ -1,0 +1,124 @@
+/* Cuadrícula que estira las tarjetas horizontalmente */
+.clientes-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+  gap: 25px;
+  padding: 10px;
+}
+
+/* Tarjeta Neón Oscura */
+.cliente-card {
+  background: linear-gradient(145deg, #1f2838, #131926);
+  border: 1px solid rgba(0, 210, 255, 0.4);
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.1);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.cliente-card:hover {
+  box-shadow: 0 0 25px rgba(0, 210, 255, 0.2);
+  transform: translateY(-3px);
+}
+
+/* Cabecera de la tarjeta */
+.cliente-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.cliente-nombre {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin: 0 0 5px 0;
+}
+
+/* ID Badge estilo neón */
+.id-badge {
+  background: rgba(0, 210, 255, 0.1);
+  color: #00d2ff;
+  padding: 3px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 210, 255, 0.3);
+  font-family: monospace;
+  font-size: 0.85rem;
+}
+
+/* Contenedor de botones */
+.acciones {
+  display: flex;
+  gap: 10px;
+}
+
+/* Botón Editar (Azul/Cyan) */
+.btn-edit {
+  background: rgba(0, 210, 255, 0.1);
+  color: #00d2ff;
+  border: 1px solid #00d2ff;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.btn-edit:hover {
+  background: #00d2ff;
+  color: #131926;
+}
+
+/* Botón Eliminar (Rojo) */
+.btn-delete {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-delete:hover {
+  background: #dc2626;
+}
+
+/* Detalles estirados horizontalmente */
+.cliente-detalles {
+  display: flex;
+  justify-content: space-between; /* Uno a cada lado */
+  align-items: center;
+}
+
+.label {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  margin-right: 8px;
+  text-transform: uppercase;
+}
+
+.valor-doc {
+  color: #e2e8f0;
+  font-weight: 500;
+}
+
+.valor-tel {
+  color: #4ade80; /* Teléfono en verde neón sutil */
+  font-weight: bold;
+}
+
+/* Estado vacío */
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #64748b;
+  border: 1px dashed #334155;
+  border-radius: 12px;
+  background: #0f172a;
+}
