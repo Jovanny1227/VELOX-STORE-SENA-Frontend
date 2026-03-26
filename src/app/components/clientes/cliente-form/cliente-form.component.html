@@ -1,5 +1,5 @@
 <div class="form-card">
-  <div class="form-row">
+  <div class="form-grid">
     <div class="field-group">
       <label>Documento</label>
       <input class="velox-input" placeholder="Número de documento" [(ngModel)]="nuevoCliente.documento" />
@@ -12,10 +12,12 @@
       <label>Teléfono</label>
       <input class="velox-input" placeholder="Número de teléfono" [(ngModel)]="nuevoCliente.telefono" />
     </div>
-    <button class="btn-primary" (click)="registrar()"
-            [disabled]="!nuevoCliente.documento || !nuevoCliente.nombre || !nuevoCliente.telefono">
-      Registrar
-    </button>
+    <div class="field-group" style="justify-content: flex-end;">
+      <button class="btn-primary" (click)="registrar()"
+              [disabled]="!nuevoCliente.documento || !nuevoCliente.nombre || !nuevoCliente.telefono">
+        Registrar
+      </button>
+    </div>
   </div>
   <p class="msg-exito" *ngIf="mensaje">{{ mensaje }}</p>
   <p class="msg-error" *ngIf="mensajeError">{{ mensajeError }}</p>
@@ -28,11 +30,11 @@
       <label>Documento</label>
       <input class="velox-input" [(ngModel)]="clienteEditando.documento" />
     </div>
-    <div class="field-group" style="margin-top:12px">
+    <div class="field-group">
       <label>Nombre</label>
       <input class="velox-input" [(ngModel)]="clienteEditando.nombre" />
     </div>
-    <div class="field-group" style="margin-top:12px">
+    <div class="field-group">
       <label>Teléfono</label>
       <input class="velox-input" [(ngModel)]="clienteEditando.telefono" />
     </div>

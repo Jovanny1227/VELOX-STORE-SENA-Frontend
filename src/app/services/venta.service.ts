@@ -1,6 +1,11 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
+export interface ItemVenta {
+  codigoBicicleta: string;
+  cantidad: number;
+}
 
 @Injectable({ providedIn: 'root' })
 export class VentaService {
@@ -12,12 +17,12 @@ export class VentaService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
-  registrarVenta(clienteId: number, codigoBicicleta: string, cantidad: number): Observable<any> {
-    const body = { clienteId, codigoBicicleta, cantidad };
-    return this.http.post<any>(`${this.apiUrl}/registrar`, body);
+  registrarVentaMultiple(clienteId: number, items: ItemVenta[]): Observable<any> {
+    const body = { clienteId, items };
+    return this.http.post<any>(this.apiUrl + '/registrar', body);
   }
 
   eliminarVenta(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+    return this.http.delete<any>(this.apiUrl + '/' + id);
   }
 }

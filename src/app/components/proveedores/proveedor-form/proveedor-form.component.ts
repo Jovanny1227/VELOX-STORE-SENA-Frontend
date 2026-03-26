@@ -14,11 +14,12 @@ export class ProveedorFormComponent {
   @Input() mensajeError: string = '';
   @Output() onRegistrar = new EventEmitter<any>();
 
-  nuevoProveedor = { nombre: '', contacto: '', direccion: '' };
+  nuevoProveedor = { nombre: '', nit: '', telefono: '', email: '' };
 
   enviar() {
     this.onRegistrar.emit(this.nuevoProveedor);
     // Limpiar el formulario localmente
-    this.nuevoProveedor = { nombre: '', contacto: '', direccion: '' };
+    this.nuevoProveedor = { nombre: '', nit: '', telefono: '', email: '' };
   }
 }
+

@@ -1,11 +1,297 @@
-.velox-table { width: 100%; border-collapse: collapse; }
-.velox-table thead tr { background: #0d2137; color: #00e5ff; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
-.velox-table th, .velox-table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #1a2e45; }
-.velox-table tbody tr:hover { background: #0d2137; }
+/* Cuadrícula de tarjetas ADAPTADA para estirar a los lados */
+.ventas-cards-container {
+  display: grid;
+  /* Aumentamos el mínimo de 320px a 450px para "estirar" las tarjetas */
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+  gap: 25px;
+  padding: 10px;
+}
 
-.id-badge { background: #0a1929; color: #00e5ff; padding: 3px 10px; border-radius: 4px; font-family: monospace; border: 1px solid #1a2e45; }
-.empty-state { text-align: center; color: #aaa; padding: 60px; }
+/* La tarjeta con el estilo neón y efecto estirado horizontal */
+.venta-card {
+  background: linear-gradient(145deg, #1f2838, #131926);
+  border: 1px solid rgba(0, 210, 255, 0.4);
+  border-radius: 12px;
+  padding: 25px; /* Aumentamos el padding interno */
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.1);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  /* Efecto de cristal oscuro brillante en el borde */
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.03), 0 0 15px rgba(0, 210, 255, 0.1);
+}
 
-/* Estilo para el botón de eliminar que estaba en tu HTML original */
-.btn-delete { background: #ef535022; color: #ef5350; border: 1px solid #ef535044; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
-.btn-delete:hover { background: #ef5350; color: #fff; }
+.venta-card:hover {
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.06), 0 0 25px rgba(0, 210, 255, 0.2);
+  transform: translateY(-3px);
+}
+
+/* Cabecera de la tarjeta: Estirada horizontalmente */
+.venta-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Alineación central vertical */
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.venta-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1; /* Ocupa el espacio disponible a la izquierda */
+}
+
+.venta-cliente {
+  font-size: 1.4rem; /* Un poco más grande para destacar */
+  font-weight: bold;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.venta-fecha {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+/* ID Badge estilo neón (mantenemos el original pero mejorado) */
+.id-badge {
+  background: rgba(0, 210, 255, 0.08);
+  color: #00d2ff;
+  padding: 3px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 210, 255, 0.3);
+  font-family: monospace;
+  font-size: 0.8rem;
+  margin-top: 5px;
+  display: inline-block;
+  align-self: flex-start; /* Alineación a la izquierda */
+}
+
+/* Botón eliminar sólido (mantenemos el original) */
+.btn-delete {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 16px; /* Botón un poco más grande */
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 20px; /* Separación a la izquierda */
+}
+
+.btn-delete:hover {
+  background: #dc2626;
+}
+
+/* Detalles: Estirados horizontalmente */
+.detalles-lista {
+  display: flex;
+  justify-content: space-between; /* Estiramos los detalles a los lados opuestos */
+  align-items: center;
+  gap: 15px;
+}
+
+.detalle-header {
+  display: none; /* Quitamos el header para un diseño más limpio y estirado */
+}
+
+.detalle-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #e2e8f0;
+  font-size: 1rem; /* Un poco más grande */
+}
+
+.detalle-item strong {
+  color: #94a3b8;
+  margin-right: 5px;
+}
+
+/* Total en verde neón (mantenemos el original) */
+.total-verde {
+  color: #4ade80;
+  font-weight: bold;
+  font-size: 1.1rem; /* Un poco más grande */
+  text-shadow: 0 0 8px rgba(74, 222, 128, 0.3);
+}
+
+/* Íconos rápidos (mantenemos los originales) */
+.icon-money::before { content: "💰"; font-size: 1rem; }
+
+/* Estado vacío (mantenemos el original) */
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #64748b;
+  border: 1px dashed #334155;
+  border-radius: 12px;
+  background: #0f172a;
+}
+
+.venta-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-detalle {
+  background: transparent;
+  color: #00d2ff;
+  border: 1px solid #00d2ff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.btn-detalle:hover {
+  background: rgba(0, 210, 255, 0.1);
+  box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+}
+
+/* ==========================================
+   ESTILOS DEL MODAL DE DETALLES
+   ========================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(11, 17, 32, 0.85);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-card {
+  background: linear-gradient(145deg, #1f2838, #131926);
+  border: 1px solid rgba(0, 210, 255, 0.4);
+  border-radius: 12px;
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+  animation: modalFadeIn 0.3s ease-out forwards;
+}
+
+.modal-card h3 {
+  color: #00d2ff;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(0, 210, 255, 0.2);
+  padding-bottom: 10px;
+}
+
+.modal-subtitle {
+  color: #94a3b8;
+  margin: 5px 0;
+  font-size: 0.95rem;
+}
+
+.modal-subtitle strong {
+  color: #f1f5f9;
+}
+
+/* Lista de Bicicletas dentro del modal */
+.venta-bikes-list {
+  margin: 20px 0;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.empty-bikes {
+  color: #f87171;
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 10px;
+}
+
+.bike-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.bike-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.bike-item-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bike-qty {
+  background: rgba(0, 210, 255, 0.15);
+  color: #00d2ff;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.bike-name { color: #e2e8f0; font-size: 0.95rem; }
+.bike-subtotal { color: #94a3b8; font-size: 0.9rem; font-family: monospace; }
+
+.modal-total-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(0, 210, 255, 0.2);
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #f1f5f9;
+}
+
+.total-verde.grande { font-size: 1.4rem; }
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-cancel {
+  background: transparent;
+  color: #f87171;
+  border: 1px solid #f87171;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.btn-cancel:hover {
+  background: rgba(248, 113, 113, 0.1);
+  box-shadow: 0 0 15px rgba(248, 113, 113, 0.2);
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}

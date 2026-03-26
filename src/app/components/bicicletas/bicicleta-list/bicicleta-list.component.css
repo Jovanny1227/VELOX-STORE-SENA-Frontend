@@ -1,3 +1,6 @@
+/* ==========================================
+   ESTILOS ORIGINALES (NO TOCADOS)
+   ========================================== */
 .catalog-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
 .catalog-title { font-family: "Orbitron", sans-serif; font-size: 1.6rem; color: #fff; margin: 0; }
 .catalog-sub { color: #7a9ab8; font-size: 0.85rem; margin: 4px 0 0; }
@@ -29,3 +32,58 @@
 .bike-actions { padding: 10px 14px; border-top: 1px solid #1a2e45; }
 .btn-delete-card { background: #3a1a1a; color: #ef5350; border: 1px solid #ef535044; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; width: 100%; }
 .btn-delete-card:hover { background: #ef5350; color: #fff; }
+
+/* ==========================================
+   NUEVOS ESTILOS PARA LA BARRA DE FILTROS
+   ========================================== */
+.filtros-bar {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  /* Fondo oscuro tipo tarjeta para la barra */
+  background: linear-gradient(145deg, #131926, #0b1120);
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 210, 255, 0.15);
+}
+
+/* Estilos para que el input y el select combinen con el diseño general */
+.velox-input {
+  background: #0a101a;
+  border: 1px solid #1a2e45;
+  border-radius: 8px;
+  padding: 12px 15px;
+  color: #f1f5f9;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.velox-input:focus {
+  border-color: #00d2ff;
+  box-shadow: 0 0 10px rgba(0, 210, 255, 0.15);
+}
+
+.filtro-texto {
+  flex: 1;
+  min-width: 250px;
+}
+
+/* Selector desplegable personalizado */
+.filtro-tipo {
+  min-width: 180px;
+  cursor: pointer;
+  appearance: none;
+  /* Flecha cian personalizada */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2300d2ff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px top 50%;
+  background-size: 12px auto;
+  padding-right: 40px;
+}
+
+.filtro-tipo option {
+  background: #0d1522;
+  color: #f1f5f9;
+}

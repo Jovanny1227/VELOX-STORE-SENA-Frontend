@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BicicletaService } from '../../services/bicicleta.service';
 import { MovimientoService } from '../../services/movimiento.service';
@@ -25,6 +25,7 @@ export class BicicletasComponent implements OnInit {
     private bicicletaService: BicicletaService,
     private movimientoService: MovimientoService,
     private inventarioService: InventarioService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -39,8 +40,11 @@ export class BicicletasComponent implements OnInit {
 
   cargarBicicletas() {
     this.bicicletaService.listarBicicletas().subscribe({
-      next: (data) => (this.bicicletas = data),
-      error: () => (this.mensajeError = 'Error al cargar bicicletas'),
+      next: (data) => {
+        this.bicicletas = data;
+        this.cdr.detectChanges(); // <-- ¡La magia ocurre aquí!
+      },
+      error: () => (this.mensajeError = 'Error al cargar las bicicletas'),
     });
   }
 
@@ -65,22 +69,12 @@ export class BicicletasComponent implements OnInit {
 
     this.bicicletaService.registrarBicicleta(datos.bicicleta, datos.stock).subscribe({
       next: (bici: any) => {
-        if (datos.stock > 0) {
-          const movimiento = {
-            codigoBicicleta: bici.codigo,
-            idProveedor: datos.idProveedor,
-            tipo: 'ENTRADA',
-            cantidad: datos.stock,
-            precioUnitario: datos.bicicleta.precio,
-            observacion: 'Stock inicial',
-          };
-          this.movimientoService.registrarMovimiento(movimiento).subscribe({
-            next: () => this.cargarInventario(),
-          });
-        }
+        // ELIMINAMOS EL BLOQUE QUE LLAMABA A this.movimientoService.registrarMovimiento(...)
+        // porque el backend ya lo hace automáticamente al registrar la bicicleta.
+
         this.mensaje = 'Bicicleta registrada correctamente';
         this.cargarBicicletas();
-        this.cargarInventario();
+        this.cargarInventario(); // Recargamos para ver el stock real
       },
       error: () => (this.mensajeError = 'Error al registrar bicicleta'),
     });
@@ -97,7 +91,19 @@ export class BicicletasComponent implements OnInit {
         this.cargarBicicletas();
         this.cargarInventario();
       },
-      error: () => (this.mensajeError = 'Error al eliminar bicicleta'),
+      error: (err) => {
+        // ESTO ES CLAVE: Leer el mensaje de error que manda Spring Boot
+        console.error('Error completo del backend:', err);
+
+        // Si el backend manda un mensaje en err.error.message o err.error
+        if (err.error && typeof err.error === 'string') {
+          this.mensajeError = err.error;
+        } else if (err.error && err.error.message) {
+          this.mensajeError = err.error.message;
+        } else {
+          this.mensajeError = 'Error al eliminar bicicleta. Revisa la consola (F12).';
+        }
+      },
     });
   }
 }

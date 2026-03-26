@@ -6,15 +6,19 @@
       <input class="velox-input" placeholder="Ej: Shimano Colombia" [(ngModel)]="nuevoProveedor.nombre" />
     </div>
     <div class="field-group">
-      <label>Contacto (Email/Tel)</label>
-      <input class="velox-input" placeholder="Nombre de contacto" [(ngModel)]="nuevoProveedor.contacto" />
+      <label>NIT</label>
+      <input class="velox-input" placeholder="Ej: 900.123.456-7" [(ngModel)]="nuevoProveedor.nit" />
     </div>
     <div class="field-group">
-      <label>Dirección</label>
-      <input class="velox-input" placeholder="Ciudad / Dirección" [(ngModel)]="nuevoProveedor.direccion" />
+      <label>Teléfono</label>
+      <input class="velox-input" placeholder="Ej: 3001234567" [(ngModel)]="nuevoProveedor.telefono" />
+    </div>
+    <div class="field-group">
+      <label>Email</label>
+      <input type="email" class="velox-input" placeholder="Ej: ventas@shimano.com" [(ngModel)]="nuevoProveedor.email" />
     </div>
     <button class="velox-btn-primary" (click)="enviar()"
-            [disabled]="!nuevoProveedor.nombre || !nuevoProveedor.contacto || !nuevoProveedor.direccion">
+            [disabled]="!nuevoProveedor.nombre">
       GUARDAR
     </button>
   </div>

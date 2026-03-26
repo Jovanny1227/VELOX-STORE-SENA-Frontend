@@ -5,4 +5,5 @@ export interface Bicicleta {
   modelo: string;
   precio: number;
   tipo: string;
+  proveedorId: number;
 }
