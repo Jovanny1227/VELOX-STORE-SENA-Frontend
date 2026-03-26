@@ -12,4 +12,15 @@ import { Venta } from '../../../models/venta.model';
 export class VentaListComponent {
   @Input() ventas: Venta[] = [];
   @Output() onEliminar = new EventEmitter<number>();
+
+  // Variable para controlar el modal
+  ventaSeleccionada: Venta | null = null;
+
+  abrirDetalle(venta: Venta) {
+    this.ventaSeleccionada = venta;
+  }
+
+  cerrarDetalle() {
+    this.ventaSeleccionada = null;
+  }
 }

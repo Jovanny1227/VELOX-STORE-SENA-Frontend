@@ -6,14 +6,15 @@
         <h3 class="venta-cliente">{{ v.nombreCliente }}</h3>
         <span class="venta-fecha">{{ v.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
       </div>
-      <button class="btn-delete" (click)="onEliminar.emit(v.idVenta!)">Eliminar</button>
+      <div class="venta-actions">
+        <button class="btn-detalle" (click)="abrirDetalle(v)">Ver Detalle</button>
+        <button class="btn-delete" (click)="onEliminar.emit(v.idVenta!)">Eliminar</button>
+      </div>
     </div>
 
     <div class="detalles-lista">
-      <div class="detalle-header">Resumen de Transacción</div>
-
       <div class="detalle-item icon-id">
-        <span><strong>ID de Venta:</strong> <span class="id-badge">{{ v.idVenta }}</span></span>
+        <span><strong>ID Venta:</strong> <span class="id-badge">{{ v.idVenta }}</span></span>
       </div>
 
       <div class="detalle-item icon-money">
@@ -26,4 +27,35 @@
 
 <div class="empty-state" *ngIf="!ventas.length">
   No hay ventas registradas
+</div>
+
+<div class="modal-overlay" *ngIf="ventaSeleccionada">
+  <div class="modal-card">
+    <h3>Detalles de Venta #{{ ventaSeleccionada.idVenta }}</h3>
+    <p class="modal-subtitle">Cliente: <strong>{{ ventaSeleccionada.nombreCliente }}</strong></p>
+    <p class="modal-subtitle">Fecha: {{ ventaSeleccionada.fecha | date:'dd/MM/yyyy HH:mm' }}</p>
+
+    <div class="venta-bikes-list">
+      <div class="empty-bikes" *ngIf="!ventaSeleccionada.detalles || ventaSeleccionada.detalles.length === 0">
+        No se ha cargado el detalle de las bicicletas (Revisar backend).
+      </div>
+
+      <div class="bike-item" *ngFor="let detalle of ventaSeleccionada.detalles">
+        <div class="bike-item-info">
+          <span class="bike-qty">{{ detalle.cantidad }}x</span>
+          <span class="bike-name">{{ detalle.bicicleta.marca }} {{ detalle.bicicleta.modelo }}</span>
+        </div>
+        <span class="bike-subtotal">{{ detalle.subtotal | currency:'COP':'symbol':'1.0-0' }}</span>
+      </div>
+    </div>
+
+    <div class="modal-total-box">
+      <span>Total Pagado:</span>
+      <span class="total-verde grande">{{ ventaSeleccionada.total | currency:'COP':'symbol':'1.0-0' }}</span>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="cerrarDetalle()">Cerrar</button>
+    </div>
+  </div>
 </div>
