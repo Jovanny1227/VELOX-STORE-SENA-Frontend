@@ -1,0 +1,252 @@
+<div class="reportes-wrapper bg-light min-vh-100 py-4">
+  <div class="container-fluid px-lg-5">
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4 p-4 bg-white">
+      <div class="row align-items-center g-3">
+        <div class="col-lg-8">
+          <h2 class="fw-bold mb-1" style="color: #0f172a;">📈 Centro de Reportes VELOX</h2>
+          <p class="text-muted fs-4 mb-0">Inteligencia de negocio y valorización de bodega (Stock Actual)</p>
+        </div>
+        <div class="col-lg-4 text-end">
+          <div class="d-flex gap-2 justify-content-end">
+            <button class="btn btn-accion btn-volver shadow-sm" (click)="volverAlInventario()" title="Volver al Inventario">🔙 Volver a Inventario</button>
+            <button class="btn btn-accion btn-excel shadow-sm" (click)="exportarExcel()" title="Exportar Stock a Excel">📊 Excel</button>
+            <button class="btn btn-accion btn-pdf shadow-sm" (click)="exportarPDF()" title="Exportar Stock a PDF">📄 PDF</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="cargando" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
+    <div [class.d-none]="cargando">
+
+      <div class="row g-4 mb-5">
+        <div class="col-md-6">
+          <div class="card shadow-sm border-0 border-start border-success border-5 h-100">
+            <div class="card-body p-4">
+              <h5 class="text-muted fw-bold mb-2 fs-4">💰 Capital Total en Bodega (Valorización)</h5>
+              <h1 class="display-5 fw-bold text-success mb-0">${{ valorTotalInventario | number }}</h1>
+              <p class="text-muted mt-2 mb-0 fs-6">Calculado sobre {{ unidadesTotales }} unidades físicas actuales</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card shadow-sm border-0 border-start border-danger border-5 h-100">
+            <div class="card-body p-4">
+              <h5 class="text-muted fw-bold mb-2 fs-4">🚨 Referencias en Quiebre de Stock</h5>
+              <h1 class="display-5 fw-bold text-danger mb-0">{{ listaBajoStock.length }}</h1>
+              <p class="text-muted mt-2 mb-0 fs-6">Bicicletas con 3 unidades o menos (Requieren compra)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4 mb-5">
+        <div class="col-md-5">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-0 pt-4 pb-0 fw-bold fs-4" style="color: #0f172a;">Distribución por Categoría</div>
+            <div class="card-body" style="position: relative; height: 300px;"><canvas id="canvasCategorias"></canvas></div>
+          </div>
+        </div>
+        <div class="col-md-7">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-0 pt-4 pb-0 fw-bold fs-4" style="color: #0f172a;">Inventario Físico por Marca</div>
+            <div class="card-body" style="position: relative; height: 300px;"><canvas id="canvasMarcas"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0 mb-5" *ngIf="listaBajoStock.length > 0">
+        <div class="card-header bg-danger text-white fw-bold p-3 fs-4">🛒 Lista de Compras Sugerida (Prioridad Alta)</div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+              <tr><th class="ps-4">Código</th><th>Marca y Modelo</th><th>Proveedor Sugerido</th><th class="text-center pe-4">Stock Restante</th></tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of listaBajoStock">
+                <td class="ps-4"><span class="badge bg-secondary">{{ item.codigo }}</span></td>
+                <td><div class="fw-bold" style="color: #0f172a;">{{ item.modelo }}</div><div class="text-muted small">{{ item.marca }}</div></td>
+                <td class="fw-semibold text-secondary">{{ item.nombreProveedor || item.proveedorNombre || 'Sin Proveedor' }}</td>
+                <td class="text-center pe-4"><span class="badge rounded-pill bg-danger fs-5 px-3 py-2">¡Solo {{ item.stock !== null ? item.stock : 0 }}!</span></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white border-bottom-0 pt-4 pb-3">
+
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+            <h3 class="fw-bold mb-0 fs-4" style="color: #0f172a;">🛍️ Historial de Ventas a Clientes</h3>
+            <div class="d-flex gap-2">
+              <button class="btn btn-accion btn-sm btn-excel shadow-sm" (click)="exportarVentasExcel()"><span class="btn-icon">📊</span><span>Excel</span></button>
+              <button class="btn btn-accion btn-sm btn-pdf shadow-sm" (click)="exportarVentasPDF()"><span class="btn-icon">📄</span><span>PDF</span></button>
+            </div>
+          </div>
+
+          <div class="d-flex flex-wrap align-items-center gap-3 p-3 rounded-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+            <div class="position-relative flex-grow-1" style="min-width: 250px; max-width: 350px;">
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0">🔍</span>
+                <input type="text" class="form-control border-start-0 ps-0 fw-bold text-muted"
+                       placeholder="Filtrar por cliente..." [(ngModel)]="filtroCliente"
+                       (focus)="mostrarDropdownCliente = true" (blur)="mostrarDropdownCliente = false" (input)="filtrarVentas()">
+                <button *ngIf="filtroCliente" class="btn btn-outline-secondary border-start-0" (click)="limpiarFiltroCliente()">✖</button>
+              </div>
+              <ul class="list-group position-absolute w-100 shadow-lg mt-1" style="z-index: 1000; max-height: 200px; overflow-y: auto;" *ngIf="mostrarDropdownCliente && clientesSugeridos.length > 0">
+                <li class="list-group-item list-group-item-action fw-bold text-secondary cursor-pointer" *ngFor="let c of clientesSugeridos" (mousedown)="seleccionarCliente(c)">{{ c }}</li>
+              </ul>
+            </div>
+            <div class="d-flex align-items-center gap-2 bg-white px-3 py-1 rounded border">
+              <label class="small fw-bold text-muted mb-0">Desde:</label>
+              <input type="date" class="form-control form-control-sm border-0 text-dark fw-semibold" [(ngModel)]="fechasVentas.inicio" (change)="filtrarVentas()">
+              <div class="vr mx-1"></div>
+              <label class="small fw-bold text-muted mb-0">Hasta:</label>
+              <input type="date" class="form-control form-control-sm border-0 text-dark fw-semibold" [(ngModel)]="fechasVentas.fin" (change)="filtrarVentas()">
+              <button *ngIf="fechasVentas.inicio || fechasVentas.fin" class="btn btn-sm text-danger border-0 p-0 ms-1" (click)="limpiarFechasVentas()">✖</button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light"><tr><th class="ps-4">No. Factura</th><th>Fecha / Cliente</th><th>Artículos</th><th>Total Venta</th><th class="pe-4">Estado</th></tr></thead>
+              <tbody>
+              <tr *ngFor="let venta of ventasFiltradas">
+                <td class="ps-4 fw-bold text-secondary">{{ venta.idFactura }}</td>
+                <td><div class="fw-bold" style="color: #0f172a;">{{ venta.cliente }}</div><div class="text-muted small">{{ venta.fecha }}</div></td>
+                <td>
+                  <ul class="list-unstyled mb-0 small"><li *ngFor="let item of venta.detalles" style="color: #0f172a;"><span class="fw-bold text-primary">{{ item.cantidad }}x</span> {{ item.marca }} {{ item.modelo }}</li></ul>
+                </td>
+                <td class="fw-bold text-success">${{ venta.total | number }}</td>
+                <td class="pe-4"><span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">{{ venta.estado }}</span></td>
+              </tr>
+              <tr *ngIf="ventasFiltradas.length === 0">
+                <td colspan="5" class="text-center py-4 text-muted fs-5">No hay ventas para los filtros actuales.</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0 mb-4 mt-5">
+        <div class="card-header bg-white border-bottom-0 pt-4 pb-3">
+
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+            <h3 class="fw-bold mb-0 fs-4" style="color: #0f172a;">🏭 Compras a Proveedores</h3>
+            <div class="d-flex gap-2">
+              <button class="btn btn-accion btn-sm btn-excel shadow-sm" (click)="exportarComprasExcel()"><span class="btn-icon">📊</span><span>Excel</span></button>
+              <button class="btn btn-accion btn-sm btn-pdf shadow-sm" (click)="exportarComprasPDF()"><span class="btn-icon">📄</span><span>PDF</span></button>
+            </div>
+          </div>
+
+          <div class="d-flex flex-wrap align-items-center gap-3 p-3 rounded-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+            <div class="position-relative flex-grow-1" style="min-width: 250px; max-width: 350px;">
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0">🔍</span>
+                <input type="text" class="form-control border-start-0 ps-0 fw-bold text-muted"
+                       placeholder="Filtrar por proveedor..." [(ngModel)]="filtroProveedor"
+                       (focus)="mostrarDropdownProveedor = true" (blur)="mostrarDropdownProveedor = false" (input)="filtrarCompras()">
+                <button *ngIf="filtroProveedor" class="btn btn-outline-secondary border-start-0" (click)="limpiarFiltroProveedor()">✖</button>
+              </div>
+              <ul class="list-group position-absolute w-100 shadow-lg mt-1" style="z-index: 1000; max-height: 200px; overflow-y: auto;" *ngIf="mostrarDropdownProveedor && proveedoresSugeridos.length > 0">
+                <li class="list-group-item list-group-item-action fw-bold text-secondary cursor-pointer" *ngFor="let p of proveedoresSugeridos" (mousedown)="seleccionarProveedor(p)">{{ p }}</li>
+              </ul>
+            </div>
+            <div class="d-flex align-items-center gap-2 bg-white px-3 py-1 rounded border">
+              <label class="small fw-bold text-muted mb-0">Desde:</label>
+              <input type="date" class="form-control form-control-sm border-0 text-dark fw-semibold" [(ngModel)]="fechasCompras.inicio" (change)="filtrarCompras()">
+              <div class="vr mx-1"></div>
+              <label class="small fw-bold text-muted mb-0">Hasta:</label>
+              <input type="date" class="form-control form-control-sm border-0 text-dark fw-semibold" [(ngModel)]="fechasCompras.fin" (change)="filtrarCompras()">
+              <button *ngIf="fechasCompras.inicio || fechasCompras.fin" class="btn btn-sm text-danger border-0 p-0 ms-1" (click)="limpiarFechasCompras()">✖</button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light"><tr><th class="ps-4">ID Registro</th><th>Fecha</th><th>Proveedor</th><th>Artículo</th><th class="text-center pe-4">Cantidad</th></tr></thead>
+              <tbody>
+              <tr *ngFor="let compra of comprasFiltradas">
+                <td class="ps-4 fw-bold text-secondary">{{ compra.idRegistro }}</td>
+                <td style="color: #0f172a;">{{ compra.fecha }}</td>
+                <td><span class="fw-bold" style="color: #ea580c;">{{ compra.proveedor }}</span></td>
+                <td style="color: #0f172a;">{{ compra.articulo }}</td>
+                <td class="text-center pe-4 fw-bold text-success">+{{ compra.cantidad }}</td>
+              </tr>
+              <tr *ngIf="comprasFiltradas.length === 0">
+                <td colspan="5" class="text-center py-4 text-muted fs-5">No hay compras para los filtros actuales.</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0 mb-4 mt-5">
+        <div class="card-header bg-white border-bottom-0 pt-4 pb-3">
+
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+            <h3 class="fw-bold mb-0 fs-4" style="color: #0f172a;">📦 Registro de Movimientos VELOX</h3>
+            <div class="d-flex gap-2">
+              <button class="btn btn-accion btn-sm btn-excel shadow-sm" (click)="exportarMovimientosExcel()"><span class="btn-icon">📊</span><span>Excel</span></button>
+              <button class="btn btn-accion btn-sm btn-pdf shadow-sm" (click)="exportarMovimientosPDF()"><span class="btn-icon">📄</span><span>PDF</span></button>
+            </div>
+          </div>
+
+          <div class="d-flex flex-wrap align-items-center gap-3 p-3 rounded-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+            <select class="form-select border-secondary text-muted fw-bold flex-grow-1" style="max-width: 250px;"
+                    [(ngModel)]="filtroMovimiento" (change)="filtrarMovimientos()">
+              <option value="TODOS">Todos los Tipos</option>
+              <option value="ENTRADAS">Solo Entradas</option>
+              <option value="SALIDAS">Solo Salidas</option>
+            </select>
+            <div class="d-flex align-items-center gap-2 bg-white px-3 py-1 rounded border">
+              <label class="small fw-bold text-muted mb-0">Desde:</label>
+              <input type="date" class="form-control form-control-sm border-0 text-dark fw-semibold" [(ngModel)]="fechasMovimientos.inicio" (change)="filtrarMovimientos()">
+              <div class="vr mx-1"></div>
+              <label class="small fw-bold text-muted mb-0">Hasta:</label>
+              <input type="date" class="form-control form-control-sm border-0 text-dark fw-semibold" [(ngModel)]="fechasMovimientos.fin" (change)="filtrarMovimientos()">
+              <button *ngIf="fechasMovimientos.inicio || fechasMovimientos.fin" class="btn btn-sm text-danger border-0 p-0 ms-1" (click)="limpiarFechasMovimientos()">✖</button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light"><tr><th class="ps-4">Fecha y Hora</th><th>Tipo</th><th>Bicicleta Afectada</th><th class="text-center">Cant.</th><th class="pe-4">Observación</th></tr></thead>
+              <tbody>
+              <tr *ngFor="let mov of movimientosFiltrados">
+                <td class="ps-4 text-muted small">{{ mov.fecha | date:'short' }}</td>
+                <td><span class="badge px-2 py-1" [ngClass]="mov.tipo.includes('ENTRADA') ? 'bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25' : 'bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25'">{{ mov.tipo }}</span></td>
+                <td class="fw-bold" style="color: #0f172a;">{{ mov.bicicleta?.codigo || mov.codigoBicicleta || 'N/A' }}</td>
+                <td class="text-center fw-bold fs-5" [ngClass]="mov.tipo.includes('ENTRADA') ? 'text-primary' : 'text-danger'">{{ mov.tipo.includes('ENTRADA') ? '+' : '-' }}{{ mov.cantidad }}</td>
+                <td class="pe-4 text-muted small">{{ mov.observacion }}</td>
+              </tr>
+              <tr *ngIf="movimientosFiltrados.length === 0">
+                <td colspan="5" class="text-center py-4 text-muted fs-5">No se encontraron movimientos para los filtros actuales.</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

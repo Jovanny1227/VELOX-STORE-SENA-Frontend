@@ -1,197 +1,175 @@
-/* =========================================
-   CONTENEDOR PRINCIPAL Y TÍTULOS
-========================================= */
-.inventario-container {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  animation: fadeIn 0.4s ease-in-out;
+/* ================= CONTENEDOR PRINCIPAL ================= */
+.inventario-wrapper {
+  background-color: #f4f7f6;
+  min-height: calc(100vh - 70px);
+  padding: 40px 0 80px 0;
 }
 
-.section-header h2 {
-  color: #00d2ff; /* Color cyan para el título */
-  font-size: 1.8rem;
-  border-bottom: 2px solid rgba(0, 210, 255, 0.3);
-  padding-bottom: 10px;
-  margin-bottom: 30px;
-  display: inline-block;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* =========================================
-   SECCIÓN 1: TARJETAS DE MÉTRICAS (STAT CARDS)
-========================================= */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin-bottom: 40px;
-}
-
-/* Estilo Neon Oscuro (El que te gustó) aplicado a las métricas */
-.stat-card {
-  background: linear-gradient(145deg, #1f2838, #131926);
-  border: 1px solid rgba(0, 210, 255, 0.3); /* Borde cyan tenue */
-  border-radius: 12px;
-  padding: 25px 20px;
-  text-align: center;
-  box-shadow: 0 0 15px rgba(0, 210, 255, 0.1);
-  transition: all 0.3s ease;
-}
-
-.stat-card:hover {
-  box-shadow: 0 0 25px rgba(0, 210, 255, 0.25);
-  transform: translateY(-3px);
-}
-
-.stat-card h3 {
-  margin: 0 0 10px 0;
+/* ================= BOTÓN DE ACCIÓN ================= */
+.btn-velox-orange {
+  background: linear-gradient(135deg, #ff8a00, #e52e71);
+  color: white;
+  border: none;
+  padding: 12px 25px;
   font-size: 1.05rem;
-  color: #94a3b8; /* Gris azulado claro */
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
+  font-weight: 700;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(255, 138, 0, 0.3);
+  transition: all 0.3s ease;
+  text-decoration: none;
 }
 
-.stat-value {
-  font-size: 2.8rem;
-  font-weight: 800;
-  color: #ffffff;
+.btn-velox-orange:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 138, 0, 0.4);
+  color: white;
 }
 
-/* Tarjeta principal destacada (Stock Total) brilla un poco más */
-.stat-primary {
-  border: 1px solid rgba(0, 210, 255, 0.8);
-  box-shadow: 0 0 25px rgba(0, 210, 255, 0.2);
-}
-
-.stat-primary .stat-value {
-  color: #00d2ff; /* Número principal en cyan brillante */
-}
-
-.stat-desc {
-  margin: 5px 0 0 0;
-  font-size: 0.9rem;
-  color: #64748b;
-}
-
-/* =========================================
-   SECCIÓN 2: COLUMNAS DE HISTORIAL
-========================================= */
-.movimientos-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-}
-
-.col-title {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* Colores para los títulos de las columnas */
-.text-success { color: #4ade80 !important; } /* Verde brillante */
-.text-danger { color: #f87171 !important; }  /* Rojo brillante */
-
-/* =========================================
-   TARJETAS DE MOVIMIENTOS INDIVIDUALES
-========================================= */
-.historial-card {
-  background: linear-gradient(145deg, #1f2838, #131926);
+/* ================= KPIs (MÁS COMPACTOS Y ÚTILES) ================= */
+.kpi-card {
+  background: #ffffff;
   border-radius: 12px;
   padding: 20px;
-  margin-bottom: 15px;
-  transition: all 0.3s ease;
-  color: #f1f5f9;
-}
-
-/* Resplandor VERDE para las entradas */
-.entradas-col .historial-card {
-  border: 1px solid rgba(74, 222, 128, 0.3);
-  box-shadow: 0 0 15px rgba(74, 222, 128, 0.05);
-}
-.entradas-col .historial-card:hover {
-  box-shadow: 0 0 20px rgba(74, 222, 128, 0.2);
-  transform: translateY(-2px);
-}
-
-/* Resplandor ROJO para las salidas */
-.salidas-col .historial-card {
-  border: 1px solid rgba(248, 113, 113, 0.3);
-  box-shadow: 0 0 15px rgba(248, 113, 113, 0.05);
-}
-.salidas-col .historial-card:hover {
-  box-shadow: 0 0 20px rgba(248, 113, 113, 0.2);
-  transform: translateY(-2px);
-}
-
-/* Interior de la tarjeta de historial */
-.hist-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
-  padding-bottom: 8px;
+  gap: 15px;
+  border: 1px solid #e2e8f0;
+  border-left: 5px solid #3b82f6;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
 }
 
-.hist-fecha {
-  font-size: 0.85rem;
-  color: #94a3b8;
+.kpi-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #475569;
 }
 
-/* Etiquetas (Badges) */
-.badge {
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.badge-success { color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.4); }
-.badge-danger { color: #f87171; border: 1px solid rgba(248, 113, 113, 0.4); }
-
-.hist-body p {
-  margin: 6px 0;
-  font-size: 0.95rem;
-  color: #cbd5e1;
-}
-
-.hist-body strong {
-  color: #ffffff;
-}
-
-.hist-obs {
-  margin-top: 10px !important;
-  padding-top: 8px;
-  border-top: 1px dotted rgba(255,255,255,0.1);
-  color: #94a3b8 !important;
-  font-style: italic;
-}
-
-/* Estado Vacío */
-.empty-state {
-  text-align: center;
-  padding: 30px;
-  background: #131926;
-  border-radius: 12px;
+.kpi-info h6 {
   color: #64748b;
-  font-style: italic;
-  border: 1px dashed rgba(255,255,255,0.15);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  margin-bottom: 2px;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.kpi-info h3 {
+  color: #0f172a;
+  font-weight: 800;
+  margin: 0;
+  font-size: 1.8rem;
 }
 
-@media (max-width: 800px) {
-  .movimientos-container { grid-template-columns: 1fr; }
+/* ================= TABLA TIPO EXCEL (LIBRO MAESTRO) ================= */
+.erp-table-container {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+  overflow: hidden;
+}
+
+.custom-table th {
+  background-color: #f8fafc;
+  color: #475569;
+  font-weight: 800; /* Letra más gruesa */
+  text-transform: uppercase;
+  font-size: 0.95rem; /* ANTES: 0.8rem - Ahora más grande y legible */
+  letter-spacing: 0.5px;
+  padding: 18px 20px; /* Más espacio para respirar */
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.custom-table td {
+  padding: 18px 20px; /* Celdas más altas */
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+  font-size: 1.05rem; /* Tamaño base de la tabla más grande */
+}
+
+.custom-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+/* ================= ETIQUETAS DE LA TABLA ================= */
+.sku-badge {
+  background: #f1f5f9;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+  font-family: monospace;
+  font-size: 1.1rem; /* ANTES: 0.9rem - Códigos muy claros */
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.cat-badge {
+  background: #eff6ff;
+  color: #2563eb;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.9rem; /* ANTES: 0.75rem */
+  font-weight: 700;
+}
+
+/* ================= ESTILOS NUEVOS PARA LA BARRA DE FILTROS ================= */
+.filter-panel {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 22px 25px;
+  border: 1px solid #cbd5e1; /* Combina con tu tabla */
+}
+
+.filter-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.filter-input {
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #1e293b;
+  font-weight: 500;
+  padding: 10px 15px;
+  transition: all 0.3s ease;
+}
+
+.filter-input:focus {
+  background-color: #ffffff;
+  border-color: #ff8a00; /* Toma el color naranja de tu tema */
+  box-shadow: 0 0 0 3px rgba(255, 138, 0, 0.15);
+  outline: none;
+}
+
+.filter-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.filter-btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-reporte {
+  background: #1e293b; /* Color oscuro profesional para el reporte */
+  border: none;
+}
+
+.btn-reporte:hover {
+  background: #0f172a;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2) !important;
 }

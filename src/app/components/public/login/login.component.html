@@ -1,0 +1,53 @@
+<div class="login-wrapper">
+
+  <div class="login-glass-card">
+    <div class="login-header">
+      <h2>Acceso Administrativo</h2>
+      <p>Ingresa tus credenciales para acceder al sistema</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-group mb-4">
+        <label class="form-label">Correo Electrónico</label>
+        <input
+          type="email"
+          class="form-control custom-input"
+          formControlName="email"
+          placeholder="ejemplo@correo.com"
+        >
+      </div>
+
+      <div class="form-group mb-5">
+        <label class="form-label">Contraseña</label>
+        <input
+          type="password"
+          class="form-control custom-input"
+          formControlName="password"
+          placeholder="••••••••"
+        >
+      </div>
+
+      <div class="alert custom-alert p-2 text-center" *ngIf="error">
+        {{ error }}
+      </div>
+
+      <button type="submit" class="btn btn-login w-100 py-3" [disabled]="loginForm.invalid || cargando">
+        {{ cargando ? 'Verificando...' : 'Iniciar Sesión' }}
+      </button>
+
+    </form>
+
+    <div class="register-section mt-4 pt-3 border-top" style="border-color: rgba(255,255,255,0.2) !important;">
+      <p class="text-center mb-1" style="color: #e2e8f0; font-size: 0.95rem;">¿No tienes una cuenta?</p>
+      <div class="text-center">
+        <a routerLink="/registro" class="register-link fw-bold">Regístrate aquí</a>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <a routerLink="/" class="back-link">← Volver al catálogo</a>
+    </div>
+  </div>
+
+</div>

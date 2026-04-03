@@ -1,14 +1,45 @@
-<nav class="velox-nav">
-  <div class="nav-brand">
+<nav class="velox-nav" [class.scrolled]="isScrolled">
+  <a class="nav-brand" routerLink="/" style="text-decoration: none;">
     <span class="brand-icon"><img src="assets/Logo/milogo.png" alt="Mi Logo de Tienda Bicicletas"></span>
-    VELOX <span class="brand-accent">STORE</span>
-  </div>
+  </a>
+
   <div class="nav-links">
-    <a routerLink="/bicicletas" routerLinkActive="active" class="nav-link">BICICLETAS</a>
-    <a routerLink="/ventas" routerLinkActive="active" class="nav-link">VENTAS</a>
-    <a routerLink="/inventario" routerLinkActive="active" class="nav-link">INVENTARIO</a>
-    <a routerLink="/clientes" routerLinkActive="active" class="nav-link">CLIENTES</a>
-    <a routerLink="/proveedores" routerLinkActive="active" class="nav-link">PROVEEDORES</a>
+    <ng-container *ngIf="!authService.isAdmin()">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">INICIO / CATÁLOGO</a>
+    </ng-container>
+
+    <ng-container *ngIf="authService.isAdmin()">
+      <a routerLink="/admin/inventario" routerLinkActive="active" class="nav-link">INVENTARIO</a>
+      <a routerLink="/bicicletas" routerLinkActive="active" class="nav-link">BICICLETAS</a>
+      <a routerLink="/proveedores" routerLinkActive="active" class="nav-link">PROVEEDORES</a>
+      <a routerLink="/admin/reportes" routerLinkActive="active" class="nav-link">REPORTES</a>
+    </ng-container>
   </div>
-  <div class="nav-badge">SYSTEM</div>
+
+  <div style="display: flex; gap: 15px; align-items: center;">
+    <a *ngIf="!authService.currentUserValue" routerLink="/login" style="background: #3b82f6; color: white; padding: 8px 20px; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 0.85rem; transition: 0.2s;">
+      INICIAR SESIÓN
+    </a>
+
+    <ng-container *ngIf="authService.currentUserValue">
+      <div class="d-flex align-items-center gap-3 ms-auto">
+
+        <div class="d-flex flex-column align-items-end text-end" style="line-height: 1.1;">
+          <span class="fw-bold mb-1" style="font-size: 0.95rem; color: #0f172a;">
+            {{ authService.currentUserValue.nombre }}
+          </span>
+          <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25" style="font-size: 0.65rem; letter-spacing: 1px;">
+            {{ authService.currentUserValue.rol }}
+          </span>
+        </div>
+
+        <div class="vr bg-secondary opacity-25 mx-1" style="height: 35px;"></div>
+
+        <button class="btn btn-sm btn-outline-danger fw-bold rounded-pill px-3 d-flex align-items-center gap-2" (click)="logout()">
+          <span>CERRAR SESIÓN</span>
+        </button>
+
+      </div>
+    </ng-container>
+  </div>
 </nav>

@@ -1,19 +1,196 @@
-<section class="velox-main">
-  <aside class="velox-sidebar">
-    <app-bicicleta-form
-      [proveedores]="proveedores"
-      [mensaje]="mensaje"
-      [mensajeError]="mensajeError"
-      (onRegistrar)="procesarRegistro($event)">
-    </app-bicicleta-form>
-  </aside>
+<div class="admin-wrapper">
+  <div class="container-fluid px-lg-5">
 
-  <section class="velox-catalog">
-    <app-bicicleta-list
-      [bicicletas]="bicicletas"
-      [inventario]="inventario"
-      (onEliminar)="procesarEliminacion($event)"
-      (onActualizar)="cargarTodo()">
-    </app-bicicleta-list>
-  </section>
-</section>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold mb-1" style="color: #0f172a; font-size: 2.2rem;">🚲 Catálogo de Vehículos</h2>
+        <p class="text-muted fs-5 mb-0">Gestión de inventario y alta de referencias</p>
+      </div>
+    </div>
+
+    <div class="command-panel mb-4">
+      <div class="panel-header">
+        <h5 class="fw-bold mb-0 text-white">
+          {{ editando ? '✏️ Modo Edición: Actualizando Datos' : (modoMasivo ? '📦 Modo Masivo: Preparando Lote' : '⚡ Nuevo Registro Rápido') }}
+        </h5>
+        <div>
+          <button class="btn btn-sm btn-light rounded-pill fw-bold me-2" *ngIf="editando" (click)="resetearFormulario()">
+            Cancelar Edición
+          </button>
+          <button class="btn custom-btn-masivo rounded-pill fw-bold"
+                  [ngClass]="{'activo': modoMasivo}"
+                  (click)="toggleModoMasivo()" *ngIf="!editando">
+            {{ modoMasivo ? '🔙 Volver a Individual' : '📦 Activar Carga Masiva' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <form [formGroup]="bicicletaForm" (ngSubmit)="onSubmit()">
+          <div class="row g-3 align-items-end">
+
+            <div class="col-md-3">
+              <label class="modern-label">Categoría</label>
+              <select class="form-select modern-input" formControlName="tipo">
+                <option value="" disabled selected>Seleccione...</option>
+                <option value="MTB">MTB</option>
+                <option value="RUTA">Ruta</option>
+                <option value="URBANO">Urbano</option>
+                <option value="BMX">BMX</option>
+              </select>
+            </div>
+
+            <div class="col-md-2">
+              <label class="modern-label">Marca</label>
+              <input type="text" class="form-control modern-input" formControlName="marca" placeholder="Ej. Trek">
+            </div>
+
+            <div class="col-md-3">
+              <label class="modern-label">Línea / Modelo</label>
+              <input type="text" class="form-control modern-input" formControlName="modelo" placeholder="Ej. Marlin 7">
+            </div>
+
+            <div class="col-md-2 position-relative">
+              <label class="modern-label">Proveedor</label>
+
+              <div class="position-relative">
+                <input type="text" class="form-control modern-input w-100"
+                       style="padding-right: 30px;"
+                       formControlName="proveedorNombre"
+                       placeholder="Buscar o elegir..."
+                       (focus)="mostrarDropdown = true"
+                       (blur)="mostrarDropdown = false">
+                <span style="position: absolute; right: 15px; top: 12px; color: #94a3b8; pointer-events: none; font-size: 0.8rem;">▼</span>
+              </div>
+
+              <div class="custom-dropdown shadow-sm" *ngIf="mostrarDropdown">
+                <div class="dropdown-item"
+                     *ngFor="let prov of proveedoresFiltrados"
+                     (mousedown)="seleccionarProveedor(prov)">
+                  {{ prov.nombre }}
+                </div>
+                <div class="dropdown-item text-muted" *ngIf="proveedoresFiltrados.length === 0">
+                  No hay coincidencias
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-2 mt-3">
+              <label class="modern-label text-success fw-bold">Precio ($)</label>
+              <input type="number" class="form-control modern-input border-success bg-success bg-opacity-10 text-success fw-bold" formControlName="precio" placeholder="0">
+            </div>
+
+            <div class="col-md-2 mt-3">
+              <label class="modern-label">Stock Inicial</label>
+              <input type="number" class="form-control modern-input fw-bold text-success"
+                     formControlName="stock" placeholder="0" min="0">
+            </div>
+
+            <div class="col-md-12 mt-3 text-end">
+              <button type="submit" class="btn modern-btn-submit px-5"
+                      [ngClass]="{'btn-edit-mode': editando, 'btn-warning text-dark': modoMasivo}"
+                      [disabled]="bicicletaForm.invalid">
+                {{ editando ? 'Guardar Cambios' : (modoMasivo ? '➕ Añadir a la lista de espera' : '+ Agregar al Catálogo') }}
+              </button>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card border-warning mb-5 shadow-sm" *ngIf="modoMasivo && listaEspera.length > 0">
+      <div class="card-header bg-warning bg-opacity-25 border-warning fw-bold d-flex justify-content-between align-items-center">
+        <span>📋 Bicicletas en cola para registrar ({{ listaEspera.length }})</span>
+        <button class="btn btn-dark fw-bold px-4 rounded-pill" (click)="enviarLoteMasivo()">
+          🚀 Registrar Lote en el Sistema
+        </button>
+      </div>
+      <div class="card-body p-0">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let bici of listaEspera; let i = index">
+            <div>
+              <span class="badge bg-secondary me-2">{{ bici.tipo }}</span>
+              <strong>{{ bici.marca }} {{ bici.modelo }}</strong> - ${{ bici.precio | number }}
+            </div>
+            <button class="btn btn-sm btn-outline-danger border-0" (click)="quitarDeLista(i)">❌ Quitar</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div *ngIf="cargando" class="text-center py-5">
+      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
+    </div>
+
+    <div class="table-card" *ngIf="!cargando">
+      <div class="table-responsive">
+
+        <div class="d-flex flex-wrap align-items-center gap-3 p-3 rounded-3 mb-4" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+
+          <div class="position-relative flex-grow-1" style="min-width: 250px;">
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">🔍</span>
+              <input type="text" class="form-control border-start-0 ps-0 fw-bold text-muted"
+                     placeholder="Filtrar por código, marca o modelo..."
+                     [(ngModel)]="filtros.termino" (input)="filtrarBicicletas()" [ngModelOptions]="{standalone: true}">
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center gap-2 bg-white px-3 py-1 rounded border">
+            <label class="small fw-bold text-muted mb-0">Precio Min:</label>
+            <span class="text-success fw-bold">$</span>
+            <input type="number" class="form-control form-control-sm border-0 text-success fw-semibold" style="width: 80px;"
+                   [(ngModel)]="filtros.precioMin" (input)="filtrarBicicletas()" [ngModelOptions]="{standalone: true}" placeholder="0">
+
+            <div class="vr mx-1"></div>
+
+            <label class="small fw-bold text-muted mb-0">Max:</label>
+            <span class="text-success fw-bold">$</span>
+            <input type="number" class="form-control form-control-sm border-0 text-success fw-semibold" style="width: 80px;"
+                   [(ngModel)]="filtros.precioMax" (input)="filtrarBicicletas()" [ngModelOptions]="{standalone: true}" placeholder="Infinito">
+
+            <button *ngIf="filtros.termino || filtros.precioMin !== null || filtros.precioMax !== null"
+                    class="btn btn-sm text-danger border-0 p-0 ms-2"
+                    (click)="limpiarFiltros()" title="Limpiar todos los filtros">✖</button>
+          </div>
+        </div>
+
+        <table class="table modern-table mb-0 align-middle">
+          <thead>
+          <tr>
+            <th class="ps-4">Código SKU</th>
+            <th>Vehículo y Marca</th>
+            <th>Categoría</th>
+            <th>Precio de Venta</th>
+            <th class="text-center pe-4">Administrar</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of catalogoFiltrado" class="table-row-hover">
+            <td class="ps-4"><span class="badge bg-light text-dark border px-3 py-2 fs-6 font-monospace">{{ item.codigo }}</span></td>
+            <td>
+              <div class="fw-bold text-dark" style="font-size: 1.15rem;">{{ item.modelo }}</div>
+              <div class="text-muted fw-semibold">{{ item.marca }}</div>
+            </td>
+            <td>
+                <span class="badge rounded-pill px-3 py-2" style="background: #e0e7ff; color: #4338ca; font-size: 0.85rem;">
+                  {{ item.tipo }}
+                </span>
+            </td>
+            <td class="fw-bold text-success fs-5">${{ item.precio | number }}</td>
+            <td class="text-center pe-4">
+              <button class="btn btn-sm btn-light border me-2 shadow-sm fs-5" title="Editar" (click)="editarBicicleta(item)">✏️</button>
+              <button class="btn btn-sm btn-light border text-danger shadow-sm fs-5" title="Eliminar" (click)="eliminarBicicleta(item.id || item.idBicicleta)">🗑️</button>
+            </td>
+          </tr>
+          <tr *ngIf="catalogoFiltrado.length === 0">
+            <td colspan="5" class="text-center py-5 text-muted fs-5">No se encontraron bicicletas con los filtros actuales.</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>

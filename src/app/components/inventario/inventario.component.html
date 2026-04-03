@@ -1,69 +1,161 @@
-<div class="inventario-container">
-  <div class="section-header">
-    <h2>Dashboard de Inventario</h2>
-  </div>
+<div class="inventario-wrapper">
+  <div class="container-fluid px-lg-5">
 
-  <div class="dashboard-grid">
-    <div class="stat-card stat-primary">
-      <h3>Stock Total</h3>
-      <div class="stat-value">{{ stockTotal }}</div>
-      <p class="stat-desc">Bicicletas en la tienda</p>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold" style="color: #0f172a;">📊 Panel de Inventario Maestro</h2>
+        <p class="text-muted mb-0">Gestión detallada de referencias, códigos SKU y existencias.</p>
+      </div>
+      <a routerLink="/bicicletas" class="btn-velox-orange">
+        + Ingresar Nuevo Stock
+      </a>
     </div>
 
-    <div class="stat-card">
-      <h3>MTB</h3>
-      <div class="stat-value">{{ stockPorTipo['MTB'] }}</div>
+    <div *ngIf="cargando" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
     </div>
-    <div class="stat-card">
-      <h3>Ruta</h3>
-      <div class="stat-value">{{ stockPorTipo['RUTA'] }}</div>
-    </div>
-    <div class="stat-card">
-      <h3>Urbano</h3>
-      <div class="stat-value">{{ stockPorTipo['URBANO'] }}</div>
-    </div>
-    <div class="stat-card">
-      <h3>BMX</h3>
-      <div class="stat-value">{{ stockPorTipo['BMX'] }}</div>
-    </div>
-  </div>
 
-  <div class="movimientos-container">
+    <div *ngIf="!cargando">
 
-    <div class="movimientos-column entradas-col">
-      <h3 class="col-title text-success">Entradas a Inventario</h3>
-      <div class="empty-state" *ngIf="entradas.length === 0">No hay entradas registradas</div>
-
-      <div class="historial-card" *ngFor="let m of entradas">
-        <div class="hist-header">
-          <span class="badge badge-success">{{ m.tipo }}</span>
-          <span class="hist-fecha">{{ m.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <div class="kpi-card" style="border-left-color: #3b82f6;">
+            <div class="kpi-icon">🚲</div>
+            <div class="kpi-info">
+              <h6>Total Unidades Físicas</h6>
+              <h3>{{ totalStockGlobal }}</h3>
+            </div>
+          </div>
         </div>
-        <div class="hist-body">
-          <p><strong>Bicicleta:</strong> {{ m.bicicleta?.marca }} {{ m.bicicleta?.modelo }} ({{ m.bicicleta?.codigo }})</p>
-          <p><strong>Cantidad agregada:</strong> <span class="text-success">+{{ m.cantidad }}</span></p>
-          <p *ngIf="m.proveedor"><strong>Proveedor:</strong> {{ m.proveedor?.nombre }}</p>
-          <p class="hist-obs" *ngIf="m.observacion"><small>Nota: {{ m.observacion }}</small></p>
+        <div class="col-md-3">
+          <div class="kpi-card" style="border-left-color: #8b5cf6;">
+            <div class="kpi-icon">📑</div>
+            <div class="kpi-info">
+              <h6>Modelos / Referencias</h6>
+              <h3>{{ referenciasUnicas }}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="kpi-card" style="border-left-color: #f97316;">
+            <div class="kpi-icon">📂</div>
+            <div class="kpi-info">
+              <h6>Categorías Activas</h6>
+              <h3>{{ totalCategoriasActivas }}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="kpi-card" style="border-left-color: #10b981;">
+            <div class="kpi-icon">🏭</div>
+            <div class="kpi-info">
+              <h6>Marcas en Bodega</h6>
+              <h3>{{ totalMarcas }}</h3>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="movimientos-column salidas-col">
-      <h3 class="col-title text-danger">Salidas de Inventario (Ventas)</h3>
-      <div class="empty-state" *ngIf="salidas.length === 0">No hay salidas registradas</div>
+      <div class="filter-panel mb-4 shadow-sm">
+        <div class="row g-3 align-items-end">
 
-      <div class="historial-card" *ngFor="let m of salidas">
-        <div class="hist-header">
-          <span class="badge badge-danger">{{ m.tipo }}</span>
-          <span class="hist-fecha">{{ m.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
-        </div>
-        <div class="hist-body">
-          <p><strong>Bicicleta:</strong> {{ m.bicicleta?.marca }} {{ m.bicicleta?.modelo }} ({{ m.bicicleta?.codigo }})</p>
-          <p><strong>Cantidad vendida:</strong> <span class="text-danger"> -{{ m.cantidad }}</span></p>
-          <p class="hist-obs" *ngIf="m.observacion"><small>Nota: {{ m.observacion }}</small></p>
+          <div class="col-md-2">
+            <label class="filter-label">Categoría</label>
+            <select class="form-select filter-input" [(ngModel)]="filtros.tipo" (change)="aplicarFiltros()">
+              <option value="">Todas</option>
+              <option value="MTB">MTB</option>
+              <option value="RUTA">Ruta</option>
+              <option value="URBANO">Urbano</option>
+              <option value="BMX">BMX</option>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label class="filter-label">Buscar Modelo o Marca</label>
+            <input type="text" class="form-control filter-input" placeholder="Ej. GW o Marlin..."
+                   [(ngModel)]="filtros.modelo" (keyup)="aplicarFiltros()">
+          </div>
+
+          <div class="col-md-2">
+            <label class="filter-label">Desde</label>
+            <input type="date" class="form-control filter-input" [(ngModel)]="filtros.fechaInicio" (change)="aplicarFiltros()">
+          </div>
+          <div class="col-md-2">
+            <label class="filter-label">Hasta</label>
+            <input type="date" class="form-control filter-input" [(ngModel)]="filtros.fechaFin" (change)="aplicarFiltros()">
+          </div>
+
+          <div class="col-md-3 d-flex gap-2 justify-content-end">
+            <button class="btn btn-light border filter-btn fw-bold" (click)="limpiarFiltros()" title="Limpiar Filtros" style="color: #64748b;">
+              🧹 Limpiar
+            </button>
+            <button class="btn btn-reporte filter-btn text-white fw-bold shadow-sm" (click)="irAReportes()">
+              📊 Generar Reporte
+            </button>
+          </div>
+
         </div>
       </div>
-    </div>
+      <div class="erp-table-container">
+        <div class="bg-white p-4 border-bottom d-flex justify-content-between align-items-center">
+          <h4 class="fw-bold m-0" style="color: #1e293b;">Libro Mayor de Artículos</h4>
+          <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2">
+            Base de datos sincronizada
+          </span>
+        </div>
 
+        <div class="table-responsive">
+          <table class="table custom-table mb-0 align-middle">
+            <thead>
+            <tr>
+              <th class="ps-4">Código SKU</th>
+              <th>Marca y Modelo</th>
+              <th>Categoría</th>
+              <th>Proveedor</th>
+              <th>Precio Unitario Base</th>
+              <th class="pe-4 text-center">Stock Disponible</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of catalogoFiltrado">
+              <td class="ps-4">
+                <span class="sku-badge">{{ item.codigo }}</span>
+              </td>
+              <td>
+                <div class="fw-bold" style="color: #1e293b; font-size: 1.2rem;">{{ item.modelo }}</div>
+                <div class="text-muted fw-semibold" style="font-size: 0.95rem;">{{ item.marca }}</div>
+              </td>
+              <td>
+                <span class="cat-badge">{{ item.tipo }}</span>
+              </td>
+              <td>
+                  <span style="color: #475569; font-weight: 600; font-size: 1.1rem;">
+                    {{ item.nombreProveedor }}
+                  </span>
+              </td>
+              <td class="fw-bold text-success" style="font-size: 1.25rem;">
+                ${{ item.precio | number }}
+              </td>
+              <td class="pe-4 text-center">
+                  <span class="badge"
+                        [ngClass]="item.stock <= 3 ? 'bg-danger' : 'bg-dark'"
+                        style="font-size: 1.15rem; padding: 8px 16px; border-radius: 8px;">
+                    {{ item.stock !== null ? item.stock : 0 }}
+                  </span>
+              </td>
+            </tr>
+
+            <tr *ngIf="catalogoFiltrado.length === 0">
+              <td colspan="6" class="text-center py-5">
+                <div class="text-muted fs-5">No se encontraron referencias con esos filtros.</div>
+                <button class="btn btn-outline-primary mt-3 fs-5" (click)="limpiarFiltros()">Ver todo el catálogo</button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>

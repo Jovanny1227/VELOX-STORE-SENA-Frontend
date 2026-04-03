@@ -1,27 +1,107 @@
-<div class="proveedores-container">
-  <div class="section-header">
-    <h2>Gestión de Proveedores</h2>
-  </div>
+<div class="admin-wrapper">
+  <div class="container-fluid px-lg-5">
 
-  <div class="layout-grid">
-    <aside>
-      <app-proveedor-form
-        [mensaje]="mensaje"
-        [mensajeError]="mensajeError"
-        (onRegistrar)="registrarProveedor($event)">
-      </app-proveedor-form>
-    </aside>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold mb-1" style="color: #0f172a; font-size: 2.2rem;">🏢 Directorio de Proveedores</h2>
+        <p class="text-muted fs-5 mb-0">Gestión de marcas y distribuidores mayoristas</p>
+      </div>
+    </div>
 
-    <section class="lista-section">
-      <div class="section-sub-header">
-        <span>PROVEEDORES REGISTRADOS </span>
-        <span class="badge-count">{{ proveedores.length }}</span>
+    <div class="command-panel mb-5">
+      <div class="panel-header">
+        <h5 class="fw-bold mb-0 text-white">
+          {{ editando ? '✏️ Modo Edición: Actualizando Proveedor' : '🤝 Alta de Nuevo Proveedor' }}
+        </h5>
+        <button class="btn btn-sm btn-light rounded-pill fw-bold" *ngIf="editando" (click)="resetearFormulario()">
+          Cancelar Edición
+        </button>
       </div>
 
-      <app-proveedor-list
-        [proveedores]="proveedores"
-        (onEliminar)="eliminarProveedor($event)">
-      </app-proveedor-list>
-    </section>
+      <div class="panel-body">
+        <form [formGroup]="proveedorForm" (ngSubmit)="onSubmit()">
+          <div class="row g-3 align-items-end">
+
+            <div class="col-md-2">
+              <label class="modern-label">NIT / Documento</label>
+              <input type="text" class="form-control modern-input font-monospace fw-bold text-primary" formControlName="nit" placeholder="Ej. 900.123.456-7">
+            </div>
+
+            <div class="col-md-5">
+              <label class="modern-label">Empresa / Marca</label>
+              <input type="text" class="form-control modern-input" formControlName="nombre" placeholder="Ej. GW Colombia">
+            </div>
+
+            <div class="col-md-5">
+              <label class="modern-label">Teléfono</label>
+              <input type="text" class="form-control modern-input" formControlName="telefono" placeholder="(+57) 300...">
+            </div>
+
+            <div class="col-md-4 mt-3">
+              <label class="modern-label">Correo Electrónico</label>
+              <input type="email" class="form-control modern-input" formControlName="email" placeholder="ventas@empresa.com">
+            </div>
+
+            <div class="col-md-5 mt-3">
+              <label class="modern-label">Dirección / Sede</label>
+              <input type="text" class="form-control modern-input" formControlName="direccion" placeholder="Ej. Cra 14 # 22-15, Armenia">
+            </div>
+
+            <div class="col-md-3 mt-3 text-end">
+              <button type="submit" class="btn modern-btn-submit w-100" [ngClass]="{'btn-edit-mode': editando}" [disabled]="proveedorForm.invalid">
+                {{ editando ? 'Guardar Cambios' : '+ Registrar Proveedor' }}
+              </button>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div *ngIf="cargando" class="text-center py-5">
+      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
+    </div>
+
+    <div class="table-card" *ngIf="!cargando">
+      <div class="table-responsive">
+        <table class="table modern-table mb-0 align-middle">
+          <thead>
+          <tr>
+            <th class="ps-4">Empresa y NIT</th>
+            <th>Comunicaciones</th>
+            <th>Sede Física</th>
+            <th class="text-center pe-4">Administrar</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of proveedores" class="table-row-hover">
+            <td class="ps-4">
+              <div class="fw-bold text-dark mb-1" style="font-size: 1.15rem;">{{ item.nombre }}</div>
+              <span class="badge bg-light text-secondary border px-2 py-1 font-monospace" style="font-size: 0.8rem;">
+                  NIT: {{ item.nit || 'Sin NIT' }}
+                </span>
+            </td>
+            <td>
+              <div class="fw-bold text-dark">{{ item.telefono }}</div>
+              <div class="text-muted" style="font-size: 0.85rem;">{{ item.email }}</div>
+            </td>
+            <td>
+                <span class="badge rounded-pill px-3 py-2" style="background: #f1f5f9; color: #475569; font-size: 0.85rem;">
+                  📍 {{ item.direccion || 'Sin registrar' }}
+                </span>
+            </td>
+            <td class="text-center pe-4">
+              <button class="btn btn-sm btn-light border me-2 shadow-sm fs-5" title="Editar" (click)="editarProveedor(item)">✏️</button>
+              <button class="btn btn-sm btn-light border text-danger shadow-sm fs-5" title="Eliminar" (click)="eliminarProveedor(item.id || item.idProveedor)">🗑️</button>
+            </td>
+          </tr>
+          <tr *ngIf="proveedores.length === 0">
+            <td colspan="4" class="text-center py-5 text-muted fs-5">No hay proveedores registrados. Utiliza el panel superior para comenzar.</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </div>
