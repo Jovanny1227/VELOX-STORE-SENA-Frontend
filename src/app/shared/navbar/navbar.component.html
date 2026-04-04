@@ -1,6 +1,6 @@
 <nav class="velox-nav" [class.scrolled]="isScrolled">
   <a class="nav-brand" routerLink="/" style="text-decoration: none;">
-    <span class="brand-icon"><img src="assets/Logo/milogo.png" alt="Mi Logo de Tienda Bicicletas"></span>
+    <span class="brand-icon"><img src="assets/Logo/milogo.png" alt="Mi Logo de Tienda Bicicletas" style="max-height: 40px; width: auto;"></span>
   </a>
 
   <div class="nav-links">
@@ -13,6 +13,9 @@
       <a routerLink="/bicicletas" routerLinkActive="active" class="nav-link">BICICLETAS</a>
       <a routerLink="/proveedores" routerLinkActive="active" class="nav-link">PROVEEDORES</a>
       <a routerLink="/admin/reportes" routerLinkActive="active" class="nav-link">REPORTES</a>
+
+      <a routerLink="/admin/clientes" routerLinkActive="active" class="nav-link">CLIENTES</a>
+      <a routerLink="/admin/caja" routerLinkActive="active" class="nav-link text-success fw-bold"><i class="bi bi-shop"></i> CAJA / POS</a>
     </ng-container>
   </div>
 

@@ -1,9 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // <--- IMPORTAMOS ChangeDetectorRef
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { InventarioService } from '../../services/inventario.service';
 import { BicicletaService } from '../../services/bicicleta.service';
 
 @Component({
@@ -14,8 +12,6 @@ import { BicicletaService } from '../../services/bicicleta.service';
   styleUrls: ['./inventario.component.css'],
 })
 export class InventarioComponent implements OnInit {
-  inventarioJerarquico: any = {};
-
   // Arreglo original intacto
   catalogoDetallado: any[] = [];
   // Arreglo que se mostrará en la tabla (filtrado)
@@ -38,46 +34,36 @@ export class InventarioComponent implements OnInit {
   referenciasUnicas: number = 0;
 
   constructor(
-    private inventarioService: InventarioService,
     private bicicletaService: BicicletaService,
     private router: Router,
-    private cdr: ChangeDetectorRef, // <--- LO INYECTAMOS AQUÍ
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
     this.cargando = true;
-
-    // Cargamos todo
-    this.inventarioService.obtenerJerarquico().subscribe({
-      next: (data) => {
-        this.inventarioJerarquico = data;
-        this.calcularMetricas();
-        this.cargarDetalleMaestro(); // Este método apagará el "cargando" al terminar
-
-        this.cdr.detectChanges(); // 🔥 PELLIZCO 1: Actualiza las tarjetas de métricas rápido
-      },
-      error: (err) => {
-        console.error('Error cargando inventario jerárquico', err);
-        this.cargando = false;
-        this.cdr.detectChanges(); // Apagamos carga si hay error
-      },
-    });
+    this.cargarDetalleMaestro();
   }
 
   cargarDetalleMaestro() {
     this.bicicletaService.listarBicicletas().subscribe({
-      next: (data) => {
-        this.catalogoDetallado = data;
-        this.catalogoFiltrado = data; // Al inicio, mostramos todo
-        this.referenciasUnicas = data.length;
+      // 🔥 CORRECCIÓN: Le ponemos ": any" a data para que TypeScript no se queje en la línea 52
+      next: (data: any) => {
+        // Validación de seguridad
+        const catalogoLimpio = Array.isArray(data) ? data : data?.content || [];
+
+        this.catalogoDetallado = catalogoLimpio;
+        this.catalogoFiltrado = catalogoLimpio;
         this.cargando = false;
 
-        this.cdr.detectChanges(); // 🔥 PELLIZCO 2: Muestra la tabla de inventario al instante
+        // Calcular métricas directamente de la lista maestra
+        this.calcularMetricas(catalogoLimpio);
+
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error cargando catálogo maestro', err);
         this.cargando = false;
-        this.cdr.detectChanges(); // Apagamos carga si hay error
+        this.cdr.detectChanges();
       },
     });
   }
@@ -85,30 +71,26 @@ export class InventarioComponent implements OnInit {
   // ================= MOTOR DE FILTROS =================
   aplicarFiltros() {
     this.catalogoFiltrado = this.catalogoDetallado.filter((item) => {
-      // 1. Filtro por Tipo
       const cumpleTipo = this.filtros.tipo ? item.tipo === this.filtros.tipo : true;
 
-      // 2. Filtro por Modelo o Marca
       const termino = this.filtros.modelo.toLowerCase();
       const cumpleModeloOMarca = this.filtros.modelo
-        ? item.modelo.toLowerCase().includes(termino) || item.marca.toLowerCase().includes(termino)
+        ? (item.modelo && item.modelo.toLowerCase().includes(termino)) ||
+          (item.marca && item.marca.toLowerCase().includes(termino))
         : true;
 
-      // 3. Filtro Estricto por Fechas
       let cumpleFecha = true;
       if (this.filtros.fechaInicio && this.filtros.fechaFin) {
-        // Buscamos la fecha en los nombres más comunes que suele mandar el Backend
         const fechaBackend = item.fechaRegistro || item.fechaCreacion || item.fecha;
 
         if (fechaBackend) {
           const fechaItem = new Date(fechaBackend);
           const inicio = new Date(this.filtros.fechaInicio);
           const fin = new Date(this.filtros.fechaFin);
-          fin.setHours(23, 59, 59); // Para incluir todo el último día
+          fin.setHours(23, 59, 59);
 
           cumpleFecha = fechaItem >= inicio && fechaItem <= fin;
         } else {
-          // Si hay fechas seleccionadas en el filtro, pero la bicicleta NO tiene fecha, la ocultamos
           cumpleFecha = false;
         }
       }
@@ -116,46 +98,40 @@ export class InventarioComponent implements OnInit {
       return cumpleTipo && cumpleModeloOMarca && cumpleFecha;
     });
 
-    this.cdr.detectChanges(); // 🔥 PELLIZCO 3: Hace que el filtrado de la tabla sea reactivo e instantáneo
+    this.cdr.detectChanges();
   }
 
   limpiarFiltros() {
     this.filtros = { tipo: '', modelo: '', fechaInicio: '', fechaFin: '' };
-    this.catalogoFiltrado = [...this.catalogoDetallado]; // Restauramos la tabla
-
-    this.cdr.detectChanges(); // 🔥 PELLIZCO 4: Al limpiar, la tabla vuelve a su estado original sin lag
+    this.catalogoFiltrado = [...this.catalogoDetallado];
+    this.cdr.detectChanges();
   }
 
   // ================= NAVEGACIÓN A REPORTES =================
   irAReportes() {
-    // Viajamos a la ruta de reportes y le pasamos los datos que filtramos en memoria
     this.router.navigate(['/admin/reportes'], {
       state: { datosFiltrados: this.catalogoFiltrado },
     });
   }
 
-  objectKeys(obj: any): string[] {
-    return Object.keys(obj || {});
-  }
-
-  calcularMetricas() {
+  // 🔥 MÉTRICAS CALCULADAS DIRECTAMENTE DE LA LISTA MAESTRA 🔥
+  calcularMetricas(listaBicicletas: any[]) {
     this.totalStockGlobal = 0;
-    const categorias = this.objectKeys(this.inventarioJerarquico);
-    this.totalCategoriasActivas = categorias.length;
-    let marcasUnicas = new Set<string>();
+    const categoriasUnicas = new Set<string>();
+    const marcasUnicas = new Set<string>();
 
-    categorias.forEach((cat) => {
-      const marcas = this.objectKeys(this.inventarioJerarquico[cat]);
-      marcas.forEach((marca) => {
-        this.totalStockGlobal += this.inventarioJerarquico[cat][marca];
-        marcasUnicas.add(marca);
-      });
+    listaBicicletas.forEach((bici) => {
+      this.totalStockGlobal += bici.stock || 0;
+      if (bici.tipo) categoriasUnicas.add(bici.tipo);
+      if (bici.marca) marcasUnicas.add(bici.marca);
     });
+
+    this.referenciasUnicas = listaBicicletas.length;
+    this.totalCategoriasActivas = categoriasUnicas.size;
     this.totalMarcas = marcasUnicas.size;
   }
 
   agregarStock() {
-    // Restauramos tu flujo original: simplemente viaja a la gestión de bicicletas
     this.router.navigate(['/bicicletas']);
   }
 }

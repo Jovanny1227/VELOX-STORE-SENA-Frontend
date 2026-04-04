@@ -1,20 +1,26 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms'; // <-- IMPORTANTE: FormsModule agregado
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  FormsModule,
+} from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { BicicletaService } from '../../services/bicicleta.service';
 
 @Component({
   selector: 'app-bicicletas',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule], // <-- FormsModule añadido aquí
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './bicicletas.component.html',
   styleUrls: ['./bicicletas.component.css'],
 })
 export class BicicletasComponent implements OnInit {
   bicicletaForm: FormGroup;
   catalogo: any[] = [];
-  catalogoFiltrado: any[] = []; // Para renderizar en la tabla
+  catalogoFiltrado: any[] = [];
   proveedores: any[] = [];
 
   cargando: boolean = true;
@@ -25,7 +31,6 @@ export class BicicletasComponent implements OnInit {
   listaEspera: any[] = [];
   mostrarDropdown: boolean = false;
 
-  // 🔥 NUEVOS FILTROS AVANZADOS 🔥
   filtros = {
     termino: '',
     precioMin: null as number | null,
@@ -36,7 +41,7 @@ export class BicicletasComponent implements OnInit {
     private fb: FormBuilder,
     private bicicletaService: BicicletaService,
     private http: HttpClient,
-    private cdr: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef, // Restaurado de forma segura
   ) {
     this.bicicletaForm = this.fb.group({
       codigo: [''],
@@ -55,10 +60,13 @@ export class BicicletasComponent implements OnInit {
   }
 
   cargarProveedores() {
-    this.http.get<any[]>('http://localhost:8080/api/proveedores').subscribe((data) => {
-      this.proveedores = data;
-      this.cdr.detectChanges();
-    });
+    const timestamp = new Date().getTime(); // Rompedor de caché
+    this.http
+      .get<any[]>(`http://localhost:8080/api/proveedores?t=${timestamp}`)
+      .subscribe((data) => {
+        this.proveedores = data;
+        this.cdr.detectChanges();
+      });
   }
 
   cargarCatalogo() {
@@ -66,9 +74,8 @@ export class BicicletasComponent implements OnInit {
     this.bicicletaService.listarBicicletas().subscribe({
       next: (data) => {
         this.catalogo = data;
-        this.catalogoFiltrado = [...this.catalogo]; // Inicializamos la tabla filtrada
         this.cargando = false;
-        this.cdr.detectChanges();
+        this.filtrarBicicletas(); // Al llamar esto, se actualiza la tabla de inmediato
       },
       error: (err) => {
         console.error('Error cargando bicicletas', err);
@@ -78,12 +85,8 @@ export class BicicletasComponent implements OnInit {
     });
   }
 
-  // ==========================================
-  //      MOTOR DE FILTROS PARA LA TABLA
-  // ==========================================
   filtrarBicicletas() {
     this.catalogoFiltrado = this.catalogo.filter((b) => {
-      // 1. Filtro por Texto (Código, Marca o Modelo)
       const term = this.filtros.termino.toLowerCase();
       const coincideTexto = term
         ? (b.modelo && b.modelo.toLowerCase().includes(term)) ||
@@ -91,7 +94,6 @@ export class BicicletasComponent implements OnInit {
           (b.codigo && b.codigo.toLowerCase().includes(term))
         : true;
 
-      // 2. Filtro por Rango de Precio
       const precioBici = b.precio || 0;
       const coincidePrecioMin =
         this.filtros.precioMin !== null && this.filtros.precioMin !== undefined
@@ -104,7 +106,7 @@ export class BicicletasComponent implements OnInit {
 
       return coincideTexto && coincidePrecioMin && coincidePrecioMax;
     });
-    this.cdr.detectChanges();
+    this.cdr.detectChanges(); // Actualización segura
   }
 
   limpiarFiltros() {
@@ -112,9 +114,6 @@ export class BicicletasComponent implements OnInit {
     this.filtrarBicicletas();
   }
 
-  // ==========================================
-  //      RESTO DE LÓGICA CRUD
-  // ==========================================
   onSubmit() {
     if (this.bicicletaForm.invalid) {
       this.bicicletaForm.markAllAsTouched();
@@ -123,7 +122,6 @@ export class BicicletasComponent implements OnInit {
 
     const formValue = this.bicicletaForm.value;
 
-    // 🔥 Aseguramos la búsqueda ignorando mayúsculas y espacios extra 🔥
     const nombreBuscado = formValue.proveedorNombre.trim().toLowerCase();
     const provEncontrado = this.proveedores.find(
       (p) => p.nombre.trim().toLowerCase() === nombreBuscado,
@@ -137,7 +135,6 @@ export class BicicletasComponent implements OnInit {
     const datos = {
       ...formValue,
       proveedorId: provEncontrado.idProveedor || provEncontrado.id,
-      cantidad: formValue.stock,
     };
     delete datos.proveedorNombre;
 
@@ -153,22 +150,18 @@ export class BicicletasComponent implements OnInit {
         next: () => {
           this.resetearFormulario();
           this.cargarCatalogo();
+          alert('Bicicleta actualizada correctamente');
         },
-        error: (err) => {
-          console.error('Error actualizando:', err);
-          alert('Hubo un error al actualizar la bicicleta.');
-        },
+        error: (err) => alert('Hubo un error al actualizar la bicicleta.'),
       });
     } else {
       this.bicicletaService.crearBicicleta(datos).subscribe({
         next: () => {
           this.resetearFormulario();
           this.cargarCatalogo();
+          alert('Bicicleta registrada con éxito');
         },
-        error: (err) => {
-          console.error('Error creando:', err);
-          alert('Hubo un error al crear la bicicleta.');
-        },
+        error: (err) => alert('Hubo un error al crear la bicicleta.'),
       });
     }
   }
@@ -199,7 +192,6 @@ export class BicicletasComponent implements OnInit {
         this.cargarCatalogo();
       },
       error: (err) => {
-        console.error('Error en carga masiva', err);
         alert('Hubo un error al registrar el lote');
         this.cargando = false;
         this.cdr.detectChanges();
@@ -212,33 +204,26 @@ export class BicicletasComponent implements OnInit {
     this.modoMasivo = false;
     this.idBicicletaActual = bici.id || bici.idBicicleta;
 
-    // 🔥 ESTRATEGIA DEFINITIVA: "El Buscador Ciego" 🔥
-    // No importa cómo Java llame a la variable (proveedor, provNombre, etc.)
-    // Buscamos si ALGÚN valor dentro de esta bicicleta es igual al nombre de un proveedor.
     let nombreProveedor = '';
-
     for (const prov of this.proveedores) {
-      // Sacamos todos los valores (Ej: [1, "BIC-001", "Marlin 7", "Trek", 500, "MTB", "GW Colombia"])
       const valoresBici = Object.values(bici);
-
       if (valoresBici.includes(prov.nombre)) {
         nombreProveedor = prov.nombre;
-        break; // ¡Lo encontramos! Detenemos la búsqueda.
+        break;
       }
     }
 
-    // Llenamos el formulario
     this.bicicletaForm.patchValue({
       codigo: bici.codigo,
       marca: bici.marca,
       modelo: bici.modelo,
       tipo: bici.tipo,
       precio: bici.precio,
-      proveedorNombre: nombreProveedor, // ¡Ahora sí se llenará solo!
+      proveedorNombre: nombreProveedor,
       stock: bici.stock !== null && bici.stock !== undefined ? bici.stock : 0,
     });
 
-    this.cdr.detectChanges(); // Forzamos a Angular a pintar el nombre de inmediato
+    this.cdr.detectChanges();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 

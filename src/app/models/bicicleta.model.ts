@@ -6,6 +6,7 @@ export interface Bicicleta {
   precio: number;
   tipo: string;
   proveedorNombre?: string;
+  stock: number;
 }
 
 // Estructura individual para el formulario masivo

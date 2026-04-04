@@ -109,7 +109,6 @@ export class ReportesComponent implements OnInit {
     });
 
     const paletaDona = ['#0f172a', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
-    const colorTexto = '#475569';
 
     const ctxCategorias = document.getElementById('canvasCategorias') as HTMLCanvasElement;
     if (ctxCategorias) {
@@ -132,6 +131,7 @@ export class ReportesComponent implements OnInit {
 
   volverAlInventario() { this.router.navigate(['/admin/inventario']); }
 
+  // ================= EXPORTACIONES INVENTARIO COMPLETO =================
   exportarExcel() {
     const datosParaExportar = this.datosReporte.map((item) => ({
       'Código SKU': item.codigo, Marca: item.marca, Modelo: item.modelo, Categoría: item.tipo,
@@ -153,6 +153,43 @@ export class ReportesComponent implements OnInit {
     doc.save('Catalogo_Actual_Velox.pdf');
   }
 
+  // 🔥 NUEVOS MÉTODOS: EXPORTACIONES SOLO PARA BAJO STOCK 🔥
+  exportarBajoStockExcel() {
+    if (this.listaBajoStock.length === 0) return;
+    const datosParaExportar = this.listaBajoStock.map((item) => ({
+      'Código SKU': item.codigo,
+      'Marca': item.marca,
+      'Modelo': item.modelo,
+      'Proveedor Sugerido': item.nombreProveedor || item.proveedorNombre || 'Sin Proveedor',
+      'Stock Restante': item.stock !== null ? item.stock : 0
+    }));
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(datosParaExportar);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Lista de Compras');
+    XLSX.writeFile(wb, 'Lista_Compras_Sugerida_Velox.xlsx');
+  }
+
+  exportarBajoStockPDF() {
+    if (this.listaBajoStock.length === 0) return;
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text('Lista de Compras Sugerida (Stock Crítico) - VELOX', 14, 20);
+    const filasTabla = this.listaBajoStock.map((item) => [
+      item.codigo,
+      item.marca,
+      item.modelo,
+      item.nombreProveedor || item.proveedorNombre || 'Sin Proveedor',
+      (item.stock !== null ? item.stock : 0).toString()
+    ]);
+    autoTable(doc, {
+      head: [['Código', 'Marca', 'Modelo', 'Proveedor Sugerido', 'Stock']],
+      body: filasTabla,
+      startY: 30
+    });
+    doc.save('Lista_Compras_Sugerida_Velox.pdf');
+  }
+
+  // ================= LÓGICA DE FILTROS Y OTROS REPORTES =================
   estaEnRango(fechaComparar: string | Date, inicioStr: string, finStr: string): boolean {
     if (!inicioStr && !finStr) return true;
     const fecha = new Date(fechaComparar);
@@ -248,6 +285,7 @@ export class ReportesComponent implements OnInit {
   movimientosFiltrados: any[] = [];
   fechasMovimientos = { inicio: '', fin: '' };
   filtroMovimiento: string = 'TODOS';
+  filtroCanal: string = '';
 
   cargarMovimientos() {
     this.http.get<any[]>('http://localhost:8080/api/movimientos').subscribe({
@@ -301,7 +339,6 @@ export class ReportesComponent implements OnInit {
     doc.save(`Compras_${this.filtroProveedor || 'Todas'}.pdf`);
   }
 
-  // 🔥 AQUÍ ESTÁ EL ARREGLO DEL PLURAL/SINGULAR 🔥
   filtrarMovimientos() {
     this.movimientosFiltrados = this.movimientosOriginales.filter(m => {
       let tipoBusqueda = this.filtroMovimiento;
@@ -310,7 +347,15 @@ export class ReportesComponent implements OnInit {
 
       const cumpleTipo = this.filtroMovimiento === 'TODOS' ? true : m.tipo.toUpperCase().includes(tipoBusqueda);
       const cumpleFecha = this.estaEnRango(m.fecha, this.fechasMovimientos.inicio, this.fechasMovimientos.fin);
-      return cumpleTipo && cumpleFecha;
+
+      let cumpleCanal = true;
+      if (this.filtroCanal === 'VIRTUAL') {
+        cumpleCanal = m.observacion && m.observacion.includes('VIRTUAL');
+      } else if (this.filtroCanal === 'PRESENCIAL') {
+        cumpleCanal = m.observacion && m.observacion.includes('PRESENCIAL');
+      }
+
+      return cumpleTipo && cumpleFecha && cumpleCanal;
     });
     this.cdr.detectChanges();
   }

@@ -60,7 +60,17 @@
       </div>
 
       <div class="card shadow-sm border-0 mb-5" *ngIf="listaBajoStock.length > 0">
-        <div class="card-header bg-danger text-white fw-bold p-3 fs-4">🛒 Lista de Compras Sugerida (Prioridad Alta)</div>
+        <div class="card-header bg-danger text-white p-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div class="fw-bold fs-4">🛒 Lista de Compras Sugerida (Prioridad Alta)</div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-accion btn-sm btn-excel shadow-sm" (click)="exportarBajoStockExcel()">
+              <span class="btn-icon">📊</span><span>Excel</span>
+            </button>
+            <button class="btn btn-accion btn-sm btn-pdf shadow-sm" (click)="exportarBajoStockPDF()">
+              <span class="btn-icon">📄</span><span>PDF</span>
+            </button>
+          </div>
+        </div>
         <div class="card-body p-0">
           <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
@@ -208,12 +218,20 @@
           </div>
 
           <div class="d-flex flex-wrap align-items-center gap-3 p-3 rounded-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
-            <select class="form-select border-secondary text-muted fw-bold flex-grow-1" style="max-width: 250px;"
+            <select class="form-select border-secondary text-muted fw-bold flex-grow-1" style="max-width: 200px;"
                     [(ngModel)]="filtroMovimiento" (change)="filtrarMovimientos()">
               <option value="TODOS">Todos los Tipos</option>
               <option value="ENTRADAS">Solo Entradas</option>
               <option value="SALIDAS">Solo Salidas</option>
             </select>
+
+            <select class="form-select border-secondary text-muted fw-bold flex-grow-1" style="max-width: 200px;"
+                    [(ngModel)]="filtroCanal" (change)="filtrarMovimientos()">
+              <option value="">Canal: Todos</option>
+              <option value="PRESENCIAL">🏪 Presencial (Caja)</option>
+              <option value="VIRTUAL">💻 Virtual (Web)</option>
+            </select>
+
             <div class="d-flex align-items-center gap-2 bg-white px-3 py-1 rounded border">
               <label class="small fw-bold text-muted mb-0">Desde:</label>
               <input type="date" class="form-control form-control-sm border-0 text-dark fw-semibold" [(ngModel)]="fechasMovimientos.inicio" (change)="filtrarMovimientos()">
@@ -229,17 +247,24 @@
         <div class="card-body p-0">
           <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-              <thead class="table-light"><tr><th class="ps-4">Fecha y Hora</th><th>Tipo</th><th>Bicicleta Afectada</th><th class="text-center">Cant.</th><th class="pe-4">Observación</th></tr></thead>
+              <thead class="table-light"><tr><th class="ps-4">Fecha y Hora</th><th>Tipo</th><th>Bicicleta Afectada</th><th class="text-center">Cant.</th><th class="text-center">Canal</th><th class="pe-4">Observación</th></tr></thead>
               <tbody>
               <tr *ngFor="let mov of movimientosFiltrados">
                 <td class="ps-4 text-muted small">{{ mov.fecha | date:'short' }}</td>
                 <td><span class="badge px-2 py-1" [ngClass]="mov.tipo.includes('ENTRADA') ? 'bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25' : 'bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25'">{{ mov.tipo }}</span></td>
                 <td class="fw-bold" style="color: #0f172a;">{{ mov.bicicleta?.codigo || mov.codigoBicicleta || 'N/A' }}</td>
                 <td class="text-center fw-bold fs-5" [ngClass]="mov.tipo.includes('ENTRADA') ? 'text-primary' : 'text-danger'">{{ mov.tipo.includes('ENTRADA') ? '+' : '-' }}{{ mov.cantidad }}</td>
+
+                <td class="text-center">
+                  <span *ngIf="mov.observacion?.includes('PRESENCIAL')" class="badge bg-success rounded-pill px-3 py-2 shadow-sm">🏪 Presencial</span>
+                  <span *ngIf="mov.observacion?.includes('VIRTUAL')" class="badge bg-primary rounded-pill px-3 py-2 shadow-sm">💻 Virtual</span>
+                  <span *ngIf="!mov.observacion?.includes('PRESENCIAL') && !mov.observacion?.includes('VIRTUAL')" class="badge bg-secondary rounded-pill px-3 py-2 shadow-sm">📦 Interno</span>
+                </td>
+
                 <td class="pe-4 text-muted small">{{ mov.observacion }}</td>
               </tr>
               <tr *ngIf="movimientosFiltrados.length === 0">
-                <td colspan="5" class="text-center py-4 text-muted fs-5">No se encontraron movimientos para los filtros actuales.</td>
+                <td colspan="6" class="text-center py-4 text-muted fs-5">No se encontraron movimientos para los filtros actuales.</td>
               </tr>
               </tbody>
             </table>

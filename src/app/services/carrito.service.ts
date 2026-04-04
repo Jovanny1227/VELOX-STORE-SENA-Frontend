@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,27 @@ export class CarritoService {
   private itemsCarrito: any[] = [];
   public carrito$ = new BehaviorSubject<any[]>([]);
 
-  constructor() {}
+  // Inyectamos PLATFORM_ID para asegurarnos de que localStorage solo se ejecute en el navegador
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.cargarDesdeLocalStorage();
+  }
+
+  private guardarEnLocalStorage() {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('velox_carrito', JSON.stringify(this.itemsCarrito));
+    }
+    this.carrito$.next(this.itemsCarrito);
+  }
+
+  private cargarDesdeLocalStorage() {
+    if (isPlatformBrowser(this.platformId)) {
+      const datos = localStorage.getItem('velox_carrito');
+      if (datos) {
+        this.itemsCarrito = JSON.parse(datos);
+        this.carrito$.next(this.itemsCarrito);
+      }
+    }
+  }
 
   agregarBicicleta(bici: any) {
     const itemExistente = this.itemsCarrito.find((item) => item.codigo === bici.codigo);
@@ -22,24 +43,24 @@ export class CarritoService {
     } else {
       this.itemsCarrito.push({ ...bici, cantidad: 1 });
     }
-    this.carrito$.next(this.itemsCarrito);
+    this.guardarEnLocalStorage();
   }
 
   disminuirCantidad(codigo: string) {
     const item = this.itemsCarrito.find((i) => i.codigo === codigo);
     if (item) {
       if (item.cantidad > 1) {
-        item.cantidad--; // Resta 1 si hay más de 1
+        item.cantidad--;
+        this.guardarEnLocalStorage();
       } else {
-        this.eliminarBicicleta(codigo); // Si llega a 0, quita la bicicleta
+        this.eliminarBicicleta(codigo);
       }
-      this.carrito$.next(this.itemsCarrito);
     }
   }
 
   eliminarBicicleta(codigo: string) {
     this.itemsCarrito = this.itemsCarrito.filter((item) => item.codigo !== codigo);
-    this.carrito$.next(this.itemsCarrito);
+    this.guardarEnLocalStorage();
   }
 
   obtenerTotal(): number {
@@ -48,6 +69,6 @@ export class CarritoService {
 
   vaciarCarrito() {
     this.itemsCarrito = [];
-    this.carrito$.next(this.itemsCarrito);
+    this.guardarEnLocalStorage();
   }
 }

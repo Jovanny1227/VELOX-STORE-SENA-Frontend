@@ -11,6 +11,7 @@ export class InventarioService {
   constructor(private http: HttpClient) {}
 
   obtenerJerarquico(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/jerarquico`);
+    const t = new Date().getTime(); // 🔥 Rompedor de caché
+    return this.http.get<any>(`${this.apiUrl}/jerarquico?t=${t}`);
   }
 }

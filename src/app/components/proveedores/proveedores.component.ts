@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // <--- IMPORTAMOS ChangeDetectorRef
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -22,16 +22,14 @@ export class ProveedoresComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
-    private cdr: ChangeDetectorRef, // <--- LO INYECTAMOS AQUÍ
+    private http: HttpClient
   ) {
-    // FORMULARIO LIMPIO SIN CONTACTO
     this.proveedorForm = this.fb.group({
       nit: ['', Validators.required],
       nombre: ['', Validators.required],
       telefono: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      direccion: [''], // Si en Java se llama "sede", cambia esta palabra a "sede"
+      direccion: [''],
     });
   }
 
@@ -45,12 +43,10 @@ export class ProveedoresComponent implements OnInit {
       next: (data) => {
         this.proveedores = data;
         this.cargando = false;
-        this.cdr.detectChanges(); // 🔥 PELLIZCO 1: Muestra la tabla de proveedores al instante
       },
       error: (err) => {
         console.error('Error cargando proveedores', err);
         this.cargando = false;
-        this.cdr.detectChanges(); // Apaga el "cargando" si hay error
       },
     });
   }
@@ -67,12 +63,9 @@ export class ProveedoresComponent implements OnInit {
       this.http.put(`${this.apiUrl}/${this.idActual}`, datos).subscribe({
         next: () => {
           this.resetearFormulario();
-          this.cargarProveedores(); // Esto ya trae su propio detectChanges adentro
+          this.cargarProveedores();
         },
-        error: (err) => {
-          alert('Error al actualizar el proveedor');
-          this.cdr.detectChanges(); // Actualiza por si el alert traba la vista
-        },
+        error: (err) => alert('Error al actualizar el proveedor'),
       });
     } else {
       this.http.post(this.apiUrl, datos).subscribe({
@@ -80,10 +73,7 @@ export class ProveedoresComponent implements OnInit {
           this.resetearFormulario();
           this.cargarProveedores();
         },
-        error: (err) => {
-          alert('Error al guardar el proveedor');
-          this.cdr.detectChanges();
-        },
+        error: (err) => alert('Error al guardar el proveedor'),
       });
     }
   }
@@ -92,35 +82,22 @@ export class ProveedoresComponent implements OnInit {
     this.editando = true;
     this.idActual = prov.idProveedor || prov.id;
 
-    // LLENAMOS EL FORMULARIO
     this.proveedorForm.patchValue({
       nit: prov.nit,
       nombre: prov.nombre,
       telefono: prov.telefono,
       email: prov.email,
-      direccion: prov.direccion, // Igual aquí, si en Java es "sede", pon prov.sede
+      direccion: prov.direccion,
     });
 
-    this.cdr.detectChanges(); // 🔥 PELLIZCO 2: Llena los inputs visualmente de inmediato
-
-    // Scroll suave hacia arriba para que el admin vea el formulario listo para editar
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   eliminarProveedor(id: number) {
-    if (
-      confirm(
-        '⚠️ ¿Estás seguro de eliminar este proveedor? Podría causar errores si hay bicicletas vinculadas a él.',
-      )
-    ) {
+    if (confirm('⚠️ ¿Estás seguro de eliminar este proveedor? Podría causar errores si hay bicicletas vinculadas a él.')) {
       this.http.delete(`${this.apiUrl}/${id}`).subscribe({
         next: () => this.cargarProveedores(),
-        error: (err) => {
-          alert(
-            'No se puede eliminar. Es probable que tenga bicicletas asociadas en el inventario.',
-          );
-          this.cdr.detectChanges(); // Actualiza rápido después del error
-        },
+        error: (err) => alert('No se puede eliminar. Es probable que tenga bicicletas asociadas en el inventario.'),
       });
     }
   }
@@ -129,6 +106,5 @@ export class ProveedoresComponent implements OnInit {
     this.proveedorForm.reset();
     this.editando = false;
     this.idActual = null;
-    this.cdr.detectChanges(); // 🔥 PELLIZCO 3: Limpia el formulario a la velocidad de la luz
   }
 }

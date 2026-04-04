@@ -1,45 +1,60 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './components/public/home/home.component';
 import { LoginComponent } from './components/public/login/login.component';
-import { RegistroComponent } from './components/public/registro/registro.component'; // <-- Importación
-import { InventarioComponent } from './components/inventario/inventario.component';
-import { ReportesComponent } from './components/reportes/reportes.component';
-import { BicicletasComponent } from './components/bicicletas/bicicletas.component';
-import { ProveedoresComponent } from './components/proveedores/proveedores.component';
+import { RegistroComponent } from './components/public/registro/registro.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  // --- RUTAS PÚBLICAS (Cualquiera puede entrar) ---
+  // --- RUTAS PÚBLICAS (Carga normal porque son críticas al inicio) ---
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'registro', component: RegistroComponent }, // <-- DEBE ESTAR ANTES DEL COMODÍN
+  { path: 'registro', component: RegistroComponent },
 
-  // --- RUTAS PROTEGIDAS (Solo Administrador) ---
+  // --- RUTAS PROTEGIDAS (Lazy Loading: Se descargan solo si el usuario entra) ---
   {
     path: 'admin/inventario',
-    component: InventarioComponent,
+    loadComponent: () =>
+      import('./components/inventario/inventario.component').then((m) => m.InventarioComponent),
     canActivate: [authGuard],
     data: { expectedRole: 'ADMIN' },
   },
   {
     path: 'admin/reportes',
-    component: ReportesComponent,
+    loadComponent: () =>
+      import('./components/reportes/reportes.component').then((m) => m.ReportesComponent),
     canActivate: [authGuard],
     data: { expectedRole: 'ADMIN' },
   },
   {
     path: 'bicicletas',
-    component: BicicletasComponent,
+    loadComponent: () =>
+      import('./components/bicicletas/bicicletas.component').then((m) => m.BicicletasComponent),
     canActivate: [authGuard],
     data: { expectedRole: 'ADMIN' },
   },
   {
     path: 'proveedores',
-    component: ProveedoresComponent,
+    loadComponent: () =>
+      import('./components/proveedores/proveedores.component').then((m) => m.ProveedoresComponent),
     canActivate: [authGuard],
     data: { expectedRole: 'ADMIN' },
   },
 
-  // --- RUTA COMODÍN (Debe ser LA ÚLTIMA LÍNEA, atrapa cualquier error) ---
+  {
+    path: 'admin/clientes',
+    loadComponent: () =>
+      import('./components/clientes/clientes.component').then((m) => m.ClientesComponent),
+    canActivate: [authGuard],
+    data: { expectedRole: 'ADMIN' },
+  },
+  {
+    path: 'admin/caja',
+    loadComponent: () =>
+      import('./components/caja-pos/caja-pos.component').then((m) => m.CajaPosComponent),
+    canActivate: [authGuard],
+    data: { expectedRole: 'ADMIN' },
+  },
+
+  // --- RUTA COMODÍN ---
   { path: '**', redirectTo: '' },
 ];
