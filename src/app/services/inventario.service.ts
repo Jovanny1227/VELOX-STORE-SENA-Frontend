@@ -6,12 +6,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class InventarioService {
-  private apiUrl = 'http://localhost:8080/api/inventario';
+  private apiUrl = 'https://velox-store-sena-backend-production-1ace.up.railway.app/api/inventario';
 
   constructor(private http: HttpClient) {}
 
   obtenerJerarquico(): Observable<any> {
-    const t = new Date().getTime(); // 🔥 Rompedor de caché
+    const t = new Date().getTime();
     return this.http.get<any>(`${this.apiUrl}/jerarquico?t=${t}`);
   }
 }

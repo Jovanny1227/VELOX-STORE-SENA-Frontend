@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ReporteService {
-  private apiUrl = 'http://localhost:8080/api/reportes';
+  private apiUrl = 'https://velox-store-sena-backend-production-1ace.up.railway.app/api/reportes';
 
   constructor(private http: HttpClient) {}
 
@@ -14,7 +14,6 @@ export class ReporteService {
     return this.http.get<any>(`${this.apiUrl}/dashboard`);
   }
 
-  // Función mágica para descargar archivos protegidos con JWT
   descargarPdf(endpoint: string, nombreArchivo: string) {
     this.http.get(`${this.apiUrl}/${endpoint}`, { responseType: 'blob' }).subscribe((blob) => {
       const url = window.URL.createObjectURL(blob);
