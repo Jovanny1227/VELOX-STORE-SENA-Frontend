@@ -1,0 +1,85 @@
+/* =========================================
+   ESTILOS UNIFICADOS PARA BOTONES DE REPORTE
+   ========================================= */
+
+/* 🔥 AUMENTO DE LETRA GENERAL 🔥 */
+.reportes-wrapper {
+  font-size: 1.05rem; /* Sube el tamaño base de los textos normales */
+}
+
+/* Aumenta el tamaño específico de las tablas */
+.table {
+  font-size: 1.1rem;
+}
+
+/* Evita que los textos secundarios se vean minúsculos */
+.table .small {
+  font-size: 0.95rem;
+}
+
+/* Etiquetas y badges más legibles */
+.badge {
+  font-size: 0.95rem;
+}
+
+/* =========================================
+   ESTILOS DE BOTONES
+   ========================================= */
+.btn-accion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  border-radius: 8px; /* Bordes suaves modernos */
+  transition: all 0.2s ease-in-out;
+  border: 1px solid transparent;
+  padding: 0.6rem 1.25rem;
+  font-size: 1.05rem; /* Botones principales más grandes */
+}
+
+.btn-accion.btn-sm {
+  padding: 0.45rem 1rem;
+  font-size: 0.95rem; /* Botones pequeños más legibles */
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+/* --- Botón Volver --- */
+.btn-volver {
+  background-color: #f1f5f9;
+  color: #475569;
+  border-color: #e2e8f0;
+}
+.btn-volver:hover {
+  background-color: #e2e8f0;
+  color: #0f172a;
+  transform: translateY(-2px);
+}
+
+/* --- Botón Excel (Verde Suave) --- */
+.btn-excel {
+  background-color: #10b981;
+  color: #ffffff;
+}
+.btn-excel:hover {
+  background-color: #059669;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+}
+
+/* --- Botón PDF (Rojo Suave) --- */
+.btn-pdf {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+.btn-pdf:hover {
+  background-color: #dc2626;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
+}

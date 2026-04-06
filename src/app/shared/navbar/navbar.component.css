@@ -1,111 +1,100 @@
 /* =========================================
-   NAVBAR VELOX - ESTILO PREMIUM OSCURO
+   NAVBAR VELOX - BASE
 ========================================= */
 .velox-nav {
-  background: rgba(15, 23, 42, 0.9); /* Azul muy oscuro casi negro */
-  backdrop-filter: blur(12px); /* Efecto de cristal esmerilado */
-  height: 70px;
+  background: #f8fafc; /* Color sólido inicial (Off-white) */
+  height: 87px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 40px;
-  border-bottom: 2px solid #00d2ff; /* Línea neón cyan */
-  box-shadow: 0 4px 20px rgba(0, 210, 255, 0.15);
   position: sticky;
   top: 0;
   z-index: 1000;
   font-family: 'Segoe UI', Roboto, sans-serif;
+  border-bottom: 1px solid #e2e8f0;
+
+  /* TRANSICIÓN: Para que el cambio a transparente sea fluido */
+  transition: all 0.4s ease-in-out;
 }
 
-/* BRAND / LOGO */
+.logo-img {
+  height: 45px; /* Ajusta este valor según qué tan alto quieras el navbar */
+  width: auto;  /* Mantiene la proporción para que no se vea estirado */
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.logo-img:hover {
+  transform: scale(1.05);
+}
+
+/* =========================================
+   ESTADO SCROLLED (ACTIVADO POR TS)
+========================================= */
+.velox-nav.scrolled {
+  /* Blanco con 80% de opacidad */
+  background: rgba(248, 250, 252, 0.8);
+
+  /* EFECTO CRISTAL: Desenfoca lo que pasa por debajo */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  height: 65px; /* Se encoge un poquito para dar sensación de dinamismo */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
 .nav-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
-  color: #ffffff;
-  font-size: 1.4rem;
-  font-weight: 800;
-  letter-spacing: 2px;
+  padding: 5px 0;
+  text-decoration: none !important; /* Por si acaso */
 }
 
 .brand-icon img {
-  height: 45px; /* Ajustado para que luzca bien dentro de los 70px de la nav */
-  width: auto;  /* Mantiene la proporción original */
+  height: 38px;
+  width: auto;
   display: block;
-  filter: drop-shadow(0 0 5px rgba(0, 210, 255, 0.5));
-}
-
-.brand-icon {
-  font-size: 1.6rem;
-  filter: drop-shadow(0 0 5px rgba(0, 210, 255, 0.5));
 }
 
 .brand-accent {
-  color: #00d2ff;
-  text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+  color: #3b82f6; /* Azul mate, sereno y profesional */
 }
 
-/* LINKS DE NAVEGACIÓN */
 .nav-links {
   display: flex;
-  gap: 10px;
+  gap: 4px;
 }
 
 .nav-link {
   text-decoration: none;
-  color: #94a3b8; /* Gris azulado suave */
-  font-size: 0.85rem;
-  font-weight: 700;
-  padding: 10px 20px;
+  color: #64748b; /* Gris suave para lectura relajada */
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 10px 16px;
   border-radius: 6px;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
-  border: 1px solid transparent;
+  transition: all 0.2s ease;
 }
 
-/* EFECTO HOVER */
 .nav-link:hover {
-  color: #ffffff;
-  background: rgba(0, 210, 255, 0.05);
-  border-color: rgba(0, 210, 255, 0.2);
+  color: #1e293b;
+  background: #f1f5f9;
 }
 
-/* ESTADO ACTIVO (Tu clase routerLinkActive="active") */
 .nav-link.active {
-  color: #00d2ff;
-  background: rgba(0, 210, 255, 0.1);
-  border-color: #00d2ff;
-  box-shadow: inset 0 0 10px rgba(0, 210, 255, 0.1), 0 0 15px rgba(0, 210, 255, 0.1);
-  transform: translateY(-2px);
+  color: #2563eb; /* Azul corporativo mate */
+  font-weight: 700;
+  background: #eff6ff; /* Fondo azul extremadamente pálido */
 }
 
-/* BADGE DEL SISTEMA */
-.nav-badge {
-  background: rgba(0, 210, 255, 0.1);
-  color: #00d2ff;
-  border: 1px solid rgba(0, 210, 255, 0.4);
-  padding: 5px 12px;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  box-shadow: 0 0 10px rgba(0, 210, 255, 0.1);
-}
-
-/* RESPONSIVE: Ajustes para pantallas pequeñas */
 @media (max-width: 950px) {
   .velox-nav {
     padding: 0 15px;
     height: 60px;
   }
-
   .nav-link {
-    padding: 8px 12px;
+    padding: 8px 10px;
     font-size: 0.75rem;
-  }
-
-  .nav-badge {
-    display: none; /* Escondemos el badge en pantallas chicas */
   }
 }

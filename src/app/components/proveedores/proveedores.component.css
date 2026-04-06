@@ -1,5 +1,115 @@
-.proveedores-container { padding: 40px; color: #fff; }
-.section-header h2 { font-size: 1.8rem; font-family: "Orbitron", sans-serif; color: #00e5ff; margin: 0 0 24px 0; }
-.layout-grid { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start; }
-.section-sub-header { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: #7a9ab8; margin-bottom: 15px; letter-spacing: 1px; }
-.badge-count { background: #00e5ff22; color: #00e5ff; border: 1px solid #00e5ff44; padding: 2px 12px; border-radius: 20px; font-size: 0.85rem; }
+.admin-wrapper {
+  background-color: #f8fafc;
+  min-height: calc(100vh - 70px);
+  padding: 40px 0 80px 0;
+}
+
+/* ================= PANEL DE CONTROL ================= */
+.command-panel {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.panel-header {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  padding: 15px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-body {
+  padding: 25px;
+}
+
+.modern-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.modern-input {
+  background-color: #f1f5f9;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 12px 18px;
+  color: #1e293b;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.modern-input:focus {
+  background-color: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+  outline: none;
+}
+
+.modern-btn-submit {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 12px 30px;
+  border-radius: 30px;
+  border: none;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+  transition: all 0.3s;
+}
+
+.modern-btn-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+  color: white;
+}
+
+.modern-btn-submit:disabled {
+  background: #94a3b8;
+  box-shadow: none;
+}
+
+.btn-edit-mode {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.3);
+}
+
+/* ================= TABLA MAESTRA ================= */
+.table-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.modern-table th {
+  background-color: #f8fafc;
+  color: #475569;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  padding: 18px 20px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.modern-table td {
+  padding: 20px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* Efecto Cebra para la lectura */
+.modern-table tbody tr:nth-child(odd) { background-color: #ffffff; }
+.modern-table tbody tr:nth-child(even) { background-color: #f8fafc; }
+
+.table-row-hover:hover {
+  background-color: #f1f5f9;
+  transition: background-color 0.2s;
+}

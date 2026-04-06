@@ -1,0 +1,204 @@
+/* ================= VARIABLES Y UTILIDADES ================= */
+.text-slate { color: #0f172a; }
+.text-orange { color: #ff8a00; }
+.bg-orange { background-color: #ff8a00; }
+.bg-off-white { background-color: #f8fafc; }
+.fw-black { font-weight: 900; }
+.tracking-wider { letter-spacing: 2px; }
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ================= HERO SECTION ================= */
+.hero-section {
+  min-height: 85vh;
+  background-image: url('https://images.unsplash.com/photo-1511994298241-608e28f14fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  border-bottom: 4px solid;
+  border-image: linear-gradient(to right, #3b82f6, #8b5cf6, #ff8a00) 1;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.95));
+  z-index: 1;
+}
+
+.btn-velox-primary {
+  background-color: #3b82f6;
+  color: #ffffff;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-velox-primary:hover {
+  background-color: #2563eb;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5) !important;
+  color: white;
+}
+
+/* ================= BENEFICIOS ================= */
+.benefit-icon {
+  font-size: 2rem;
+}
+
+/* ================= CARDS DE PRODUCTO ================= */
+.bici-card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border-radius: 16px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.bici-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.1) !important;
+}
+
+.img-container {
+  height: 220px;
+  background: linear-gradient(145deg, #f8fafc, #f1f5f9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bici-img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  transition: transform 0.5s ease;
+  filter: drop-shadow(0 15px 15px rgba(0,0,0,0.1));
+}
+
+.bici-card:hover .bici-img {
+  transform: scale(1.1) rotate(2deg);
+}
+
+.badge-tipo {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: #1e293b;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  z-index: 2;
+}
+
+.marca-text {
+  font-size: 0.85rem;
+  letter-spacing: 1.5px;
+  color: #64748b;
+}
+
+.precio-tag {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #ff8a00;
+}
+
+.btn-add-cart {
+  background: #f1f5f9;
+  color: #3b82f6;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.btn-add-cart:hover {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+/* ================= BOTÓN FLOTANTE CARRITO ================= */
+.btn-cart-float {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #ff8a00;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.btn-cart-float:hover {
+  transform: scale(1.1);
+  background-color: #e67e00;
+}
+
+.badge-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+
+/* ================= ITEMS DEL CARRITO PRO ================= */
+.cart-item-mini-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.cart-item-mini-card:hover {
+  border-color: #3b82f6;
+  background: #f1f5f9;
+}
+
+.cart-img-container {
+  width: 90px; /* <--- Aumentado */
+  height: 90px; /* <--- Aumentado */
+  background: #f8fafc;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+}
+
+.cart-img-mini {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.btn-remove-item {
+  color: #94a3b8;
+  transition: color 0.2s;
+  background: none;
+  border: none;
+  padding: 5px;
+}
+
+.btn-remove-item:hover {
+  color: #ef4444;
+}
