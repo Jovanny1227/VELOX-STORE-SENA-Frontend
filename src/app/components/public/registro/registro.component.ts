@@ -1,8 +1,8 @@
-import { Component, ChangeDetectorRef } from '@angular/core'; // <--- IMPORTAMOS AQUÍ
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-registro',
@@ -19,9 +19,9 @@ export class RegistroComponent {
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
+    private authService: AuthService,
     private router: Router,
-    private cdr: ChangeDetectorRef, // <--- LO INYECTAMOS AQUÍ
+    private cdr: ChangeDetectorRef,
   ) {
     this.registroForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
@@ -39,23 +39,21 @@ export class RegistroComponent {
     this.cargando = true;
     this.error = '';
 
-    // ATENCIÓN: Ajusta 'http://localhost:8080/api/clientes' si tu Swagger dice otra URL
-    this.http.post('http://localhost:8080/api/clientes', this.registroForm.value).subscribe({
+    this.authService.register(this.registroForm.value).subscribe({
       next: () => {
         this.cargando = false;
         this.mensajeExito = '¡Cuenta creada con éxito! Redirigiendo al acceso...';
 
-        this.cdr.detectChanges(); // 🔥 PELLIZCO 1: Muestra el mensaje de éxito al instante 🔥
+        this.cdr.detectChanges();
 
-        // Esperamos 2.5 segundos para que el usuario lea el mensaje y lo mandamos al login
         setTimeout(() => this.router.navigate(['/login']), 2500);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.cargando = false;
         this.error = 'Hubo un error al crear la cuenta. Es posible que el correo ya exista.';
         console.error(err);
 
-        this.cdr.detectChanges(); // 🔥 PELLIZCO 2: Muestra el error rojo al instante 🔥
+        this.cdr.detectChanges();
       },
     });
   }

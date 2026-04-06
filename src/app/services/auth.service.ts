@@ -8,11 +8,9 @@ import { AuthLogin, AuthResponse } from '../models/auth.model';
 })
 export class AuthService {
   private apiUrl = 'http://localhost:8080/api/auth';
-  // Mantiene el estado del usuario en toda la aplicación
   private currentUserSubject = new BehaviorSubject<AuthResponse | null>(null);
 
   constructor(private http: HttpClient) {
-    // CAMBIO 1: sessionStorage para que muera al cerrar la pestaña
     const storedUser = sessionStorage.getItem('currentUser');
     if (storedUser) {
       this.currentUserSubject.next(JSON.parse(storedUser));
@@ -26,15 +24,18 @@ export class AuthService {
   login(credentials: AuthLogin): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap((response) => {
-        // CAMBIO 2: Guardamos en sessionStorage
         sessionStorage.setItem('currentUser', JSON.stringify(response));
         this.currentUserSubject.next(response);
       }),
     );
   }
 
+  // 👇 MÉTODO CORREGIDO 👇
+  register(userData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/registro-cliente`, userData);
+  }
+
   logout(): void {
-    // CAMBIO 3: Limpiamos el sessionStorage
     sessionStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
   }
