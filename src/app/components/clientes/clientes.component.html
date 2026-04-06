@@ -1,23 +1,89 @@
-<div class="clientes-container">
-  <div class="section-header"><h2>Registro de Clientes</h2></div>
+<div class="admin-wrapper">
+  <div class="container-fluid px-lg-5">
 
-  <app-cliente-form
-    [clienteEditando]="clienteEditando"
-    [mensaje]="mensaje"
-    [mensajeError]="mensajeError"
-    (onRegistrar)="registrarCliente($event)"
-    (onGuardarEdicion)="actualizarCliente($event)"
-    (onCancelarEdicion)="clienteEditando = null">
-  </app-cliente-form>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold mb-1" style="color: #0f172a; font-size: 2.2rem;">👥 Gestión de Clientes</h2>
+        <p class="text-muted fs-5 mb-0">Directorio de clientes para ventas presenciales</p>
+      </div>
+    </div>
 
-  <div class="section-header" style="margin-top:32px">
-    <h2>Lista de Clientes</h2>
-    <span class="badge-count">{{ clientes.length }}</span>
+    <div class="command-panel mb-5">
+      <div class="panel-header">
+        <h5 class="fw-bold mb-0 text-white">
+          {{ editando ? '✏️ Modo Edición: Actualizando Cliente' : '👤 Registrar Nuevo Cliente' }}
+        </h5>
+        <button class="btn btn-sm btn-light rounded-pill fw-bold" *ngIf="editando" (click)="resetFormulario()">
+          Cancelar Edición
+        </button>
+      </div>
+
+      <div class="panel-body">
+        <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
+          <div class="row g-3 align-items-end">
+
+            <div class="col-md-3">
+              <label class="modern-label">Documento (Cédula/NIT)</label>
+              <input type="text" class="form-control modern-input font-monospace fw-bold text-primary" formControlName="documento" placeholder="Ej. 1098765432">
+            </div>
+
+            <div class="col-md-4">
+              <label class="modern-label">Nombre Completo</label>
+              <input type="text" class="form-control modern-input" formControlName="nombre" placeholder="Ej. Juan Pérez">
+            </div>
+
+            <div class="col-md-3">
+              <label class="modern-label">Teléfono</label>
+              <input type="text" class="form-control modern-input" formControlName="telefono" placeholder="Ej. 3001234567">
+            </div>
+
+            <div class="col-md-2 text-end">
+              <button type="submit" class="btn modern-btn-submit w-100" [ngClass]="{'btn-edit-mode': editando}" [disabled]="clienteForm.invalid">
+                {{ editando ? 'Guardar' : '+ Registrar' }}
+              </button>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-responsive">
+        <table class="table modern-table mb-0 align-middle">
+          <thead>
+          <tr>
+            <th class="ps-4">Documento</th>
+            <th>Nombre Completo</th>
+            <th>Teléfono</th>
+            <th class="text-center pe-4">Administrar</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let cliente of clientes" class="table-row-hover">
+            <td class="ps-4 font-monospace fw-bold text-secondary" style="font-size: 1.1rem;">
+              {{ cliente.documento }}
+            </td>
+            <td>
+              <div class="fw-bold text-dark" style="font-size: 1.15rem;">{{ cliente.nombre }}</div>
+            </td>
+            <td>
+              <span class="badge rounded-pill px-3 py-2" style="background: #f1f5f9; color: #475569; font-size: 0.85rem;">
+                📞 {{ cliente.telefono || 'Sin registrar' }}
+              </span>
+            </td>
+            <td class="text-center pe-4">
+              <button class="btn btn-sm btn-light border me-2 shadow-sm fs-5" title="Editar" (click)="editarCliente(cliente)">✏️</button>
+              <button class="btn btn-sm btn-light border text-danger shadow-sm fs-5" title="Eliminar" (click)="eliminarCliente(cliente.clienteId)">🗑️</button>
+            </td>
+          </tr>
+          <tr *ngIf="clientes.length === 0">
+            <td colspan="4" class="text-center py-5 text-muted fs-5">No hay clientes registrados. Utiliza el panel superior para comenzar.</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
-
-  <app-cliente-list
-    [clientes]="clientes"
-    (onEditar)="clienteEditando = $event"
-    (onEliminar)="eliminarCliente($event)">
-  </app-cliente-list>
 </div>

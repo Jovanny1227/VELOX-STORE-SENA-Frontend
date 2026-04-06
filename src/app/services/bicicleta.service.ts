@@ -1,27 +1,48 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Bicicleta, BicicletaMasivaRequest } from '../models/bicicleta.model';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class BicicletaService {
   private apiUrl = 'http://localhost:8080/api/bicicletas';
 
   constructor(private http: HttpClient) {}
 
-  listarBicicletas(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+  // 🔥 SOLUCIÓN: Agregamos size=1000 para que el backend no esconda los datos nuevos en la página 2
+  listarBicicletas(): Observable<Bicicleta[]> {
+    const t = new Date().getTime();
+    return this.http
+      .get<any>(`${this.apiUrl}?size=1000&t=${t}`)
+      .pipe(map((res) => (res.content !== undefined ? res.content : res)));
   }
 
-  buscarPorCodigo(codigo: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${codigo}`);
+  // Lo mismo para el catálogo público
+  obtenerCatalogo(): Observable<Bicicleta[]> {
+    const t = new Date().getTime();
+    return this.http
+      .get<any>(`${this.apiUrl}/catalogo?size=1000&t=${t}`)
+      .pipe(map((res) => (res.content !== undefined ? res.content : res)));
   }
 
-  registrarBicicleta(bicicleta: any, stock: number): Observable<any> {
-    const params = new HttpParams().set('stock', stock.toString());
-    return this.http.post<any>(this.apiUrl, bicicleta, { params });
+  // === MÉTODOS CRUD ===
+
+  crearBicicleta(bicicleta: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, bicicleta);
   }
 
-  eliminarBicicleta(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  actualizarBicicleta(id: number, bicicleta: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, bicicleta);
+  }
+
+  registrarMasivo(request: BicicletaMasivaRequest): Observable<string> {
+    return this.http.post(`${this.apiUrl}/masivo`, request, { responseType: 'text' });
+  }
+
+  eliminar(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
