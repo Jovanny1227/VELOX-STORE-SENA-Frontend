@@ -8,11 +8,10 @@ import { Bicicleta, BicicletaMasivaRequest } from '../models/bicicleta.model';
   providedIn: 'root',
 })
 export class BicicletaService {
-  private apiUrl = 'http://localhost:8080/api/bicicletas';
+  private apiUrl = 'https://velox-store-sena-backend-production-1ace.up.railway.app/api/bicicletas';
 
   constructor(private http: HttpClient) {}
 
-  // 🔥 SOLUCIÓN: Agregamos size=1000 para que el backend no esconda los datos nuevos en la página 2
   listarBicicletas(): Observable<Bicicleta[]> {
     const t = new Date().getTime();
     return this.http
@@ -20,15 +19,12 @@ export class BicicletaService {
       .pipe(map((res) => (res.content !== undefined ? res.content : res)));
   }
 
-  // Lo mismo para el catálogo público
   obtenerCatalogo(): Observable<Bicicleta[]> {
     const t = new Date().getTime();
     return this.http
       .get<any>(`${this.apiUrl}/catalogo?size=1000&t=${t}`)
       .pipe(map((res) => (res.content !== undefined ? res.content : res)));
   }
-
-  // === MÉTODOS CRUD ===
 
   crearBicicleta(bicicleta: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, bicicleta);

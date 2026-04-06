@@ -7,7 +7,7 @@ import { AuthLogin, AuthResponse } from '../models/auth.model';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = 'https://velox-store-sena-backend-production-1ace.up.railway.app/api/auth';
   private currentUserSubject = new BehaviorSubject<AuthResponse | null>(null);
 
   constructor(private http: HttpClient) {
@@ -30,7 +30,6 @@ export class AuthService {
     );
   }
 
-  // 👇 MÉTODO CORREGIDO 👇
   register(userData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/registro-cliente`, userData);
   }
