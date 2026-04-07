@@ -62,7 +62,7 @@ export class BicicletasComponent implements OnInit {
   cargarProveedores() {
     const timestamp = new Date().getTime(); // Rompedor de caché
     this.http
-      .get<any[]>(`http://localhost:8080/api/proveedores?t=${timestamp}`)
+      .get<any[]>(`https://velox-store-sena-backend-production-2ed0.up.railway.app/api/proveedores?t=${timestamp}`)
       .subscribe((data) => {
         this.proveedores = data;
         this.cdr.detectChanges();

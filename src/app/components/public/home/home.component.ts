@@ -48,7 +48,7 @@ export class HomeComponent implements OnInit {
     this.cargandoCatalogo = true;
 
     // Se añade la validación para extraer el arreglo 'content'
-    this.http.get<any>(`http://localhost:8080/api/bicicletas/catalogo?t=${timestamp}`).subscribe({
+    this.http.get<any>(`https://velox-store-sena-backend-production-2ed0.up.railway.app/api/bicicletas/catalogo?t=${timestamp}`).subscribe({
       next: (data) => {
         this.catalogoBicicletas = data.content !== undefined ? data.content : data;
         this.cargandoCatalogo = false;
