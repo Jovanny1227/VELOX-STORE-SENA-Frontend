@@ -9,6 +9,6 @@ RUN npm run build --configuration=production
 # Etapa 2: Servidor Nginx
 FROM nginx:alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist/velox-store-sena-frontend/browser /usr/share/nginx/html
+COPY --from=build /app/dist/velox-store-sena-frontend /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
