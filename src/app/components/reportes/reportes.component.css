@@ -60,25 +60,27 @@
   transform: translateY(-2px);
 }
 
-/* --- Botón Excel (Verde Suave) --- */
+/* --- Botón Excel (Verde Suave - Outline) --- */
 .btn-excel {
-  background-color: #10b981;
-  color: #ffffff;
+  background-color: transparent;
+  color: #10b981;
+  border: 2px solid #10b981;
 }
 .btn-excel:hover {
-  background-color: #059669;
+  background-color: #10b981;
   color: #ffffff;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
 }
 
-/* --- Botón PDF (Rojo Suave) --- */
+/* --- Botón PDF (Rojo Suave - Outline) --- */
 .btn-pdf {
-  background-color: #ef4444;
-  color: #ffffff;
+  background-color: transparent;
+  color: #ef4444;
+  border: 2px solid #ef4444;
 }
 .btn-pdf:hover {
-  background-color: #dc2626;
+  background-color: #ef4444;
   color: #ffffff;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;

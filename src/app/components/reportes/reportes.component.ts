@@ -21,8 +21,9 @@ Chart.register(...registerables);
   styleUrls: ['./reportes.component.css'],
 })
 export class ReportesComponent implements OnInit {
-  datosReporte: any[] = [];
   cargando: boolean = true;
+  seccionActiva: string = 'ventas';
+  datosReporte: any[] = [];
 
   valorTotalInventario: number = 0;
   unidadesTotales: number = 0;
@@ -220,6 +221,7 @@ export class ReportesComponent implements OnInit {
   filtroCliente: string = '';
   clientesUnicos: string[] = [];
   mostrarDropdownCliente: boolean = false;
+
 
   cargarHistorialVentas() {
     this.ventaService.listarTodas().subscribe({
