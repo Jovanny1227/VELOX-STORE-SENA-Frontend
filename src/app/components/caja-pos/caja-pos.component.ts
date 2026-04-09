@@ -13,86 +13,76 @@ import { VentaService } from '../../services/venta.service';
   styleUrls: ['./caja-pos.component.css'],
 })
 export class CajaPosComponent implements OnInit {
+  // Variables EXACTAS que pide el HTML
+  mensajeExito: string = '';
+  mensajeError: string = '';
+  clienteSeleccionadoId: number | null = null;
+  codigoBusqueda: string = '';
+  carrito: any[] = [];
+  total: number = 0;
+
+  // Variables auxiliares para los datos
   clientes: any[] = [];
-  busquedaCliente: string = '';
-  clienteSeleccionado: any = null;
-
   catalogoBicicletas: any[] = [];
-  filtroMarca: string = '';
-  filtroTipo: string = '';
-  filtroModelo: string = '';
-
-  carritoPos: any[] = [];
 
   constructor(
     private clienteService: ClienteService,
     private bicicletaService: BicicletaService,
     private ventaService: VentaService,
-    private cdr: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.clienteService.listar().subscribe((data: any) => {
-      this.clientes = data;
-      this.cdr.detectChanges();
+    this.clienteService.listar().subscribe({
+      next: (data: any) => {
+        this.clientes = data;
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => console.error('Error al cargar clientes', err)
     });
     this.cargarBicicletas();
   }
 
   cargarBicicletas() {
-    this.bicicletaService.listarBicicletas().subscribe((data: any) => {
-      this.catalogoBicicletas = data;
-      this.cdr.detectChanges();
+    this.bicicletaService.listarBicicletas().subscribe({
+      next: (data: any) => {
+        this.catalogoBicicletas = data;
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => console.error('Error al cargar inventario', err)
     });
   }
 
-  get clientesFiltrados() {
-    if (!this.busquedaCliente.trim()) return [];
-    return this.clientes.filter((c) => c.documento.includes(this.busquedaCliente));
-  }
+  // Método EXACTO que pide el HTML
+  buscarProducto() {
+    const productoEncontrado = this.catalogoBicicletas.find(
+      (bici) => bici.codigo === this.codigoBusqueda.trim()
+    );
 
-  seleccionarCliente(cliente: any) {
-    this.clienteSeleccionado = cliente;
-    this.busquedaCliente = '';
-    this.cdr.detectChanges();
-  }
-
-  quitarCliente() {
-    this.clienteSeleccionado = null;
-    this.cdr.detectChanges();
-  }
-
-  get marcasDisponibles() {
-    return [...new Set(this.catalogoBicicletas.map((b) => b.marca))];
-  }
-  get tiposDisponibles() {
-    return [...new Set(this.catalogoBicicletas.map((b) => b.tipo))];
-  }
-
-  get bicicletasFiltradas() {
-    const modeloTerm = this.filtroModelo.toLowerCase().trim();
-
-    return this.catalogoBicicletas.filter((b) => {
-      if (b.stock <= 0) return false;
-      const matchMarca = !this.filtroMarca || b.marca === this.filtroMarca;
-      const matchTipo = !this.filtroTipo || b.tipo === this.filtroTipo;
-      const matchModelo = !modeloTerm || b.modelo.toLowerCase().includes(modeloTerm);
-      return matchMarca && matchTipo && matchModelo;
-    });
+    if (productoEncontrado) {
+      if (productoEncontrado.stock > 0) {
+        this.agregarAlCarrito(productoEncontrado);
+        this.codigoBusqueda = ''; // Limpiar campo
+      } else {
+        this.mostrarError('El producto no tiene stock disponible.');
+      }
+    } else {
+      this.mostrarError('Producto no encontrado con ese código.');
+    }
   }
 
   agregarAlCarrito(bici: any) {
-    const existe = this.carritoPos.find((i) => i.codigoBicicleta === bici.codigo);
+    const existe = this.carrito.find((i) => i.codigoBicicleta === bici.codigo);
 
     if (existe) {
       if (existe.cantidad < bici.stock) {
         existe.cantidad++;
-        this.recalcularSubtotal(existe);
+        existe.subtotal = existe.cantidad * existe.precio;
       } else {
-        alert(`Máximo stock alcanzado (${bici.stock})`);
+        this.mostrarError(`Máximo stock alcanzado (${bici.stock})`);
       }
     } else {
-      this.carritoPos.push({
+      this.carrito.push({
         codigoBicicleta: bici.codigo,
         modelo: bici.modelo,
         precio: bici.precio,
@@ -101,56 +91,67 @@ export class CajaPosComponent implements OnInit {
         subtotal: bici.precio,
       });
     }
+    this.calcularTotal();
+  }
+
+  // Método EXACTO que pide el HTML
+  eliminarDelCarrito(index: number) {
+    this.carrito.splice(index, 1);
+    this.calcularTotal();
+  }
+
+  calcularTotal() {
+    this.total = this.carrito.reduce((acc, item) => acc + item.subtotal, 0);
     this.cdr.detectChanges();
   }
 
-  validarCantidad(item: any) {
-    if (item.cantidad < 1) {
-      item.cantidad = 1;
-      alert('La cantidad mínima es 1');
-    } else if (item.cantidad > item.stockMaximo) {
-      item.cantidad = item.stockMaximo;
-      alert(`Solo hay ${item.stockMaximo} unidades disponibles en inventario`);
+  mostrarError(mensaje: string) {
+    this.mensajeError = mensaje;
+    setTimeout(() => {
+      this.mensajeError = '';
+      this.cdr.detectChanges();
+    }, 3000);
+    this.cdr.detectChanges();
+  }
+
+  mostrarExito(mensaje: string) {
+    this.mensajeExito = mensaje;
+    setTimeout(() => {
+      this.mensajeExito = '';
+      this.cdr.detectChanges();
+    }, 3000);
+    this.cdr.detectChanges();
+  }
+
+  // Método EXACTO que pide el HTML
+  procesarVenta() {
+    if (this.carrito.length === 0) {
+      this.mostrarError('El carrito está vacío');
+      return;
     }
-    this.recalcularSubtotal(item);
-  }
-
-  recalcularSubtotal(item: any) {
-    item.subtotal = item.cantidad * item.precio;
-    this.cdr.detectChanges();
-  }
-
-  quitarDelCarrito(index: number) {
-    this.carritoPos.splice(index, 1);
-    this.cdr.detectChanges();
-  }
-
-  getTotal() {
-    return this.carritoPos.reduce((acc, item) => acc + item.subtotal, 0);
-  }
-
-  registrarVenta() {
-    if (this.carritoPos.length === 0) return;
 
     const payload = {
-      usuarioId: 1,
-      items: this.carritoPos.map((i) => ({
+      usuarioId: 1, // ID del cajero temporal
+      items: this.carrito.map((i) => ({
         codigoBicicleta: i.codigoBicicleta,
         cantidad: i.cantidad,
       })),
-      clienteId: this.clienteSeleccionado ? this.clienteSeleccionado.clienteId : null,
+      clienteId: this.clienteSeleccionadoId,
       tipoVenta: 'PRESENCIAL',
     };
 
     this.ventaService.registrarVentaMultiple(payload).subscribe({
       next: (res: any) => {
-        alert('Venta procesada con éxito');
-        this.carritoPos = [];
-        this.clienteSeleccionado = null;
-        this.cargarBicicletas();
-        this.cdr.detectChanges();
+        this.mostrarExito('Venta registrada con éxito!');
+        this.carrito = [];
+        this.clienteSeleccionadoId = null;
+        this.codigoBusqueda = '';
+        this.calcularTotal();
+        this.cargarBicicletas(); // Refrescar el stock del catálogo
       },
-      error: (err: any) => alert('Error al registrar la venta'),
+      error: (err: any) => {
+        this.mostrarError(err.error?.message || 'Error al registrar la venta');
+      }
     });
   }
 }
