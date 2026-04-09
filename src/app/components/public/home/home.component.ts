@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -19,14 +19,7 @@ declare var bootstrap: any;
 })
 export class HomeComponent implements OnInit {
   catalogoBicicletas: any[] = [];
-  proveedoresDestacados: string[] = [
-    'GW Colombia',
-    'Sunday Bikes',
-    'Trek',
-    'Specialized',
-    'Shimano',
-  ];
-
+  proveedoresDestacados: string[] = ['GW Colombia', 'Sunday Bikes', 'Trek', 'Specialized', 'Shimano'];
   itemsCarrito: any[] = [];
   totalCarrito: number = 0;
   filtroMarca: string = '';
@@ -47,8 +40,7 @@ export class HomeComponent implements OnInit {
     const timestamp = new Date().getTime();
     this.cargandoCatalogo = true;
 
-    // Se añade la validación para extraer el arreglo 'content'
-    this.http.get<any>(`http://localhost:8080/api/bicicletas/catalogo?t=${timestamp}`).subscribe({
+    this.http.get<any>('https://velox-store-sena-backend-production-2ed0.up.railway.app/api/bicicletas/catalogo?t=' + timestamp).subscribe({
       next: (data) => {
         this.catalogoBicicletas = data.content !== undefined ? data.content : data;
         this.cargandoCatalogo = false;
@@ -58,7 +50,7 @@ export class HomeComponent implements OnInit {
         console.error('Error cargando catálogo', err);
         this.cargandoCatalogo = false;
         this.cdr.detectChanges();
-      },
+      }
     });
 
     this.carritoService.carrito$.subscribe((items) => {
@@ -73,22 +65,14 @@ export class HomeComponent implements OnInit {
   }
 
   get bicicletasFiltradas() {
-    // Si catalogoBicicletas no es un arreglo (por error de carga), devolvemos lista vacía
     if (!Array.isArray(this.catalogoBicicletas)) return [];
-
     return this.catalogoBicicletas.filter((bici) => {
       const stockReal = bici.stock !== null ? bici.stock : 0;
       if (stockReal <= 0) return false;
 
-      const coincideMarca = this.filtroMarca
-        ? bici.marca.toLowerCase().includes(this.filtroMarca.toLowerCase())
-        : true;
-      const coincideModelo = this.filtroModelo
-        ? bici.modelo.toLowerCase().includes(this.filtroModelo.toLowerCase())
-        : true;
-      const coincideTipo = this.filtroTipo
-        ? bici.tipo.toLowerCase().includes(this.filtroTipo.toLowerCase())
-        : true;
+      const coincideMarca = this.filtroMarca ? bici.marca.toLowerCase().includes(this.filtroMarca.toLowerCase()) : true;
+      const coincideModelo = this.filtroModelo ? bici.modelo.toLowerCase().includes(this.filtroModelo.toLowerCase()) : true;
+      const coincideTipo = this.filtroTipo ? bici.tipo.toLowerCase().includes(this.filtroTipo.toLowerCase()) : true;
 
       return coincideMarca && coincideModelo && coincideTipo;
     });
@@ -98,8 +82,7 @@ export class HomeComponent implements OnInit {
     const tipoLower = tipo ? tipo.toLowerCase() : '';
     if (tipoLower.includes('mtb')) return 'assets/bikes/mtb.png';
     if (tipoLower.includes('ruta')) return 'assets/bikes/ruta.png';
-    if (tipoLower.includes('urbano') || tipoLower.includes('urbana'))
-      return 'assets/bikes/urbano.png';
+    if (tipoLower.includes('urbano') || tipoLower.includes('urbana')) return 'assets/bikes/urbano.png';
     if (tipoLower.includes('bmx')) return 'assets/bikes/bmx.png';
     return 'assets/bikes/mtb.png';
   }
@@ -124,18 +107,14 @@ export class HomeComponent implements OnInit {
 
   aumentarCantidad(item: any) {
     if (item.cantidad >= item.stock) {
-      alert(`Solo quedan ${item.stock} unidades disponibles.`);
+      alert('Solo quedan ' + item.stock + ' unidades disponibles.');
       return;
     }
     this.carritoService.agregarBicicleta(item);
   }
 
-  disminuirCantidad(codigo: string) {
-    this.carritoService.disminuirCantidad(codigo);
-  }
-  eliminarDelCarrito(codigo: string) {
-    this.carritoService.eliminarBicicleta(codigo);
-  }
+  disminuirCantidad(codigo: string) { this.carritoService.disminuirCantidad(codigo); }
+  eliminarDelCarrito(codigo: string) { this.carritoService.eliminarBicicleta(codigo); }
 
   procesarPago() {
     const usuarioActual = this.authService.currentUserValue;
@@ -144,26 +123,37 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    const idDelCliente =
-      (usuarioActual as any).id ||
-      (usuarioActual as any).idUsuario ||
-      (usuarioActual as any).usuarioId;
+    const idDelCliente = (usuarioActual as any).id || (usuarioActual as any).idUsuario || (usuarioActual as any).usuarioId;
+
+    if (!idDelCliente) {
+        alert('Tu sesión ha expirado o es inválida. Por favor inicia sesión de nuevo.');
+        this.authService.logout();
+        this.router.navigate(['/login']);
+        return;
+    }
 
     const peticionVenta = {
       usuarioId: idDelCliente,
       items: this.itemsCarrito.map((item) => ({
-        codigoBicicleta: item.codigo,
+        codigoBicicleta: item.codigo || item.codigoBicicleta,
         cantidad: item.cantidad,
       })),
+      tipoVenta: 'VIRTUAL'
     };
 
     this.ventaService.registrarVentaMultiple(peticionVenta).subscribe({
       next: (respuesta) => {
-        alert(`¡Compra procesada! Factura: FAC-${respuesta.idVenta}`);
+        alert('¡Compra procesada! Factura: FAC-' + respuesta.idVenta);
         this.carritoService.vaciarCarrito();
         this.ngOnInit();
       },
-      error: (err) => alert('Error al procesar la compra.'),
+      error: (err) => {
+        console.error(err);
+        alert('Error: La base de datos de Railway se reinició y estos productos (o tu usuario) ya no existen. Tu carrito se vaciará y deberás iniciar sesión nuevamente.');
+        this.carritoService.vaciarCarrito();
+        this.authService.logout();
+        window.location.href = '/login';
+      },
     });
   }
 }

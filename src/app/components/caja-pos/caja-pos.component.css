@@ -1,113 +1,18 @@
-.admin-wrapper {
-  background-color: #f8fafc;
-  min-height: calc(100vh - 70px);
-  padding: 40px 0 80px 0;
-}
-
-.page-title {
-  font-weight: 800;
-  color: #0f172a;
-  letter-spacing: -0.5px;
-}
-
-.velox-card {
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.04);
-  border: 1px solid #e2e8f0;
-}
-
-.modern-input {
-  background-color: #f1f5f9;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  padding: 12px 18px;
-  color: #1e293b;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.modern-input:focus {
-  background-color: #ffffff;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
-  outline: none;
-}
-
-/* Listas Flotantes (Autocompletado) */
-.autocomplete-item {
-  background-color: #ffffff;
-  border-left: 3px solid transparent;
-  border-bottom: 1px solid #f1f5f9;
-  cursor: pointer;
-  transition: all 0.2s;
-  color: #1e293b;
-}
-
-.autocomplete-item:hover {
-  background-color: #f8fafc;
-  border-left: 3px solid #3b82f6;
-}
-
-/* Tabla de Factura */
-.modern-table {
-  margin-bottom: 0;
-  font-size: 1.05rem;
-}
-
-.modern-table th {
-  background-color: #f8fafc;
-  color: #475569;
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-  padding: 15px 10px;
-  border-bottom: 2px solid #e2e8f0;
-}
-
-.modern-table td {
-  padding: 15px 10px;
-  vertical-align: middle;
-  border-bottom: 1px solid #f1f5f9;
-  color: #1e293b;
-}
-
-/* Botón de Cobro */
-.velox-btn-success {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: white;
-  border: none;
-  transition: all 0.3s;
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
-}
-
-.velox-btn-success:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-}
-
-.velox-btn-success:disabled {
-  background: #94a3b8;
-  box-shadow: none;
-}
-
-.catalog-scroll-container {
-  max-height: 280px;
-  overflow-y: auto;
-  background-color: #ffffff;
-}
-
-/* Opcional: Personalizar el scrollbar solo para esa cajita */
-.catalog-scroll-container::-webkit-scrollbar {
-  width: 6px;
-}
-.catalog-scroll-container::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-.catalog-scroll-container::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
-}
-.catalog-scroll-container::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
+﻿.admin-wrapper { background-color: #ffffff; min-height: calc(100vh - 70px); padding: 40px 0 80px 0; }
+.page-title { font-weight: 800; color: #111827; letter-spacing: -0.5px; }
+.velox-card { background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.04); border: 1px solid #111827; }
+.modern-input { background-color: #ffffff; border: 1px solid #111827; border-radius: 10px; padding: 12px 18px; color: #111827; font-weight: 500; transition: all 0.3s ease; }
+.modern-input:focus { background-color: #ffffff; border-color: #2563eb; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15); outline: none; }
+.autocomplete-item { background-color: #ffffff; border-left: 3px solid transparent; border-bottom: 1px solid #e2e8f0; cursor: pointer; transition: all 0.2s; color: #111827; }
+.autocomplete-item:hover { background-color: #f3f4f6; border-left: 3px solid #2563eb; }
+.modern-table { margin-bottom: 0; font-size: 1.05rem; }
+.modern-table th { background-color: #ffffff; color: #111827; font-weight: 800; text-transform: uppercase; font-size: 0.85rem; padding: 15px 10px; border-bottom: 2px solid #111827; }
+.modern-table td { padding: 15px 10px; vertical-align: middle; border-bottom: 1px solid #e2e8f0; color: #111827; }
+.velox-btn-success { background: #2563eb; color: white; border: none; transition: all 0.3s; box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3); }
+.velox-btn-success:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4); background: #1d4ed8; }
+.velox-btn-success:disabled { background: #111827; color: white; box-shadow: none; }
+.catalog-scroll-container { max-height: 280px; overflow-y: auto; background-color: #ffffff; border: 1px solid #111827; border-radius: 8px; }
+.catalog-scroll-container::-webkit-scrollbar { width: 6px; }
+.catalog-scroll-container::-webkit-scrollbar-track { background: #ffffff; }
+.catalog-scroll-container::-webkit-scrollbar-thumb { background: #111827; border-radius: 4px; }
+.catalog-scroll-container::-webkit-scrollbar-thumb:hover { background: #2563eb; }

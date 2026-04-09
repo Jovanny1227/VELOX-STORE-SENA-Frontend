@@ -1,171 +1,19 @@
-/* ================= CONTENEDOR PRINCIPAL ================= */
-.login-wrapper {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  overflow: hidden;
-}
-
-/* ================= LA IMAGEN BORROSA (MAGIA CSS) ================= */
-.login-wrapper::before {
-  content: '';
-  position: absolute;
-  /* Lo hacemos un poco más grande para que los bordes borrosos no se vean mal */
-  top: -20px; left: -20px; right: -20px; bottom: -20px;
-
-  /* AQUÍ ESTÁ LA IMAGEN. Puedes cambiar este enlace web por una tuya, ej: url('assets/bikes/montana.jpg') */
-  background: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
-
-  /* El efecto borroso y oscuro */
-  filter: blur(8px) brightness(0.65);
-  z-index: 0; /* Lo ponemos en el nivel base */
-}
-
-/* ================= EFECTO CRISTAL BLANCO ================= */
-.login-glass-card {
-  position: relative;
-  z-index: 1; /* Lo ponemos por encima de la imagen borrosa */
-
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 20px;
-
-  padding: 50px;
-  width: 100%;
-  max-width: 500px;
-
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-  color: #ffffff;
-}
-
-/* ================= TIPOGRAFÍA ================= */
-.login-header h2 {
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 8px;
-  letter-spacing: 0.5px;
-  font-size: 1.8rem;
-}
-
-.login-header p {
-  text-align: center;
-  color: #e2e8f0;
-  font-size: 0.95rem;
-  margin-bottom: 35px;
-}
-
-.form-label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #ffffff;
-  margin-bottom: 10px;
-}
-
-/* ================= INPUTS ================= */
-.custom-input {
-  /* Fondo blanco casi invisible para que coincida con la tarjeta */
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #ffffff;
-  padding: 14px 18px; /* Inputs más altos */
-  border-radius: 10px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-}
-
-.custom-input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.custom-input:focus {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: #ffffff;
-  box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-  outline: none;
-}
-
-/* ================= BOTÓN ================= */
-.btn-login {
-  background-color: #ffffff; /* Botón blanco para resaltar */
-  color: #1e293b; /* Texto oscuro */
-  border: none;
-  font-weight: 700;
-  border-radius: 10px;
-  letter-spacing: 0.5px;
-  font-size: 1.05rem;
-  transition: all 0.3s ease;
-}
-
-.btn-login:hover:not(:disabled) {
-  background-color: #f1f5f9;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-}
-
-.btn-login:disabled {
-  background-color: #94a3b8;
-  color: #e2e8f0;
-  cursor: not-allowed;
-  opacity: 0.8;
-}
-
-/* ================= ENLACE INFERIOR ================= */
-.back-link {
-  color: #e2e8f0;
-  text-decoration: none;
-  font-size: 0.95rem;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.back-link:hover {
-  color: #ffffff;
-  text-decoration: underline;
-}
-
-/* ================= ALERTA DE ERROR ================= */
-.custom-alert {
-  background: rgba(239, 68, 68, 0.3);
-  border: 1px solid rgba(239, 68, 68, 0.5);
-  color: #ffe4e6;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-/* ================= ENLACE DE REGISTRO ================= */
-.register-link {
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 1.05rem;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-/* Efecto de subrayado animado al hacer hover */
-.register-link::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: -4px;
-  left: 0;
-  background-color: #60a5fa; /* Azul claro */
-  transition: width 0.3s ease;
-}
-
-.register-link:hover {
-  color: #60a5fa;
-}
-
-.register-link:hover::after {
-  width: 100%;
-}
+﻿.login-wrapper { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 60px 20px; overflow: hidden; }
+.login-wrapper::before { content: ''; position: absolute; top: -20px; left: -20px; right: -20px; bottom: -20px; background: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat; filter: blur(8px) brightness(0.65); z-index: 0; }
+.login-glass-card { position: relative; z-index: 1; background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 20px; padding: 50px; width: 100%; max-width: 500px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); color: #111827; }
+.login-header h2 { font-weight: 700; text-align: center; margin-bottom: 8px; letter-spacing: 0.5px; font-size: 1.8rem; color: #111827; }
+.login-header p { text-align: center; color: #111827; font-size: 0.95rem; margin-bottom: 35px; }
+.form-label { font-size: 0.9rem; font-weight: 600; color: #111827; margin-bottom: 10px; }
+.custom-input { background: #ffffff; border: 1px solid #111827; color: #111827; padding: 14px 18px; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; }
+.custom-input::placeholder { color: #111827; opacity: 0.6; }
+.custom-input:focus { background: #ffffff; border-color: #2563eb; box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.2); color: #111827; outline: none; }
+.btn-login { background-color: #2563eb; color: #ffffff; border: none; font-weight: 700; border-radius: 10px; letter-spacing: 0.5px; font-size: 1.05rem; transition: all 0.3s ease; }
+.btn-login:hover:not(:disabled) { background-color: #1d4ed8; color: #ffffff; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); }
+.btn-login:disabled { background-color: #111827; color: #ffffff; cursor: not-allowed; opacity: 0.8; }
+.back-link { color: #111827; text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: color 0.2s; }
+.back-link:hover { color: #2563eb; text-decoration: underline; }
+.custom-alert { background: #111827; border: 1px solid #f59e0b; color: #f59e0b; border-radius: 10px; font-size: 0.9rem; font-weight: 500; }
+.register-link { color: #2563eb; text-decoration: none; font-size: 1.05rem; letter-spacing: 0.5px; transition: all 0.3s ease; position: relative; }
+.register-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0; background-color: #f59e0b; transition: width 0.3s ease; }
+.register-link:hover { color: #f59e0b; }
+.register-link:hover::after { width: 100%; }
