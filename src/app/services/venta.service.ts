@@ -1,4 +1,4 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class VentaService {
-  private apiUrl = 'https://velox-store-sena-backend-production-1ace.up.railway.app/api/ventas';
+  private apiUrl = 'https://velox-store-sena-backend-production-2ed0.up.railway.app/api/ventas';
 
   constructor(private http: HttpClient) {}
 

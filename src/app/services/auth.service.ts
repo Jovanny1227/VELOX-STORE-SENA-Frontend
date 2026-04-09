@@ -7,7 +7,7 @@ import { AuthLogin, AuthResponse } from '../models/auth.model';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'https://velox-store-sena-backend-production-1ace.up.railway.app/api/auth';
+  private apiUrl = 'https://velox-store-sena-backend-production-2ed0.up.railway.app/api/auth';
   private currentUserSubject = new BehaviorSubject<AuthResponse | null>(null);
 
   constructor(private http: HttpClient) {

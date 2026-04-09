@@ -8,7 +8,7 @@ import { Bicicleta, BicicletaMasivaRequest } from '../models/bicicleta.model';
   providedIn: 'root',
 })
 export class BicicletaService {
-  private apiUrl = 'https://velox-store-sena-backend-production-1ace.up.railway.app/api/bicicletas';
+  private apiUrl = 'https://velox-store-sena-backend-production-2ed0.up.railway.app/api/bicicletas';
 
   constructor(private http: HttpClient) {}
 

@@ -18,7 +18,7 @@ export class ProveedoresComponent implements OnInit {
   editando: boolean = false;
   idActual: number | null = null;
 
-  private apiUrl = 'http://localhost:8080/api/proveedores';
+  private apiUrl = 'https://velox-store-sena-backend-production-2ed0.up.railway.app/api/proveedores';
 
   constructor(
     private fb: FormBuilder,
