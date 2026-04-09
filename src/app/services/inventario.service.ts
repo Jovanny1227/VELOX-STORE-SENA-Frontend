@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class InventarioService {
-  private apiUrl = 'https://velox-store-sena-backend-production-1ace.up.railway.app/api/inventario';
+  private apiUrl = 'https://velox-store-sena-backend-production-2ed0.up.railway.app/api/inventario';
 
   constructor(private http: HttpClient) {}
 

@@ -21,8 +21,9 @@ Chart.register(...registerables);
   styleUrls: ['./reportes.component.css'],
 })
 export class ReportesComponent implements OnInit {
-  datosReporte: any[] = [];
   cargando: boolean = true;
+  seccionActiva: string = 'ventas';
+  datosReporte: any[] = [];
 
   valorTotalInventario: number = 0;
   unidadesTotales: number = 0;
@@ -221,6 +222,7 @@ export class ReportesComponent implements OnInit {
   clientesUnicos: string[] = [];
   mostrarDropdownCliente: boolean = false;
 
+
   cargarHistorialVentas() {
     this.ventaService.listarTodas().subscribe({
       next: (ventasDesdeJava) => {
@@ -288,7 +290,7 @@ export class ReportesComponent implements OnInit {
   filtroCanal: string = '';
 
   cargarMovimientos() {
-    this.http.get<any[]>('http://localhost:8080/api/movimientos').subscribe({
+    this.http.get<any[]>('https://velox-store-sena-backend-production-2ed0.up.railway.app/api/movimientos').subscribe({
       next: (datos) => {
         this.movimientosOriginales = datos.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
         this.historialComprasGlobal = this.movimientosOriginales

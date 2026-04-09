@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class MovimientoService {
-  private apiUrl = 'https://velox-store-sena-backend-production-1ace.up.railway.app/api/movimientos';
-  private proveedorUrl = 'https://velox-store-sena-backend-production-1ace.up.railway.app/api/proveedores';
+  private apiUrl = 'https://velox-store-sena-backend-production-2ed0.up.railway.app/api/movimientos';
+  private proveedorUrl = 'https://velox-store-sena-backend-production-2ed0.up.railway.app/api/proveedores';
 
   constructor(private http: HttpClient) {}
 

@@ -4,9 +4,6 @@
   </a>
 
   <div class="nav-links">
-    <ng-container *ngIf="!authService.isAdmin()">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">INICIO / CATÁLOGO</a>
-    </ng-container>
 
     <ng-container *ngIf="authService.isAdmin()">
       <a routerLink="/admin/inventario" routerLinkActive="active" class="nav-link">INVENTARIO</a>
