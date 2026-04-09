@@ -1,161 +1,122 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ClienteService } from '../../services/cliente.service';
-import { BicicletaService } from '../../services/bicicleta.service';
 import { VentaService } from '../../services/venta.service';
+import { ClienteService } from '../../services/cliente.service';
+import { InventarioService } from '../../services/inventario.service';
 
 @Component({
   selector: 'app-caja-pos',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './caja-pos.component.html',
-  styleUrls: ['./caja-pos.component.css'],
+  styleUrls: ['./caja-pos.component.css']
 })
 export class CajaPosComponent implements OnInit {
+  productos: any[] = [];
+  carrito: any[] = [];
   clientes: any[] = [];
-  busquedaCliente: string = '';
-  clienteSeleccionado: any = null;
-
-  catalogoBicicletas: any[] = [];
-  filtroMarca: string = '';
-  filtroTipo: string = '';
-  filtroModelo: string = '';
-
-  carritoPos: any[] = [];
+  clienteSeleccionadoId: number | null = null;
+  codigoBusqueda: string = '';
+  total: number = 0;
+  mensajeExito: string = '';
+  mensajeError: string = '';
 
   constructor(
-    private clienteService: ClienteService,
-    private bicicletaService: BicicletaService,
     private ventaService: VentaService,
-    private cdr: ChangeDetectorRef, // <-- Inyectado aquí
+    private clienteService: ClienteService,
+    private inventarioService: InventarioService
   ) {}
 
-  ngOnInit() {
-    this.clienteService.listar().subscribe((data) => {
-      this.clientes = data;
-      this.cdr.detectChanges(); // <-- Actualizar al traer clientes
-    });
-    this.cargarBicicletas();
+  ngOnInit(): void {
+    this.cargarClientes();
+    this.cargarInventario();
   }
 
-  cargarBicicletas() {
-    this.bicicletaService.listarBicicletas().subscribe((data) => {
-      this.catalogoBicicletas = data;
-      this.cdr.detectChanges(); // <-- Actualizar al traer bicicletas
+  cargarClientes() {
+    this.clienteService.getClientes().subscribe({
+      next: (data) => this.clientes = data,
+      error: (err) => console.error('Error al cargar clientes', err)
     });
   }
 
-  // --- LÓGICA DE CLIENTES ---
-  get clientesFiltrados() {
-    if (!this.busquedaCliente.trim()) return [];
-    return this.clientes.filter((c) => c.documento.includes(this.busquedaCliente));
-  }
-
-  seleccionarCliente(cliente: any) {
-    this.clienteSeleccionado = cliente;
-    this.busquedaCliente = '';
-    this.cdr.detectChanges(); // <-- Refrescar al seleccionar
-  }
-
-  quitarCliente() {
-    this.clienteSeleccionado = null;
-    this.cdr.detectChanges(); // <-- Refrescar al quitar
-  }
-
-  // --- LÓGICA DE BÚSQUEDA DE PRODUCTOS ---
-  get marcasDisponibles() {
-    return [...new Set(this.catalogoBicicletas.map((b) => b.marca))];
-  }
-  get tiposDisponibles() {
-    return [...new Set(this.catalogoBicicletas.map((b) => b.tipo))];
-  }
-
-  get bicicletasFiltradas() {
-    const modeloTerm = this.filtroModelo.toLowerCase().trim();
-
-    return this.catalogoBicicletas.filter((b) => {
-      // MEJORA: Solo mostrar las que tienen stock > 0
-      if (b.stock <= 0) return false;
-
-      const matchMarca = !this.filtroMarca || b.marca === this.filtroMarca;
-      const matchTipo = !this.filtroTipo || b.tipo === this.filtroTipo;
-      const matchModelo = !modeloTerm || b.modelo.toLowerCase().includes(modeloTerm);
-      return matchMarca && matchTipo && matchModelo;
+  cargarInventario() {
+    this.inventarioService.getInventario().subscribe({
+      next: (data) => this.productos = data,
+      error: (err) => console.error('Error al cargar inventario', err)
     });
   }
 
-  agregarAlCarrito(bici: any) {
-    const existe = this.carritoPos.find((i) => i.codigoBicicleta === bici.codigo);
-
-    if (existe) {
-      if (existe.cantidad < bici.stock) {
-        existe.cantidad++;
-        this.recalcularSubtotal(existe);
-      } else {
-        alert(`Máximo stock alcanzado (${bici.stock})`);
-      }
+  buscarProducto() {
+    const producto = this.productos.find(p => p.bicicleta.codigo === this.codigoBusqueda);
+    if (producto) {
+      this.agregarAlCarrito(producto.bicicleta);
+      this.codigoBusqueda = ''; 
     } else {
-      this.carritoPos.push({
-        codigoBicicleta: bici.codigo,
-        modelo: bici.modelo,
-        precio: bici.precio,
+      this.mensajeError = 'Producto no encontrado o sin inventario';
+      setTimeout(() => this.mensajeError = '', 3000);
+    }
+  }
+
+  agregarAlCarrito(bicicleta: any) {
+    const itemExistente = this.carrito.find(item => item.codigoBicicleta === bicicleta.codigo);
+    if (itemExistente) {
+      itemExistente.cantidad++;
+      itemExistente.subtotal = itemExistente.cantidad * bicicleta.precio;
+    } else {
+      this.carrito.push({
+        codigoBicicleta: bicicleta.codigo,
+        modelo: bicicleta.modelo,
+        precio: bicicleta.precio,
         cantidad: 1,
-        stockMaximo: bici.stock, // Guardamos el tope para validar luego
-        subtotal: bici.precio,
+        subtotal: bicicleta.precio
       });
     }
-    this.cdr.detectChanges(); // <-- Actualizar al agregar items
+    this.calcularTotal();
   }
 
-  // 🔥 NUEVA FUNCIÓN: Valida cambios manuales en la tabla de la factura
-  validarCantidad(item: any) {
-    if (item.cantidad < 1) {
-      item.cantidad = 1;
-      alert('La cantidad mínima es 1');
-    } else if (item.cantidad > item.stockMaximo) {
-      item.cantidad = item.stockMaximo;
-      alert(`Solo hay ${item.stockMaximo} unidades disponibles en inventario`);
+  eliminarDelCarrito(index: number) {
+    this.carrito.splice(index, 1);
+    this.calcularTotal();
+  }
+
+  calcularTotal() {
+    this.total = this.carrito.reduce((acc, item) => acc + item.subtotal, 0);
+  }
+
+  procesarVenta() {
+    if (this.carrito.length === 0) {
+      this.mensajeError = 'El carrito está vacío';
+      return;
     }
-    this.recalcularSubtotal(item);
-  }
+    
+    // Obtenemos el usuario autenticado (Si tienes auth usa el token, sino dejamos un 1 por defecto)
+    const usuarioString = localStorage.getItem('usuario');
+    const usuarioId = usuarioString ? JSON.parse(usuarioString).idUsuario : 1; 
 
-  recalcularSubtotal(item: any) {
-    item.subtotal = item.cantidad * item.precio;
-    this.cdr.detectChanges(); // <-- Actualizar al recalcular
-  }
-
-  quitarDelCarrito(index: number) {
-    this.carritoPos.splice(index, 1);
-    this.cdr.detectChanges(); // <-- Actualizar al quitar items
-  }
-
-  getTotal() {
-    return this.carritoPos.reduce((acc, item) => acc + item.subtotal, 0);
-  }
-
-  registrarVenta() {
-    if (this.carritoPos.length === 0) return;
-
+    // Aquí se arma el objeto exacto que el backend espera
     const payload = {
-      usuarioId: 1,
-      items: this.carritoPos.map((i) => ({
-        codigoBicicleta: i.codigoBicicleta,
-        cantidad: i.cantidad,
+      items: this.carrito.map(item => ({
+        codigoBicicleta: item.codigoBicicleta,
+        cantidad: item.cantidad
       })),
-      clienteId: this.clienteSeleccionado ? this.clienteSeleccionado.clienteId : null,
       tipoVenta: 'PRESENCIAL',
+      clienteId: this.clienteSeleccionadoId // AQUÍ ENVIAMOS EL CLIENTE SELECCIONADO
     };
 
-    this.ventaService.registrarVentaMultiple(payload).subscribe({
-      next: () => {
-        alert('Venta procesada con éxito');
-        this.carritoPos = [];
-        this.clienteSeleccionado = null;
-        this.cargarBicicletas(); // Refrescar stock visual
-        this.cdr.detectChanges(); // <-- Limpiar toda la vista tras venta
+    this.ventaService.registrarVentaPos(Number(usuarioId), payload).subscribe({
+      next: (res) => {
+        this.mensajeExito = 'Venta registrada con éxito!';
+        this.carrito = [];
+        this.clienteSeleccionadoId = null; // Limpiamos el cliente para la próxima venta
+        this.calcularTotal();
+        this.cargarInventario(); 
+        setTimeout(() => this.mensajeExito = '', 3000);
       },
-      error: () => alert('Error al registrar la venta'),
+      error: (err) => {
+        this.mensajeError = err.error?.message || 'Error al registrar la venta';
+        setTimeout(() => this.mensajeError = '', 3000);
+      }
     });
   }
 }
