@@ -61,7 +61,7 @@ export class ReportesComponent implements OnInit {
 
     } else {
       this.bicicletaService.listarBicicletas().subscribe({
-        next: (data) => {
+        next: (data: any) => {
           this.procesarDatos(data);
           this.cargando = false;
           this.cdr.detectChanges();
@@ -71,7 +71,7 @@ export class ReportesComponent implements OnInit {
             this.cdr.detectChanges();
           }, 100);
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Error cargando datos para reportes', err);
           this.cargando = false;
           this.cdr.detectChanges();
@@ -132,7 +132,6 @@ export class ReportesComponent implements OnInit {
 
   volverAlInventario() { this.router.navigate(['/admin/inventario']); }
 
-  // ================= EXPORTACIONES INVENTARIO COMPLETO =================
   exportarExcel() {
     const datosParaExportar = this.datosReporte.map((item) => ({
       'Código SKU': item.codigo, Marca: item.marca, Modelo: item.modelo, Categoría: item.tipo,
@@ -154,7 +153,6 @@ export class ReportesComponent implements OnInit {
     doc.save('Catalogo_Actual_Velox.pdf');
   }
 
-  // 🔥 NUEVOS MÉTODOS: EXPORTACIONES SOLO PARA BAJO STOCK 🔥
   exportarBajoStockExcel() {
     if (this.listaBajoStock.length === 0) return;
     const datosParaExportar = this.listaBajoStock.map((item) => ({
@@ -190,7 +188,6 @@ export class ReportesComponent implements OnInit {
     doc.save('Lista_Compras_Sugerida_Velox.pdf');
   }
 
-  // ================= LÓGICA DE FILTROS Y OTROS REPORTES =================
   estaEnRango(fechaComparar: string | Date, inicioStr: string, finStr: string): boolean {
     if (!inicioStr && !finStr) return true;
     const fecha = new Date(fechaComparar);
@@ -214,7 +211,6 @@ export class ReportesComponent implements OnInit {
     this.filtrarMovimientos();
   }
 
-  // VENTAS
   historialVentas: any[] = [];
   ventasFiltradas: any[] = [];
   fechasVentas = { inicio: '', fin: '' };
@@ -275,7 +271,6 @@ export class ReportesComponent implements OnInit {
     doc.save(`Ventas_${this.filtroCliente || 'Todas'}.pdf`);
   }
 
-  // COMPRAS Y MOVIMIENTOS
   historialComprasGlobal: any[] = [];
   comprasFiltradas: any[] = [];
   fechasCompras = { inicio: '', fin: '' };
@@ -291,8 +286,8 @@ export class ReportesComponent implements OnInit {
 
   cargarMovimientos() {
     this.http.get<any[]>('https://velox-store-sena-backend-production-2ed0.up.railway.app/api/movimientos').subscribe({
-      next: (datos) => {
-        this.movimientosOriginales = datos.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+      next: (datos: any) => {
+        this.movimientosOriginales = datos.sort((a: any, b: any) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
         this.historialComprasGlobal = this.movimientosOriginales
           .filter(m => m.tipo.toUpperCase().includes('ENTRADA'))
           .map(m => ({

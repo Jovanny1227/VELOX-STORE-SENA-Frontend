@@ -41,13 +41,13 @@ export class HomeComponent implements OnInit {
     this.cargandoCatalogo = true;
 
     this.http.get<any>('https://velox-store-sena-backend-production-2ed0.up.railway.app/api/bicicletas/catalogo?t=' + timestamp).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.catalogoBicicletas = data.content !== undefined ? data.content : data;
         this.cargandoCatalogo = false;
         this.cdr.detectChanges();
       },
       error: (err: any) => {
-        console.error('Error cargando cat·logo', err);
+        console.error('Error cargando cat√°logo', err);
         this.cargandoCatalogo = false;
         this.cdr.detectChanges();
       }
@@ -126,7 +126,7 @@ export class HomeComponent implements OnInit {
     const idDelCliente = (usuarioActual as any).id || (usuarioActual as any).idUsuario || (usuarioActual as any).usuarioId;
 
     if (!idDelCliente) {
-        alert('Tu sesiÛn ha expirado o es inv·lida. Por favor inicia sesiÛn de nuevo.');
+        alert('Tu sesi√≥n ha expirado o es inv√°lida. Por favor inicia sesi√≥n de nuevo.');
         this.authService.logout();
         this.router.navigate(['/login']);
         return;
@@ -143,13 +143,13 @@ export class HomeComponent implements OnInit {
 
     this.ventaService.registrarVentaMultiple(peticionVenta).subscribe({
       next: (respuesta: any) => {
-        alert('°Compra procesada! Factura: FAC-' + respuesta.idVenta);
+        alert('¬°Compra procesada! Factura: FAC-' + respuesta.idVenta);
         this.carritoService.vaciarCarrito();
         this.ngOnInit();
       },
       error: (err: any) => {
-        console.error(err: any);
-        alert('Error: La base de datos de Railway se reiniciÛ y estos productos (o tu usuario) ya no existen. Tu carrito se vaciar· y deber·s iniciar sesiÛn nuevamente.');
+        console.error(err);
+        alert('Error: La base de datos de Railway se reinici√≥ y estos productos (o tu usuario) ya no existen. Tu carrito se vaciar√° y deber√°s iniciar sesi√≥n nuevamente.');
         this.carritoService.vaciarCarrito();
         this.authService.logout();
         window.location.href = '/login';
