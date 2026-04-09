@@ -1,4 +1,4 @@
-ï»¿import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -46,8 +46,8 @@ export class HomeComponent implements OnInit {
         this.cargandoCatalogo = false;
         this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error('Error cargando catÃ¡logo', err);
+      error: (err: any) => {
+        console.error('Error cargando catálogo', err);
         this.cargandoCatalogo = false;
         this.cdr.detectChanges();
       }
@@ -126,7 +126,7 @@ export class HomeComponent implements OnInit {
     const idDelCliente = (usuarioActual as any).id || (usuarioActual as any).idUsuario || (usuarioActual as any).usuarioId;
 
     if (!idDelCliente) {
-        alert('Tu sesiÃ³n ha expirado o es invÃ¡lida. Por favor inicia sesiÃ³n de nuevo.');
+        alert('Tu sesión ha expirado o es inválida. Por favor inicia sesión de nuevo.');
         this.authService.logout();
         this.router.navigate(['/login']);
         return;
@@ -142,14 +142,14 @@ export class HomeComponent implements OnInit {
     };
 
     this.ventaService.registrarVentaMultiple(peticionVenta).subscribe({
-      next: (respuesta) => {
-        alert('Â¡Compra procesada! Factura: FAC-' + respuesta.idVenta);
+      next: (respuesta: any) => {
+        alert('¡Compra procesada! Factura: FAC-' + respuesta.idVenta);
         this.carritoService.vaciarCarrito();
         this.ngOnInit();
       },
-      error: (err) => {
-        console.error(err);
-        alert('Error: La base de datos de Railway se reiniciÃ³ y estos productos (o tu usuario) ya no existen. Tu carrito se vaciarÃ¡ y deberÃ¡s iniciar sesiÃ³n nuevamente.');
+      error: (err: any) => {
+        console.error(err: any);
+        alert('Error: La base de datos de Railway se reinició y estos productos (o tu usuario) ya no existen. Tu carrito se vaciará y deberás iniciar sesión nuevamente.');
         this.carritoService.vaciarCarrito();
         this.authService.logout();
         window.location.href = '/login';
