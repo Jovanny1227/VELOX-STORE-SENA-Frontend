@@ -1,122 +1,156 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { VentaService } from '../../services/venta.service';
 import { ClienteService } from '../../services/cliente.service';
-import { InventarioService } from '../../services/inventario.service';
+import { BicicletaService } from '../../services/bicicleta.service';
+import { VentaService } from '../../services/venta.service';
 
 @Component({
   selector: 'app-caja-pos',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './caja-pos.component.html',
-  styleUrls: ['./caja-pos.component.css']
+  styleUrls: ['./caja-pos.component.css'],
 })
 export class CajaPosComponent implements OnInit {
-  productos: any[] = [];
-  carrito: any[] = [];
   clientes: any[] = [];
-  clienteSeleccionadoId: number | null = null;
-  codigoBusqueda: string = '';
-  total: number = 0;
-  mensajeExito: string = '';
-  mensajeError: string = '';
+  busquedaCliente: string = '';
+  clienteSeleccionado: any = null;
+
+  catalogoBicicletas: any[] = [];
+  filtroMarca: string = '';
+  filtroTipo: string = '';
+  filtroModelo: string = '';
+
+  carritoPos: any[] = [];
 
   constructor(
-    private ventaService: VentaService,
     private clienteService: ClienteService,
-    private inventarioService: InventarioService
+    private bicicletaService: BicicletaService,
+    private ventaService: VentaService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
-  ngOnInit(): void {
-    this.cargarClientes();
-    this.cargarInventario();
+  ngOnInit() {
+    this.clienteService.listar().subscribe((data: any) => {
+      this.clientes = data;
+      this.cdr.detectChanges();
+    });
+    this.cargarBicicletas();
   }
 
-  cargarClientes() {
-    this.clienteService.getClientes().subscribe({
-      next: (data: any) => this.clientes = data,
-      error: (err: any) => console.error('Error al cargar clientes', err)
+  cargarBicicletas() {
+    this.bicicletaService.listarBicicletas().subscribe((data: any) => {
+      this.catalogoBicicletas = data;
+      this.cdr.detectChanges();
     });
   }
 
-  cargarInventario() {
-    this.inventarioService.getInventario().subscribe({
-      next: (data: any) => this.productos = data,
-      error: (err: any) => console.error('Error al cargar inventario', err)
+  get clientesFiltrados() {
+    if (!this.busquedaCliente.trim()) return [];
+    return this.clientes.filter((c) => c.documento.includes(this.busquedaCliente));
+  }
+
+  seleccionarCliente(cliente: any) {
+    this.clienteSeleccionado = cliente;
+    this.busquedaCliente = '';
+    this.cdr.detectChanges();
+  }
+
+  quitarCliente() {
+    this.clienteSeleccionado = null;
+    this.cdr.detectChanges();
+  }
+
+  get marcasDisponibles() {
+    return [...new Set(this.catalogoBicicletas.map((b) => b.marca))];
+  }
+  get tiposDisponibles() {
+    return [...new Set(this.catalogoBicicletas.map((b) => b.tipo))];
+  }
+
+  get bicicletasFiltradas() {
+    const modeloTerm = this.filtroModelo.toLowerCase().trim();
+
+    return this.catalogoBicicletas.filter((b) => {
+      if (b.stock <= 0) return false;
+      const matchMarca = !this.filtroMarca || b.marca === this.filtroMarca;
+      const matchTipo = !this.filtroTipo || b.tipo === this.filtroTipo;
+      const matchModelo = !modeloTerm || b.modelo.toLowerCase().includes(modeloTerm);
+      return matchMarca && matchTipo && matchModelo;
     });
   }
 
-  buscarProducto() {
-    const producto = this.productos.find(p => p.bicicleta.codigo === this.codigoBusqueda);
-    if (producto) {
-      this.agregarAlCarrito(producto.bicicleta);
-      this.codigoBusqueda = ''; 
-    } else {
-      this.mensajeError = 'Producto no encontrado o sin inventario';
-      setTimeout(() => this.mensajeError = '', 3000);
-    }
-  }
+  agregarAlCarrito(bici: any) {
+    const existe = this.carritoPos.find((i) => i.codigoBicicleta === bici.codigo);
 
-  agregarAlCarrito(bicicleta: any) {
-    const itemExistente = this.carrito.find(item => item.codigoBicicleta === bicicleta.codigo);
-    if (itemExistente) {
-      itemExistente.cantidad++;
-      itemExistente.subtotal = itemExistente.cantidad * bicicleta.precio;
+    if (existe) {
+      if (existe.cantidad < bici.stock) {
+        existe.cantidad++;
+        this.recalcularSubtotal(existe);
+      } else {
+        alert(`MÃ¡ximo stock alcanzado (${bici.stock})`);
+      }
     } else {
-      this.carrito.push({
-        codigoBicicleta: bicicleta.codigo,
-        modelo: bicicleta.modelo,
-        precio: bicicleta.precio,
+      this.carritoPos.push({
+        codigoBicicleta: bici.codigo,
+        modelo: bici.modelo,
+        precio: bici.precio,
         cantidad: 1,
-        subtotal: bicicleta.precio
+        stockMaximo: bici.stock,
+        subtotal: bici.precio,
       });
     }
-    this.calcularTotal();
+    this.cdr.detectChanges();
   }
 
-  eliminarDelCarrito(index: number) {
-    this.carrito.splice(index, 1);
-    this.calcularTotal();
-  }
-
-  calcularTotal() {
-    this.total = this.carrito.reduce((acc, item) => acc + item.subtotal, 0);
-  }
-
-  procesarVenta() {
-    if (this.carrito.length === 0) {
-      this.mensajeError = 'El carrito está vacío';
-      return;
+  validarCantidad(item: any) {
+    if (item.cantidad < 1) {
+      item.cantidad = 1;
+      alert('La cantidad mÃ­nima es 1');
+    } else if (item.cantidad > item.stockMaximo) {
+      item.cantidad = item.stockMaximo;
+      alert(`Solo hay ${item.stockMaximo} unidades disponibles en inventario`);
     }
-    
-    // Obtenemos el usuario autenticado (Si tienes auth usa el token, sino dejamos un 1 por defecto)
-    const usuarioString = localStorage.getItem('usuario');
-    const usuarioId = usuarioString ? JSON.parse(usuarioString).idUsuario : 1; 
+    this.recalcularSubtotal(item);
+  }
 
-    // Aquí se arma el objeto exacto que el backend espera
+  recalcularSubtotal(item: any) {
+    item.subtotal = item.cantidad * item.precio;
+    this.cdr.detectChanges();
+  }
+
+  quitarDelCarrito(index: number) {
+    this.carritoPos.splice(index, 1);
+    this.cdr.detectChanges();
+  }
+
+  getTotal() {
+    return this.carritoPos.reduce((acc, item) => acc + item.subtotal, 0);
+  }
+
+  registrarVenta() {
+    if (this.carritoPos.length === 0) return;
+
     const payload = {
-      items: this.carrito.map(item => ({
-        codigoBicicleta: item.codigoBicicleta,
-        cantidad: item.cantidad
+      usuarioId: 1,
+      items: this.carritoPos.map((i) => ({
+        codigoBicicleta: i.codigoBicicleta,
+        cantidad: i.cantidad,
       })),
+      clienteId: this.clienteSeleccionado ? this.clienteSeleccionado.clienteId : null,
       tipoVenta: 'PRESENCIAL',
-      clienteId: this.clienteSeleccionadoId // AQUÍ ENVIAMOS EL CLIENTE SELECCIONADO
     };
 
-    this.ventaService.registrarVentaPos(Number(usuarioId), payload).subscribe({
+    this.ventaService.registrarVentaMultiple(payload).subscribe({
       next: (res: any) => {
-        this.mensajeExito = 'Venta registrada con éxito!';
-        this.carrito = [];
-        this.clienteSeleccionadoId = null; // Limpiamos el cliente para la próxima venta
-        this.calcularTotal();
-        this.cargarInventario(); 
-        setTimeout(() => this.mensajeExito = '', 3000);
+        alert('Venta procesada con Ã©xito');
+        this.carritoPos = [];
+        this.clienteSeleccionado = null;
+        this.cargarBicicletas();
+        this.cdr.detectChanges();
       },
-      error: (err: any) => {
-        this.mensajeError = err.error?.message || 'Error al registrar la venta';
-        setTimeout(() => this.mensajeError = '', 3000);
-      }
+      error: (err: any) => alert('Error al registrar la venta'),
     });
   }
 }
