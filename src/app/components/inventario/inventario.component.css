@@ -1,175 +1,21 @@
-/* ================= CONTENEDOR PRINCIPAL ================= */
-.inventario-wrapper {
-  background-color: #f4f7f6;
-  min-height: calc(100vh - 70px);
-  padding: 40px 0 80px 0;
-}
-
-/* ================= BOTÓN DE ACCIÓN ================= */
-.btn-velox-orange {
-  background: linear-gradient(135deg, #ff8a00, #e52e71);
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  font-size: 1.05rem;
-  font-weight: 700;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(255, 138, 0, 0.3);
-  transition: all 0.3s ease;
-  text-decoration: none;
-}
-
-.btn-velox-orange:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 138, 0, 0.4);
-  color: white;
-}
-
-/* ================= KPIs (MÁS COMPACTOS Y ÚTILES) ================= */
-.kpi-card {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  border: 1px solid #e2e8f0;
-  border-left: 5px solid #3b82f6;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-}
-
-.kpi-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 10px;
-  background: #f1f5f9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  color: #475569;
-}
-
-.kpi-info h6 {
-  color: #64748b;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  margin-bottom: 2px;
-}
-
-.kpi-info h3 {
-  color: #0f172a;
-  font-weight: 800;
-  margin: 0;
-  font-size: 1.8rem;
-}
-
-/* ================= TABLA TIPO EXCEL (LIBRO MAESTRO) ================= */
-.erp-table-container {
-  background: #ffffff;
-  border-radius: 12px;
-  border: 1px solid #cbd5e1;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-  overflow: hidden;
-}
-
-.custom-table th {
-  background-color: #f8fafc;
-  color: #475569;
-  font-weight: 800; /* Letra más gruesa */
-  text-transform: uppercase;
-  font-size: 0.95rem; /* ANTES: 0.8rem - Ahora más grande y legible */
-  letter-spacing: 0.5px;
-  padding: 18px 20px; /* Más espacio para respirar */
-  border-bottom: 2px solid #e2e8f0;
-}
-
-.custom-table td {
-  padding: 18px 20px; /* Celdas más altas */
-  color: #334155;
-  border-bottom: 1px solid #f1f5f9;
-  vertical-align: middle;
-  font-size: 1.05rem; /* Tamaño base de la tabla más grande */
-}
-
-.custom-table tbody tr:hover {
-  background-color: #f8fafc;
-}
-
-/* ================= ETIQUETAS DE LA TABLA ================= */
-.sku-badge {
-  background: #f1f5f9;
-  color: #0f172a;
-  border: 1px solid #cbd5e1;
-  font-family: monospace;
-  font-size: 1.1rem; /* ANTES: 0.9rem - Códigos muy claros */
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-weight: bold;
-}
-
-.cat-badge {
-  background: #eff6ff;
-  color: #2563eb;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 0.9rem; /* ANTES: 0.75rem */
-  font-weight: 700;
-}
-
-/* ================= ESTILOS NUEVOS PARA LA BARRA DE FILTROS ================= */
-.filter-panel {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 22px 25px;
-  border: 1px solid #cbd5e1; /* Combina con tu tabla */
-}
-
-.filter-label {
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
-  display: block;
-}
-
-.filter-input {
-  background-color: #f8fafc;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  color: #1e293b;
-  font-weight: 500;
-  padding: 10px 15px;
-  transition: all 0.3s ease;
-}
-
-.filter-input:focus {
-  background-color: #ffffff;
-  border-color: #ff8a00; /* Toma el color naranja de tu tema */
-  box-shadow: 0 0 0 3px rgba(255, 138, 0, 0.15);
-  outline: none;
-}
-
-.filter-btn {
-  padding: 10px 20px;
-  border-radius: 8px;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.filter-btn:hover {
-  transform: translateY(-2px);
-}
-
-.btn-reporte {
-  background: #1e293b; /* Color oscuro profesional para el reporte */
-  border: none;
-}
-
-.btn-reporte:hover {
-  background: #0f172a;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2) !important;
-}
+﻿.inventario-wrapper { background-color: #ffffff; min-height: calc(100vh - 70px); padding: 40px 0 80px 0; }
+.btn-velox-orange { background: #f59e0b; color: #111827; border: none; padding: 12px 25px; font-size: 1.05rem; font-weight: 700; border-radius: 8px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); transition: all 0.3s ease; text-decoration: none; }
+.btn-velox-orange:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4); background: #fbbf24; }
+.kpi-card { background: #ffffff; border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid #111827; border-left: 5px solid #2563eb; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+.kpi-icon { width: 50px; height: 50px; border-radius: 10px; background: #ffffff; border: 1px solid #111827; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #111827; }
+.kpi-info h6 { color: #111827; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; margin-bottom: 2px; }
+.kpi-info h3 { color: #2563eb; font-weight: 800; margin: 0; font-size: 1.8rem; }
+.erp-table-container { background: #ffffff; border-radius: 12px; border: 1px solid #111827; box-shadow: 0 5px 15px rgba(0,0,0,0.03); overflow: hidden; }
+.custom-table th { background-color: #ffffff; color: #111827; font-weight: 800; text-transform: uppercase; font-size: 0.95rem; letter-spacing: 0.5px; padding: 18px 20px; border-bottom: 2px solid #111827; }
+.custom-table td { padding: 18px 20px; color: #111827; border-bottom: 1px solid #e2e8f0; vertical-align: middle; font-size: 1.05rem; }
+.custom-table tbody tr:hover { background-color: #f3f4f6; }
+.sku-badge { background: #111827; color: #ffffff; border: 1px solid #111827; font-family: monospace; font-size: 1.1rem; padding: 6px 12px; border-radius: 6px; font-weight: bold; }
+.cat-badge { background: #2563eb; color: #ffffff; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 700; }
+.filter-panel { background: #ffffff; border-radius: 12px; padding: 22px 25px; border: 1px solid #111827; }
+.filter-label { font-size: 0.75rem; font-weight: 800; color: #111827; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block; }
+.filter-input { background-color: #ffffff; border: 1px solid #111827; border-radius: 8px; font-size: 0.95rem; color: #111827; font-weight: 500; padding: 10px 15px; transition: all 0.3s ease; }
+.filter-input:focus { background-color: #ffffff; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); outline: none; }
+.filter-btn { padding: 10px 20px; border-radius: 8px; transition: transform 0.2s, box-shadow 0.2s; }
+.filter-btn:hover { transform: translateY(-2px); }
+.btn-reporte { background: #111827; border: none; color: white; }
+.btn-reporte:hover { background: #000000; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2) !important; }

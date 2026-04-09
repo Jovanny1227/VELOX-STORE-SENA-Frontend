@@ -1,87 +1,13 @@
-/* =========================================
-   ESTILOS UNIFICADOS PARA BOTONES DE REPORTE
-   ========================================= */
-
-/* 🔥 AUMENTO DE LETRA GENERAL 🔥 */
-.reportes-wrapper {
-  font-size: 1.05rem; /* Sube el tamaño base de los textos normales */
-}
-
-/* Aumenta el tamaño específico de las tablas */
-.table {
-  font-size: 1.1rem;
-}
-
-/* Evita que los textos secundarios se vean minúsculos */
-.table .small {
-  font-size: 0.95rem;
-}
-
-/* Etiquetas y badges más legibles */
-.badge {
-  font-size: 0.95rem;
-}
-
-/* =========================================
-   ESTILOS DE BOTONES
-   ========================================= */
-.btn-accion {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  font-weight: 600;
-  border-radius: 8px; /* Bordes suaves modernos */
-  transition: all 0.2s ease-in-out;
-  border: 1px solid transparent;
-  padding: 0.6rem 1.25rem;
-  font-size: 1.05rem; /* Botones principales más grandes */
-}
-
-.btn-accion.btn-sm {
-  padding: 0.45rem 1rem;
-  font-size: 0.95rem; /* Botones pequeños más legibles */
-}
-
-.btn-icon {
-  font-size: 1.2rem;
-  line-height: 1;
-}
-
-/* --- Botón Volver --- */
-.btn-volver {
-  background-color: #f1f5f9;
-  color: #475569;
-  border-color: #e2e8f0;
-}
-.btn-volver:hover {
-  background-color: #e2e8f0;
-  color: #0f172a;
-  transform: translateY(-2px);
-}
-
-/* --- Botón Excel (Verde Suave - Outline) --- */
-.btn-excel {
-  background-color: transparent;
-  color: #10b981;
-  border: 2px solid #10b981;
-}
-.btn-excel:hover {
-  background-color: #10b981;
-  color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
-}
-
-/* --- Botón PDF (Rojo Suave - Outline) --- */
-.btn-pdf {
-  background-color: transparent;
-  color: #ef4444;
-  border: 2px solid #ef4444;
-}
-.btn-pdf:hover {
-  background-color: #ef4444;
-  color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
-}
+﻿.reportes-wrapper { font-size: 1.05rem; }
+.table { font-size: 1.1rem; color: #111827; }
+.table .small { font-size: 0.95rem; color: #111827; }
+.badge { font-size: 0.95rem; }
+.btn-accion { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 600; border-radius: 8px; transition: all 0.2s ease-in-out; border: 1px solid transparent; padding: 0.6rem 1.25rem; font-size: 1.05rem; }
+.btn-accion.btn-sm { padding: 0.45rem 1rem; font-size: 0.95rem; }
+.btn-icon { font-size: 1.2rem; line-height: 1; }
+.btn-volver { background-color: #ffffff; color: #111827; border: 1px solid #111827; }
+.btn-volver:hover { background-color: #111827; color: #ffffff; transform: translateY(-2px); }
+.btn-excel { background-color: transparent; color: #2563eb; border: 2px solid #2563eb; }
+.btn-excel:hover { background-color: #2563eb; color: #ffffff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important; }
+.btn-pdf { background-color: transparent; color: #f59e0b; border: 2px solid #f59e0b; }
+.btn-pdf:hover { background-color: #f59e0b; color: #111827; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3) !important; }

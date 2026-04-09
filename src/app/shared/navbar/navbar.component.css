@@ -1,100 +1,12 @@
-/* =========================================
-   NAVBAR VELOX - BASE
-========================================= */
-.velox-nav {
-  background: #f8fafc; /* Color sólido inicial (Off-white) */
-  height: 87px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  font-family: 'Segoe UI', Roboto, sans-serif;
-  border-bottom: 1px solid #e2e8f0;
-
-  /* TRANSICIÓN: Para que el cambio a transparente sea fluido */
-  transition: all 0.4s ease-in-out;
-}
-
-.logo-img {
-  height: 45px; /* Ajusta este valor según qué tan alto quieras el navbar */
-  width: auto;  /* Mantiene la proporción para que no se vea estirado */
-  display: block;
-  transition: transform 0.3s ease;
-}
-
-.logo-img:hover {
-  transform: scale(1.05);
-}
-
-/* =========================================
-   ESTADO SCROLLED (ACTIVADO POR TS)
-========================================= */
-.velox-nav.scrolled {
-  /* Blanco con 80% de opacidad */
-  background: rgba(248, 250, 252, 0.8);
-
-  /* EFECTO CRISTAL: Desenfoca lo que pasa por debajo */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-
-  height: 65px; /* Se encoge un poquito para dar sensación de dinamismo */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.nav-brand {
-  display: flex;
-  align-items: center;
-  padding: 5px 0;
-  text-decoration: none !important; /* Por si acaso */
-}
-
-.brand-icon img {
-  height: 38px;
-  width: auto;
-  display: block;
-}
-
-.brand-accent {
-  color: #3b82f6; /* Azul mate, sereno y profesional */
-}
-
-.nav-links {
-  display: flex;
-  gap: 4px;
-}
-
-.nav-link {
-  text-decoration: none;
-  color: #64748b; /* Gris suave para lectura relajada */
-  font-size: 1rem;
-  font-weight: 600;
-  padding: 10px 16px;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-}
-
-.nav-link:hover {
-  color: #1e293b;
-  background: #f1f5f9;
-}
-
-.nav-link.active {
-  color: #2563eb; /* Azul corporativo mate */
-  font-weight: 700;
-  background: #eff6ff; /* Fondo azul extremadamente pálido */
-}
-
-@media (max-width: 950px) {
-  .velox-nav {
-    padding: 0 15px;
-    height: 60px;
-  }
-  .nav-link {
-    padding: 8px 10px;
-    font-size: 0.75rem;
-  }
-}
+﻿.velox-nav { background: #ffffff; height: 87px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; position: sticky; top: 0; z-index: 1000; font-family: 'Segoe UI', Roboto, sans-serif; border-bottom: 1px solid #e2e8f0; transition: all 0.4s ease-in-out; }
+.logo-img { height: 45px; width: auto; display: block; transition: transform 0.3s ease; }
+.logo-img:hover { transform: scale(1.05); }
+.velox-nav.scrolled { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); height: 65px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+.nav-brand { display: flex; align-items: center; padding: 5px 0; text-decoration: none !important; }
+.brand-icon img { height: 38px; width: auto; display: block; }
+.brand-accent { color: #2563eb; }
+.nav-links { display: flex; gap: 4px; }
+.nav-link { text-decoration: none; color: #111827; font-size: 1rem; font-weight: 600; padding: 10px 16px; border-radius: 6px; transition: all 0.2s ease; }
+.nav-link:hover { color: #000000; background: #f3f4f6; }
+.nav-link.active { color: #2563eb; font-weight: 700; background: #eff6ff; }
+@media (max-width: 950px) { .velox-nav { padding: 0 15px; height: 60px; } .nav-link { padding: 8px 10px; font-size: 0.75rem; } }

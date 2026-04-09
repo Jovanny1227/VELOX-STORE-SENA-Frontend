@@ -1,53 +1,7 @@
-/* ================= CONTENEDOR PRINCIPAL ================= */
-.velox-footer {
-  /* Fondo oscuro sólido, limpio y sin cosas raras */
-  background-color: #0f172a;
-  color: #f8fafc;
-
-  /* AQUÍ ESTÁ LA MAGIA:
-     Una línea de 4px de grosor con un degradado de izquierda a derecha
-     que usa tus colores (del azul de tus iconos al naranja de tu botón) */
-  border-top: 4px solid;
-  border-image: linear-gradient(to right, #3b82f6, #8b5cf6, #ff8a00) 1;
-
-  margin-top: auto;
-  font-family: inherit;
-}
-
-/* ================= ENLACES RÁPIDOS ================= */
-.footer-links li {
-  margin-bottom: 12px;
-}
-
-.footer-links a {
-  color: #cbd5e1;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  display: inline-block;
-  font-weight: 500;
-}
-
-/* Animación al pasar el mouse */
-.footer-links a:hover {
-  color: #ff8a00; /* Se ilumina en naranja */
-  transform: translateX(6px); /* Pequeño salto elegante hacia la derecha */
-}
-
-/* ================= LISTA DE CONTACTO ================= */
-.info-list li {
-  margin-bottom: 15px;
-  display: flex;
-  align-items: center;
-}
-
-.icon-contact {
-  margin-right: 12px;
-  font-size: 1.1rem;
-  opacity: 0.9;
-}
-
-/* ================= COPYRIGHT INFERIOR ================= */
-.footer-bottom {
-  background-color: #020617; /* Un tono aún más oscuro para separar la base */
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
+﻿.velox-footer { background-color: #111827; color: #ffffff; border-top: 4px solid; border-image: linear-gradient(to right, #2563eb, #f59e0b, #000000) 1; margin-top: auto; font-family: inherit; }
+.footer-links li { margin-bottom: 12px; }
+.footer-links a { color: #ffffff; text-decoration: none; transition: all 0.3s ease; display: inline-block; font-weight: 500; }
+.footer-links a:hover { color: #f59e0b; transform: translateX(6px); }
+.info-list li { margin-bottom: 15px; display: flex; align-items: center; }
+.icon-contact { margin-right: 12px; font-size: 1.1rem; opacity: 0.9; }
+.footer-bottom { background-color: #000000; border-top: 1px solid rgba(255, 255, 255, 0.1); }
