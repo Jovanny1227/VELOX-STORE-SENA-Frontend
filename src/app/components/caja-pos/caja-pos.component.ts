@@ -1,4 +1,4 @@
-ï»¿import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VentaService } from '../../services/venta.service';
@@ -35,15 +35,15 @@ export class CajaPosComponent implements OnInit {
 
   cargarClientes() {
     this.clienteService.getClientes().subscribe({
-      next: (data) => this.clientes = data,
-      error: (err) => console.error('Error al cargar clientes', err)
+      next: (data: any) => this.clientes = data,
+      error: (err: any) => console.error('Error al cargar clientes', err)
     });
   }
 
   cargarInventario() {
     this.inventarioService.getInventario().subscribe({
-      next: (data) => this.productos = data,
-      error: (err) => console.error('Error al cargar inventario', err)
+      next: (data: any) => this.productos = data,
+      error: (err: any) => console.error('Error al cargar inventario', err)
     });
   }
 
@@ -86,7 +86,7 @@ export class CajaPosComponent implements OnInit {
 
   procesarVenta() {
     if (this.carrito.length === 0) {
-      this.mensajeError = 'El carrito estÃ¡ vacÃ­o';
+      this.mensajeError = 'El carrito está vacío';
       return;
     }
     
@@ -94,26 +94,26 @@ export class CajaPosComponent implements OnInit {
     const usuarioString = localStorage.getItem('usuario');
     const usuarioId = usuarioString ? JSON.parse(usuarioString).idUsuario : 1; 
 
-    // AquÃ­ se arma el objeto exacto que el backend espera
+    // Aquí se arma el objeto exacto que el backend espera
     const payload = {
       items: this.carrito.map(item => ({
         codigoBicicleta: item.codigoBicicleta,
         cantidad: item.cantidad
       })),
       tipoVenta: 'PRESENCIAL',
-      clienteId: this.clienteSeleccionadoId // AQUÃ ENVIAMOS EL CLIENTE SELECCIONADO
+      clienteId: this.clienteSeleccionadoId // AQUÍ ENVIAMOS EL CLIENTE SELECCIONADO
     };
 
     this.ventaService.registrarVentaPos(Number(usuarioId), payload).subscribe({
-      next: (res) => {
-        this.mensajeExito = 'Venta registrada con Ã©xito!';
+      next: (res: any) => {
+        this.mensajeExito = 'Venta registrada con éxito!';
         this.carrito = [];
-        this.clienteSeleccionadoId = null; // Limpiamos el cliente para la prÃ³xima venta
+        this.clienteSeleccionadoId = null; // Limpiamos el cliente para la próxima venta
         this.calcularTotal();
         this.cargarInventario(); 
         setTimeout(() => this.mensajeExito = '', 3000);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.mensajeError = err.error?.message || 'Error al registrar la venta';
         setTimeout(() => this.mensajeError = '', 3000);
       }

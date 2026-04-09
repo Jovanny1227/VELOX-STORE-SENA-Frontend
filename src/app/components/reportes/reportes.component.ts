@@ -225,8 +225,8 @@ export class ReportesComponent implements OnInit {
 
   cargarHistorialVentas() {
     this.ventaService.listarTodas().subscribe({
-      next: (ventasDesdeJava) => {
-        this.historialVentas = ventasDesdeJava.map((venta) => ({
+      next: (ventasDesdeJava: any) => {
+        this.historialVentas = ventasDesdeJava.map((venta: any) => ({
           idFactura: `FAC-${venta.idVenta}`,
           fechaOriginal: venta.fecha,
           fecha: new Date(venta.fecha).toLocaleDateString(),
