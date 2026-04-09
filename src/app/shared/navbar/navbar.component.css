@@ -1,12 +1,12 @@
 ﻿.velox-nav { background: #ffffff; height: 87px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; position: sticky; top: 0; z-index: 1000; font-family: 'Segoe UI', Roboto, sans-serif; border-bottom: 1px solid #e2e8f0; transition: all 0.4s ease-in-out; }
 .logo-img { height: 45px; width: auto; display: block; transition: transform 0.3s ease; }
 .logo-img:hover { transform: scale(1.05); }
-.velox-nav.scrolled { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); height: 65px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+.velox-nav.scrolled { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); height: 65px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
 .nav-brand { display: flex; align-items: center; padding: 5px 0; text-decoration: none !important; }
 .brand-icon img { height: 38px; width: auto; display: block; }
-.brand-accent { color: #2563eb; }
+.brand-accent { color: #3b82f6; }
 .nav-links { display: flex; gap: 4px; }
-.nav-link { text-decoration: none; color: #111827; font-size: 1rem; font-weight: 600; padding: 10px 16px; border-radius: 6px; transition: all 0.2s ease; }
-.nav-link:hover { color: #000000; background: #f3f4f6; }
-.nav-link.active { color: #2563eb; font-weight: 700; background: #eff6ff; }
+.nav-link { text-decoration: none; color: #4b5563; font-size: 1rem; font-weight: 600; padding: 10px 16px; border-radius: 6px; transition: all 0.2s ease; }
+.nav-link:hover { color: #111827; background: #f3f4f6; }
+.nav-link.active { color: #3b82f6; font-weight: 700; background: #eff6ff; }
 @media (max-width: 950px) { .velox-nav { padding: 0 15px; height: 60px; } .nav-link { padding: 8px 10px; font-size: 0.75rem; } }
